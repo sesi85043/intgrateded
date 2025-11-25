@@ -24,6 +24,8 @@ import Users from "@/pages/users";
 import Analytics from "@/pages/analytics";
 import ActivityPage from "@/pages/activity";
 import Config from "@/pages/config";
+import Departments from "@/pages/departments";
+import Team from "@/pages/team";
 import NotFound from "@/pages/not-found";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
@@ -113,6 +115,8 @@ function Router() {
       <Switch>
         <Route path="/" component={Dashboard} />
         <Route path="/users" component={Users} />
+        <Route path="/departments" component={Departments} />
+        <Route path="/team" component={Team} />
         <Route path="/analytics" component={Analytics} />
         <Route path="/activity" component={ActivityPage} />
         <Route path="/config" component={Config} />

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +19,18 @@ const mainMenuItems = [
     url: "/",
     icon: LayoutDashboard,
     testId: "nav-dashboard"
+  },
+  {
+    title: "Departments",
+    url: "/departments",
+    icon: Building2,
+    testId: "nav-departments"
+  },
+  {
+    title: "Team Members",
+    url: "/team",
+    icon: UserCog,
+    testId: "nav-team"
   },
   {
     title: "User Management",
