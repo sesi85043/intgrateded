@@ -1,12 +1,18 @@
 // Storage layer - Database operations using Drizzle ORM
 import {
   users,
+  departments,
+  teamMembers,
   serviceConfigs,
   managedUsers,
   activityLogs,
   analyticsMetrics,
   type User,
   type UpsertUser,
+  type Department,
+  type InsertDepartment,
+  type TeamMember,
+  type InsertTeamMember,
   type ServiceConfig,
   type InsertServiceConfig,
   type ManagedUser,
@@ -21,6 +27,22 @@ export interface IStorage {
   // User operations (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+
+  // Department operations
+  getAllDepartments(): Promise<Department[]>;
+  getDepartment(id: string): Promise<Department | undefined>;
+  getDepartmentByCode(code: string): Promise<Department | undefined>;
+  createDepartment(department: InsertDepartment): Promise<Department>;
+  updateDepartment(id: string, department: Partial<InsertDepartment>): Promise<Department>;
+  deleteDepartment(id: string): Promise<void>;
+
+  // Team Member operations
+  getAllTeamMembers(): Promise<TeamMember[]>;
+  getTeamMembersByDepartment(departmentId: string): Promise<TeamMember[]>;
+  getTeamMember(id: string): Promise<TeamMember | undefined>;
+  createTeamMember(member: InsertTeamMember): Promise<TeamMember>;
+  updateTeamMember(id: string, member: Partial<InsertTeamMember>): Promise<TeamMember>;
+  deleteTeamMember(id: string): Promise<void>;
 
   // Service configuration operations
   getAllServices(): Promise<ServiceConfig[]>;
@@ -78,6 +100,75 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  // Department operations
+  async getAllDepartments(): Promise<Department[]> {
+    return await db.select().from(departments).orderBy(departments.name);
+  }
+
+  async getDepartment(id: string): Promise<Department | undefined> {
+    const [dept] = await db.select().from(departments).where(eq(departments.id, id));
+    return dept;
+  }
+
+  async getDepartmentByCode(code: string): Promise<Department | undefined> {
+    const [dept] = await db.select().from(departments).where(eq(departments.code, code));
+    return dept;
+  }
+
+  async createDepartment(department: InsertDepartment): Promise<Department> {
+    const [created] = await db.insert(departments).values(department).returning();
+    return created;
+  }
+
+  async updateDepartment(id: string, department: Partial<InsertDepartment>): Promise<Department> {
+    const [updated] = await db
+      .update(departments)
+      .set({ ...department, updatedAt: new Date() })
+      .where(eq(departments.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteDepartment(id: string): Promise<void> {
+    await db.delete(departments).where(eq(departments.id, id));
+  }
+
+  // Team Member operations
+  async getAllTeamMembers(): Promise<TeamMember[]> {
+    return await db.select().from(teamMembers).orderBy(desc(teamMembers.createdAt));
+  }
+
+  async getTeamMembersByDepartment(departmentId: string): Promise<TeamMember[]> {
+    return await db
+      .select()
+      .from(teamMembers)
+      .where(eq(teamMembers.departmentId, departmentId))
+      .orderBy(teamMembers.lastName);
+  }
+
+  async getTeamMember(id: string): Promise<TeamMember | undefined> {
+    const [member] = await db.select().from(teamMembers).where(eq(teamMembers.id, id));
+    return member;
+  }
+
+  async createTeamMember(member: InsertTeamMember): Promise<TeamMember> {
+    const [created] = await db.insert(teamMembers).values(member).returning();
+    return created;
+  }
+
+  async updateTeamMember(id: string, member: Partial<InsertTeamMember>): Promise<TeamMember> {
+    const [updated] = await db
+      .update(teamMembers)
+      .set({ ...member, updatedAt: new Date() })
+      .where(eq(teamMembers.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteTeamMember(id: string): Promise<void> {
+    await db.delete(teamMembers).where(eq(teamMembers.id, id));
   }
 
   // Service configuration operations

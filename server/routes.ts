@@ -4,7 +4,12 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 // Using development auth for local testing
 import { setupAuth, isAuthenticated } from "./devAuth";
-import { insertServiceConfigSchema, insertManagedUserSchema } from "@shared/schema";
+import {
+  insertServiceConfigSchema,
+  insertManagedUserSchema,
+  insertDepartmentSchema,
+  insertTeamMemberSchema,
+} from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
@@ -19,6 +24,149 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // Department routes
+  app.get('/api/departments', isAuthenticated, async (req: any, res) => {
+    try {
+      const departments = await storage.getAllDepartments();
+      res.json(departments);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      res.status(500).json({ message: "Failed to fetch departments" });
+    }
+  });
+
+  app.post('/api/departments', isAuthenticated, async (req: any, res) => {
+    try {
+      const validatedData = insertDepartmentSchema.parse(req.body);
+      const department = await storage.createDepartment(validatedData);
+      
+      await storage.createActivityLog(
+        req.user.claims.sub,
+        "created_department",
+        "department",
+        department.id
+      );
+
+      res.json(department);
+    } catch (error) {
+      console.error("Error creating department:", error);
+      res.status(400).json({ message: "Failed to create department" });
+    }
+  });
+
+  app.patch('/api/departments/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const validatedData = insertDepartmentSchema.partial().parse(req.body);
+      const department = await storage.updateDepartment(id, validatedData);
+      
+      await storage.createActivityLog(
+        req.user.claims.sub,
+        "updated_department",
+        "department",
+        id
+      );
+
+      res.json(department);
+    } catch (error) {
+      console.error("Error updating department:", error);
+      res.status(400).json({ message: "Failed to update department" });
+    }
+  });
+
+  app.delete('/api/departments/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteDepartment(id);
+      
+      await storage.createActivityLog(
+        req.user.claims.sub,
+        "deleted_department",
+        "department",
+        id
+      );
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting department:", error);
+      res.status(400).json({ message: "Failed to delete department" });
+    }
+  });
+
+  // Team Member routes
+  app.get('/api/team-members', isAuthenticated, async (req: any, res) => {
+    try {
+      const { departmentId } = req.query;
+      const members = departmentId 
+        ? await storage.getTeamMembersByDepartment(departmentId as string)
+        : await storage.getAllTeamMembers();
+      res.json(members);
+    } catch (error) {
+      console.error("Error fetching team members:", error);
+      res.status(500).json({ message: "Failed to fetch team members" });
+    }
+  });
+
+  app.post('/api/team-members', isAuthenticated, async (req: any, res) => {
+    try {
+      const validatedData = insertTeamMemberSchema.parse(req.body);
+      const member = await storage.createTeamMember(validatedData);
+      
+      await storage.createActivityLog(
+        req.user.claims.sub,
+        "created_team_member",
+        "team_member",
+        member.id,
+        undefined,
+        { employeeId: member.employeeId, role: member.role }
+      );
+
+      res.json(member);
+    } catch (error) {
+      console.error("Error creating team member:", error);
+      res.status(400).json({ message: "Failed to create team member" });
+    }
+  });
+
+  app.patch('/api/team-members/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const validatedData = insertTeamMemberSchema.partial().parse(req.body);
+      const member = await storage.updateTeamMember(id, validatedData);
+      
+      await storage.createActivityLog(
+        req.user.claims.sub,
+        "updated_team_member",
+        "team_member",
+        id
+      );
+
+      res.json(member);
+    } catch (error) {
+      console.error("Error updating team member:", error);
+      res.status(400).json({ message: "Failed to update team member" });
+    }
+  });
+
+  app.delete('/api/team-members/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteTeamMember(id);
+      
+      await storage.createActivityLog(
+        req.user.claims.sub,
+        "deleted_team_member",
+        "team_member",
+        id
+      );
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting team member:", error);
+      res.status(400).json({ message: "Failed to delete team member" });
     }
   });
 
