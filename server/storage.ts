@@ -14,6 +14,9 @@ import {
   taskAssignments,
   taskHistory,
   worklogs,
+  pendingRegistrations,
+  approvalOtps,
+  adminNotifications,
   type User,
   type UpsertUser,
   type Department,
@@ -35,9 +38,13 @@ import {
   type TaskHistory,
   type Worklog,
   type InsertWorklog,
+  type PendingRegistration,
+  type InsertPendingRegistration,
+  type ApprovalOtp,
+  type AdminNotification,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql, and, gte, or, inArray } from "drizzle-orm";
+import { eq, desc, sql, and, gte, or, inArray, lte } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (required for Replit Auth)
@@ -548,6 +555,162 @@ export class DatabaseStorage implements IStorage {
       .from(worklogs)
       .where(eq(worklogs.teamMemberId, teamMemberId))
       .orderBy(desc(worklogs.createdAt));
+  }
+
+  // Pending Registration operations
+  async createPendingRegistration(registration: InsertPendingRegistration): Promise<PendingRegistration> {
+    const [created] = await db.insert(pendingRegistrations).values(registration).returning();
+    return created;
+  }
+
+  async getPendingRegistration(id: string): Promise<PendingRegistration | undefined> {
+    const [registration] = await db.select().from(pendingRegistrations).where(eq(pendingRegistrations.id, id));
+    return registration;
+  }
+
+  async getPendingRegistrationByEmail(email: string): Promise<PendingRegistration | undefined> {
+    const [registration] = await db.select().from(pendingRegistrations).where(eq(pendingRegistrations.email, email));
+    return registration;
+  }
+
+  async getAllPendingRegistrations(status?: string): Promise<PendingRegistration[]> {
+    if (status) {
+      return await db
+        .select()
+        .from(pendingRegistrations)
+        .where(eq(pendingRegistrations.status, status))
+        .orderBy(desc(pendingRegistrations.createdAt));
+    }
+    return await db.select().from(pendingRegistrations).orderBy(desc(pendingRegistrations.createdAt));
+  }
+
+  async updatePendingRegistration(id: string, data: Partial<PendingRegistration>): Promise<PendingRegistration> {
+    const [updated] = await db
+      .update(pendingRegistrations)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(pendingRegistrations.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deletePendingRegistration(id: string): Promise<void> {
+    await db.delete(pendingRegistrations).where(eq(pendingRegistrations.id, id));
+  }
+
+  // Approval OTP operations
+  async createApprovalOtp(registrationId: string, otpCode: string, expiresAt: Date): Promise<ApprovalOtp> {
+    const [created] = await db
+      .insert(approvalOtps)
+      .values({
+        registrationId,
+        otpCode,
+        expiresAt,
+      })
+      .returning();
+    return created;
+  }
+
+  async getValidApprovalOtp(registrationId: string, otpCode: string): Promise<ApprovalOtp | undefined> {
+    const [otp] = await db
+      .select()
+      .from(approvalOtps)
+      .where(
+        and(
+          eq(approvalOtps.registrationId, registrationId),
+          eq(approvalOtps.otpCode, otpCode),
+          eq(approvalOtps.isUsed, false),
+          gte(approvalOtps.expiresAt, new Date())
+        )
+      );
+    return otp;
+  }
+
+  async getLatestOtpForRegistration(registrationId: string): Promise<ApprovalOtp | undefined> {
+    const [otp] = await db
+      .select()
+      .from(approvalOtps)
+      .where(eq(approvalOtps.registrationId, registrationId))
+      .orderBy(desc(approvalOtps.createdAt))
+      .limit(1);
+    return otp;
+  }
+
+  async markOtpAsUsed(otpId: string, usedById: string): Promise<void> {
+    await db
+      .update(approvalOtps)
+      .set({ isUsed: true, usedAt: new Date(), usedById })
+      .where(eq(approvalOtps.id, otpId));
+  }
+
+  async invalidateExpiredOtps(): Promise<void> {
+    await db
+      .update(approvalOtps)
+      .set({ isUsed: true })
+      .where(and(eq(approvalOtps.isUsed, false), lte(approvalOtps.expiresAt, new Date())));
+  }
+
+  // Admin Notification operations
+  async createAdminNotification(
+    type: string,
+    title: string,
+    message: string,
+    targetRoleLevel: number = 3,
+    relatedEntityType?: string,
+    relatedEntityId?: string,
+    metadata?: any
+  ): Promise<AdminNotification> {
+    const [notification] = await db
+      .insert(adminNotifications)
+      .values({
+        type,
+        title,
+        message,
+        targetRoleLevel,
+        relatedEntityType,
+        relatedEntityId,
+        metadata,
+      })
+      .returning();
+    return notification;
+  }
+
+  async getUnreadNotifications(roleLevel: number): Promise<AdminNotification[]> {
+    return await db
+      .select()
+      .from(adminNotifications)
+      .where(and(eq(adminNotifications.isRead, false), lte(adminNotifications.targetRoleLevel, roleLevel)))
+      .orderBy(desc(adminNotifications.createdAt));
+  }
+
+  async getAllNotifications(roleLevel: number, limit: number = 50): Promise<AdminNotification[]> {
+    return await db
+      .select()
+      .from(adminNotifications)
+      .where(lte(adminNotifications.targetRoleLevel, roleLevel))
+      .orderBy(desc(adminNotifications.createdAt))
+      .limit(limit);
+  }
+
+  async markNotificationAsRead(id: string, readById: string): Promise<void> {
+    await db
+      .update(adminNotifications)
+      .set({ isRead: true, readAt: new Date(), readById })
+      .where(eq(adminNotifications.id, id));
+  }
+
+  async markAllNotificationsAsRead(readById: string, roleLevel: number): Promise<void> {
+    await db
+      .update(adminNotifications)
+      .set({ isRead: true, readAt: new Date(), readById })
+      .where(and(eq(adminNotifications.isRead, false), lte(adminNotifications.targetRoleLevel, roleLevel)));
+  }
+
+  async getPendingRegistrationCount(): Promise<number> {
+    const [result] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(pendingRegistrations)
+      .where(eq(pendingRegistrations.status, 'pending'));
+    return result?.count || 0;
   }
 }
 

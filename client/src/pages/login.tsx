@@ -142,6 +142,13 @@ export default function Login() {
                 <p><strong>Technician:</strong> ha.tech1@company.com</p>
               </div>
             </div>
+
+            <div className="mt-6 pt-6 border-t text-center">
+              <p className="text-sm text-muted-foreground mb-2">New staff member?</p>
+              <Button variant="outline" className="w-full" onClick={() => setLocation("/register")}>
+                Apply for Staff Access
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </main>

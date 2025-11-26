@@ -31,6 +31,8 @@ import Team from "@/pages/team";
 import Tasks from "@/pages/tasks";
 import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
+import Register from "@/pages/register";
+import Registrations from "@/pages/registrations";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -120,6 +122,7 @@ function Router() {
     return (
       <Switch>
         <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
         <Route component={Landing} />
       </Switch>
     );
@@ -137,6 +140,7 @@ function Router() {
         <Route path="/activity" component={ActivityPage} />
         <Route path="/config" component={Config} />
         <Route path="/profile" component={Profile} />
+        <Route path="/registrations" component={Registrations} />
         <Route component={NotFound} />
       </Switch>
     </AuthenticatedLayout>

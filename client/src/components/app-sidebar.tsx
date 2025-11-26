@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -53,6 +53,13 @@ export function AppSidebar() {
       url: "/users",
       icon: Users,
       testId: "nav-users",
+      show: hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS),
+    },
+    {
+      title: "Staff Registrations",
+      url: "/registrations",
+      icon: UserPlus,
+      testId: "nav-registrations",
       show: hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS),
     },
     {

@@ -43,6 +43,11 @@ export default function Landing() {
                 Get Started
               </Button>
             </Link>
+            <Link href="/register">
+              <Button size="lg" variant="outline">
+                Staff Registration
+              </Button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">

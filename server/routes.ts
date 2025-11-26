@@ -1032,6 +1032,469 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ==================== STAFF REGISTRATION ROUTES ====================
+  
+  // Generate a 6-digit OTP
+  function generateOtp(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  // Validate simple CAPTCHA - using a basic challenge/response for dev
+  // In production, integrate with hCaptcha or Google reCAPTCHA
+  function validateCaptcha(token: string): boolean {
+    // Simple validation - token must be present and non-empty
+    // In production, verify with actual CAPTCHA service
+    if (!token || token.length === 0 || token === 'test-invalid') {
+      return false;
+    }
+    return true;
+  }
+
+  // Staff Registration - Creates a pending registration
+  app.post('/api/auth/register', async (req: any, res) => {
+    try {
+      const {
+        email, password, firstName, lastName, phone, departmentId,
+        addressLine1, addressLine2, city, state, postalCode, country,
+        nextOfKin1Name, nextOfKin1Relationship, nextOfKin1Phone, nextOfKin1Email, nextOfKin1Address,
+        nextOfKin2Name, nextOfKin2Relationship, nextOfKin2Phone, nextOfKin2Email, nextOfKin2Address,
+        captchaToken
+      } = req.body;
+
+      // Validate CAPTCHA
+      if (!validateCaptcha(captchaToken)) {
+        return res.status(400).json({ message: "CAPTCHA verification failed. Please try again." });
+      }
+
+      // Check if email already exists in team members
+      const existingMember = await storage.getTeamMemberByEmail(email);
+      if (existingMember) {
+        return res.status(400).json({ message: "An account with this email already exists." });
+      }
+
+      // Check if email already exists in pending registrations
+      const existingPending = await storage.getPendingRegistrationByEmail(email);
+      if (existingPending) {
+        if (existingPending.status === 'pending') {
+          return res.status(400).json({ message: "A registration with this email is already pending approval." });
+        } else if (existingPending.status === 'rejected') {
+          // Delete the old rejected registration and allow a new one
+          await storage.deletePendingRegistration(existingPending.id);
+        }
+      }
+
+      // Validate department exists
+      const dept = await storage.getDepartment(departmentId);
+      if (!dept) {
+        return res.status(400).json({ message: "Invalid department selected." });
+      }
+
+      // Hash the password
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Create pending registration
+      const registration = await storage.createPendingRegistration({
+        email,
+        passwordHash,
+        firstName,
+        lastName,
+        phone,
+        departmentId,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+        postalCode,
+        country: country || 'Nigeria',
+        nextOfKin1Name,
+        nextOfKin1Relationship,
+        nextOfKin1Phone,
+        nextOfKin1Email: nextOfKin1Email || null,
+        nextOfKin1Address: nextOfKin1Address || null,
+        nextOfKin2Name,
+        nextOfKin2Relationship,
+        nextOfKin2Phone,
+        nextOfKin2Email: nextOfKin2Email || null,
+        nextOfKin2Address: nextOfKin2Address || null,
+      });
+
+      // Generate OTP for approval (valid for 24 hours)
+      const otpCode = generateOtp();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await storage.createApprovalOtp(registration.id, otpCode, expiresAt);
+
+      // Create admin notification
+      await storage.createAdminNotification(
+        'registration_pending',
+        'New Staff Registration',
+        `${firstName} ${lastName} (${email}) has submitted a registration request for ${dept.name} department. OTP: ${otpCode}`,
+        3, // Management level
+        'pending_registration',
+        registration.id,
+        { otpCode, departmentName: dept.name, applicantName: `${firstName} ${lastName}` }
+      );
+
+      res.status(201).json({
+        message: "Registration submitted successfully! Your application is pending approval by management.",
+        registrationId: registration.id,
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Failed to submit registration. Please try again." });
+    }
+  });
+
+  // Get departments for registration (public endpoint)
+  app.get('/api/public/departments', async (req: any, res) => {
+    try {
+      const departments = await storage.getAllDepartments();
+      // Return only active departments with minimal info
+      const publicDepts = departments
+        .filter(d => d.status === 'active')
+        .map(d => ({ id: d.id, name: d.name, code: d.code }));
+      res.json(publicDepts);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      res.status(500).json({ message: "Failed to fetch departments" });
+    }
+  });
+
+  // Get all pending registrations (Management only)
+  app.get('/api/registrations', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { status } = req.query;
+      const registrations = await storage.getAllPendingRegistrations(status as string);
+      
+      // Enrich with department info
+      const enrichedRegistrations = await Promise.all(registrations.map(async (reg) => {
+        const dept = await storage.getDepartment(reg.departmentId);
+        const otp = await storage.getLatestOtpForRegistration(reg.id);
+        return {
+          ...reg,
+          passwordHash: undefined, // Don't expose password hash
+          department: dept ? { id: dept.id, name: dept.name, code: dept.code } : null,
+          latestOtp: otp && !otp.isUsed && otp.expiresAt > new Date() ? {
+            code: otp.otpCode,
+            expiresAt: otp.expiresAt,
+          } : null,
+        };
+      }));
+
+      res.json(enrichedRegistrations);
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+      res.status(500).json({ message: "Failed to fetch registrations" });
+    }
+  });
+
+  // Get single pending registration
+  app.get('/api/registrations/:id', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const registration = await storage.getPendingRegistration(id);
+      
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      const dept = await storage.getDepartment(registration.departmentId);
+      const otp = await storage.getLatestOtpForRegistration(registration.id);
+
+      res.json({
+        ...registration,
+        passwordHash: undefined,
+        department: dept ? { id: dept.id, name: dept.name, code: dept.code } : null,
+        latestOtp: otp && !otp.isUsed && otp.expiresAt > new Date() ? {
+          code: otp.otpCode,
+          expiresAt: otp.expiresAt,
+        } : null,
+      });
+    } catch (error) {
+      console.error("Error fetching registration:", error);
+      res.status(500).json({ message: "Failed to fetch registration" });
+    }
+  });
+
+  // Generate new OTP for a registration
+  app.post('/api/registrations/:id/generate-otp', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const registration = await storage.getPendingRegistration(id);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      if (registration.status !== 'pending') {
+        return res.status(400).json({ message: "Registration is no longer pending" });
+      }
+
+      // Generate new OTP (valid for 24 hours)
+      const otpCode = generateOtp();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await storage.createApprovalOtp(registration.id, otpCode, expiresAt);
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "generated_registration_otp",
+        "pending_registration",
+        id,
+        undefined,
+        { applicantEmail: registration.email }
+      );
+
+      res.json({ 
+        message: "New OTP generated successfully",
+        otp: { code: otpCode, expiresAt }
+      });
+    } catch (error) {
+      console.error("Error generating OTP:", error);
+      res.status(500).json({ message: "Failed to generate OTP" });
+    }
+  });
+
+  // Approve registration with OTP
+  app.post('/api/registrations/:id/approve', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { otpCode, roleId, employeeId } = req.body;
+      const member = req.teamMember;
+
+      if (!otpCode) {
+        return res.status(400).json({ message: "OTP is required for approval" });
+      }
+
+      const registration = await storage.getPendingRegistration(id);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      if (registration.status !== 'pending') {
+        return res.status(400).json({ message: "Registration is no longer pending" });
+      }
+
+      // Validate OTP
+      const validOtp = await storage.getValidApprovalOtp(id, otpCode);
+      if (!validOtp) {
+        return res.status(400).json({ message: "Invalid or expired OTP" });
+      }
+
+      // Validate role if provided
+      let selectedRole = null;
+      if (roleId) {
+        selectedRole = await storage.getRole(roleId);
+        if (!selectedRole) {
+          return res.status(400).json({ message: "Invalid role selected" });
+        }
+      } else {
+        // Default to technician role
+        selectedRole = await storage.getRoleByCode(ROLE_TYPES.TECHNICIAN);
+      }
+
+      // Create the team member from the registration
+      const newMember = await storage.createTeamMember({
+        email: registration.email,
+        passwordHash: registration.passwordHash,
+        firstName: registration.firstName,
+        lastName: registration.lastName,
+        phone: registration.phone,
+        departmentId: registration.departmentId,
+        roleId: selectedRole?.id,
+        role: selectedRole?.code || ROLE_TYPES.TECHNICIAN,
+        employeeId: employeeId || null,
+        status: 'active',
+        // Extended fields
+        addressLine1: registration.addressLine1,
+        addressLine2: registration.addressLine2,
+        city: registration.city,
+        state: registration.state,
+        postalCode: registration.postalCode,
+        country: registration.country,
+        nextOfKin1Name: registration.nextOfKin1Name,
+        nextOfKin1Relationship: registration.nextOfKin1Relationship,
+        nextOfKin1Phone: registration.nextOfKin1Phone,
+        nextOfKin1Email: registration.nextOfKin1Email,
+        nextOfKin1Address: registration.nextOfKin1Address,
+        nextOfKin2Name: registration.nextOfKin2Name,
+        nextOfKin2Relationship: registration.nextOfKin2Relationship,
+        nextOfKin2Phone: registration.nextOfKin2Phone,
+        nextOfKin2Email: registration.nextOfKin2Email,
+        nextOfKin2Address: registration.nextOfKin2Address,
+      });
+
+      // Mark OTP as used
+      await storage.markOtpAsUsed(validOtp.id, member.id);
+
+      // Update registration status
+      await storage.updatePendingRegistration(id, {
+        status: 'approved',
+        reviewedById: member.id,
+        reviewedAt: new Date(),
+      });
+
+      // Create activity log
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "approved_registration",
+        "team_member",
+        newMember.id,
+        undefined,
+        { applicantEmail: registration.email, role: selectedRole?.code }
+      );
+
+      // Create notification about approval
+      await storage.createAdminNotification(
+        'registration_approved',
+        'Registration Approved',
+        `${registration.firstName} ${registration.lastName} (${registration.email}) has been approved and added as a ${selectedRole?.name || 'Technician'}.`,
+        2, // Department Admin and above
+        'team_member',
+        newMember.id,
+        { approvedBy: `${member.firstName} ${member.lastName}` }
+      );
+
+      res.json({
+        message: "Registration approved successfully",
+        teamMember: {
+          id: newMember.id,
+          email: newMember.email,
+          firstName: newMember.firstName,
+          lastName: newMember.lastName,
+          role: newMember.role,
+        }
+      });
+    } catch (error: any) {
+      console.error("Error approving registration:", error);
+      if (error.message?.includes('duplicate')) {
+        return res.status(400).json({ message: "A team member with this email already exists" });
+      }
+      res.status(500).json({ message: "Failed to approve registration" });
+    }
+  });
+
+  // Reject registration
+  app.post('/api/registrations/:id/reject', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { reason } = req.body;
+      const member = req.teamMember;
+
+      const registration = await storage.getPendingRegistration(id);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      if (registration.status !== 'pending') {
+        return res.status(400).json({ message: "Registration is no longer pending" });
+      }
+
+      // Update registration status
+      await storage.updatePendingRegistration(id, {
+        status: 'rejected',
+        rejectionReason: reason || 'Application rejected by management',
+        reviewedById: member.id,
+        reviewedAt: new Date(),
+      });
+
+      // Create activity log
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "rejected_registration",
+        "pending_registration",
+        id,
+        undefined,
+        { applicantEmail: registration.email, reason }
+      );
+
+      res.json({ message: "Registration rejected successfully" });
+    } catch (error) {
+      console.error("Error rejecting registration:", error);
+      res.status(500).json({ message: "Failed to reject registration" });
+    }
+  });
+
+  // Get pending registration count
+  app.get('/api/registrations/count/pending', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const count = await storage.getPendingRegistrationCount();
+      res.json({ count });
+    } catch (error) {
+      console.error("Error fetching pending count:", error);
+      res.status(500).json({ message: "Failed to fetch pending count" });
+    }
+  });
+
+  // ==================== NOTIFICATION ROUTES ====================
+
+  // Get notifications for current user
+  app.get('/api/notifications', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const { unreadOnly, limit } = req.query;
+
+      // Get role level from member's role
+      const role = await storage.getRole(member.roleId);
+      const roleLevel = role?.level || 1;
+
+      let notifications;
+      if (unreadOnly === 'true') {
+        notifications = await storage.getUnreadNotifications(roleLevel);
+      } else {
+        notifications = await storage.getAllNotifications(roleLevel, parseInt(limit as string) || 50);
+      }
+
+      res.json(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      res.status(500).json({ message: "Failed to fetch notifications" });
+    }
+  });
+
+  // Get unread notification count
+  app.get('/api/notifications/count', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const role = await storage.getRole(member.roleId);
+      const roleLevel = role?.level || 1;
+
+      const notifications = await storage.getUnreadNotifications(roleLevel);
+      res.json({ count: notifications.length });
+    } catch (error) {
+      console.error("Error fetching notification count:", error);
+      res.status(500).json({ message: "Failed to fetch notification count" });
+    }
+  });
+
+  // Mark notification as read
+  app.post('/api/notifications/:id/read', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      await storage.markNotificationAsRead(id, member.id);
+      res.json({ message: "Notification marked as read" });
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      res.status(500).json({ message: "Failed to mark notification as read" });
+    }
+  });
+
+  // Mark all notifications as read
+  app.post('/api/notifications/read-all', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const role = await storage.getRole(member.roleId);
+      const roleLevel = role?.level || 1;
+
+      await storage.markAllNotificationsAsRead(member.id, roleLevel);
+      res.json({ message: "All notifications marked as read" });
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+      res.status(500).json({ message: "Failed to mark all notifications as read" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

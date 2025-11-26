@@ -152,6 +152,29 @@ export const teamMembers = pgTable("team_members", {
   phone: varchar("phone", { length: 20 }),
   status: varchar("status", { length: 20 }).default('active').notNull(),
   lastLoginAt: timestamp("last_login_at"),
+  
+  // Residential Address
+  addressLine1: varchar("address_line_1", { length: 255 }),
+  addressLine2: varchar("address_line_2", { length: 255 }),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 100 }),
+  postalCode: varchar("postal_code", { length: 20 }),
+  country: varchar("country", { length: 100 }),
+  
+  // Next of Kin 1
+  nextOfKin1Name: varchar("next_of_kin_1_name", { length: 100 }),
+  nextOfKin1Relationship: varchar("next_of_kin_1_relationship", { length: 50 }),
+  nextOfKin1Phone: varchar("next_of_kin_1_phone", { length: 20 }),
+  nextOfKin1Email: varchar("next_of_kin_1_email"),
+  nextOfKin1Address: text("next_of_kin_1_address"),
+  
+  // Next of Kin 2
+  nextOfKin2Name: varchar("next_of_kin_2_name", { length: 100 }),
+  nextOfKin2Relationship: varchar("next_of_kin_2_relationship", { length: 50 }),
+  nextOfKin2Phone: varchar("next_of_kin_2_phone", { length: 20 }),
+  nextOfKin2Email: varchar("next_of_kin_2_email"),
+  nextOfKin2Address: text("next_of_kin_2_address"),
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -333,3 +356,157 @@ export const insertWorklogSchema = createInsertSchema(worklogs).omit({
 
 export type InsertWorklog = z.infer<typeof insertWorklogSchema>;
 export type Worklog = typeof worklogs.$inferSelect;
+
+// Registration status types
+export const REGISTRATION_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+} as const;
+
+export type RegistrationStatus = typeof REGISTRATION_STATUS[keyof typeof REGISTRATION_STATUS];
+
+// Pending Registrations table - Staff registration applications awaiting approval
+export const pendingRegistrations = pgTable("pending_registrations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  firstName: varchar("first_name").notNull(),
+  lastName: varchar("last_name").notNull(),
+  phone: varchar("phone", { length: 20 }),
+  departmentId: varchar("department_id").notNull().references(() => departments.id),
+  
+  // Residential Address
+  addressLine1: varchar("address_line_1", { length: 255 }).notNull(),
+  addressLine2: varchar("address_line_2", { length: 255 }),
+  city: varchar("city", { length: 100 }).notNull(),
+  state: varchar("state", { length: 100 }).notNull(),
+  postalCode: varchar("postal_code", { length: 20 }).notNull(),
+  country: varchar("country", { length: 100 }).notNull().default('Nigeria'),
+  
+  // Next of Kin 1
+  nextOfKin1Name: varchar("next_of_kin_1_name", { length: 100 }).notNull(),
+  nextOfKin1Relationship: varchar("next_of_kin_1_relationship", { length: 50 }).notNull(),
+  nextOfKin1Phone: varchar("next_of_kin_1_phone", { length: 20 }).notNull(),
+  nextOfKin1Email: varchar("next_of_kin_1_email"),
+  nextOfKin1Address: text("next_of_kin_1_address"),
+  
+  // Next of Kin 2
+  nextOfKin2Name: varchar("next_of_kin_2_name", { length: 100 }).notNull(),
+  nextOfKin2Relationship: varchar("next_of_kin_2_relationship", { length: 50 }).notNull(),
+  nextOfKin2Phone: varchar("next_of_kin_2_phone", { length: 20 }).notNull(),
+  nextOfKin2Email: varchar("next_of_kin_2_email"),
+  nextOfKin2Address: text("next_of_kin_2_address"),
+  
+  // Status and metadata
+  status: varchar("status", { length: 20 }).default('pending').notNull(),
+  rejectionReason: text("rejection_reason"),
+  reviewedById: varchar("reviewed_by_id").references(() => teamMembers.id),
+  reviewedAt: timestamp("reviewed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertPendingRegistrationSchema = createInsertSchema(pendingRegistrations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  reviewedById: true,
+  reviewedAt: true,
+  status: true,
+  rejectionReason: true,
+});
+
+export type InsertPendingRegistration = z.infer<typeof insertPendingRegistrationSchema>;
+export type PendingRegistration = typeof pendingRegistrations.$inferSelect;
+
+// Approval OTPs table - One-time passwords for registration approval
+export const approvalOtps = pgTable("approval_otps", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  registrationId: varchar("registration_id").notNull().references(() => pendingRegistrations.id, { onDelete: 'cascade' }),
+  otpCode: varchar("otp_code", { length: 6 }).notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  isUsed: boolean("is_used").default(false).notNull(),
+  usedAt: timestamp("used_at"),
+  usedById: varchar("used_by_id").references(() => teamMembers.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type ApprovalOtp = typeof approvalOtps.$inferSelect;
+
+// Admin Notifications table - Alerts for management about pending actions
+export const adminNotifications = pgTable("admin_notifications", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  type: varchar("type", { length: 50 }).notNull(), // registration_pending, registration_approved, etc.
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  targetRoleLevel: integer("target_role_level").default(3), // 3 = management by default
+  relatedEntityType: varchar("related_entity_type", { length: 50 }), // pending_registration, team_member, etc.
+  relatedEntityId: varchar("related_entity_id"),
+  isRead: boolean("is_read").default(false).notNull(),
+  readById: varchar("read_by_id").references(() => teamMembers.id),
+  readAt: timestamp("read_at"),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type AdminNotification = typeof adminNotifications.$inferSelect;
+
+// Extended team member fields schema for profile updates
+export const extendedTeamMemberSchema = z.object({
+  addressLine1: z.string().min(1).optional(),
+  addressLine2: z.string().optional(),
+  city: z.string().min(1).optional(),
+  state: z.string().min(1).optional(),
+  postalCode: z.string().min(1).optional(),
+  country: z.string().min(1).optional(),
+  nextOfKin1Name: z.string().min(1).optional(),
+  nextOfKin1Relationship: z.string().min(1).optional(),
+  nextOfKin1Phone: z.string().min(1).optional(),
+  nextOfKin1Email: z.string().email().optional(),
+  nextOfKin1Address: z.string().optional(),
+  nextOfKin2Name: z.string().min(1).optional(),
+  nextOfKin2Relationship: z.string().min(1).optional(),
+  nextOfKin2Phone: z.string().min(1).optional(),
+  nextOfKin2Email: z.string().email().optional(),
+  nextOfKin2Address: z.string().optional(),
+});
+
+// Staff registration form validation schema
+export const staffRegistrationSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  phone: z.string().min(10, "Valid phone number required"),
+  departmentId: z.string().min(1, "Department is required"),
+  
+  // Address
+  addressLine1: z.string().min(1, "Street address is required"),
+  addressLine2: z.string().optional(),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  postalCode: z.string().min(1, "Postal code is required"),
+  country: z.string().default("Nigeria"),
+  
+  // Next of Kin 1
+  nextOfKin1Name: z.string().min(1, "Next of kin name is required"),
+  nextOfKin1Relationship: z.string().min(1, "Relationship is required"),
+  nextOfKin1Phone: z.string().min(10, "Valid phone number required"),
+  nextOfKin1Email: z.string().email().optional().or(z.literal("")),
+  nextOfKin1Address: z.string().optional(),
+  
+  // Next of Kin 2
+  nextOfKin2Name: z.string().min(1, "Second next of kin name is required"),
+  nextOfKin2Relationship: z.string().min(1, "Relationship is required"),
+  nextOfKin2Phone: z.string().min(10, "Valid phone number required"),
+  nextOfKin2Email: z.string().email().optional().or(z.literal("")),
+  nextOfKin2Address: z.string().optional(),
+  
+  // CAPTCHA token
+  captchaToken: z.string().min(1, "Please verify you are human"),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
