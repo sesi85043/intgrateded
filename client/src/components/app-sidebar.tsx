@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,73 +12,101 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "wouter";
-
-const mainMenuItems = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: LayoutDashboard,
-    testId: "nav-dashboard"
-  },
-  {
-    title: "Departments",
-    url: "/departments",
-    icon: Building2,
-    testId: "nav-departments"
-  },
-  {
-    title: "Team Members",
-    url: "/team",
-    icon: UserCog,
-    testId: "nav-team"
-  },
-  {
-    title: "User Management",
-    url: "/users",
-    icon: Users,
-    testId: "nav-users"
-  },
-  {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart3,
-    testId: "nav-analytics"
-  },
-  {
-    title: "Activity Logs",
-    url: "/activity",
-    icon: Activity,
-    testId: "nav-activity"
-  },
-  {
-    title: "Configuration",
-    url: "/config",
-    icon: Settings,
-    testId: "nav-config"
-  },
-];
-
-const platformItems = [
-  {
-    title: "Metabase",
-    icon: Database,
-  },
-  {
-    title: "Chatwoot",
-    icon: MessageSquare,
-  },
-  {
-    title: "Typebot",
-    icon: FormInput,
-  },
-  {
-    title: "Mailcow",
-    icon: Mail,
-  },
-];
+import { useAuth } from "@/hooks/useAuth";
+import { Badge } from "@/components/ui/badge";
 
 export function AppSidebar() {
   const [location] = useLocation();
+  const { teamMember, hasPermission, isManagement, isDepartmentAdmin, isTechnician, PERMISSION_TYPES } = useAuth();
+
+  const mainMenuItems = [
+    {
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+      testId: "nav-dashboard",
+      show: true,
+    },
+    {
+      title: "Tasks",
+      url: "/tasks",
+      icon: ClipboardList,
+      testId: "nav-tasks",
+      show: hasPermission(PERMISSION_TYPES.VIEW_TASKS),
+    },
+    {
+      title: "Departments",
+      url: "/departments",
+      icon: Building2,
+      testId: "nav-departments",
+      show: hasPermission(PERMISSION_TYPES.VIEW_ALL_DEPARTMENTS) || hasPermission(PERMISSION_TYPES.VIEW_OWN_DEPARTMENT),
+    },
+    {
+      title: "Team Members",
+      url: "/team",
+      icon: UserCog,
+      testId: "nav-team",
+      show: hasPermission(PERMISSION_TYPES.MANAGE_DEPARTMENT_USERS) || hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS),
+    },
+    {
+      title: "User Management",
+      url: "/users",
+      icon: Users,
+      testId: "nav-users",
+      show: hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS),
+    },
+    {
+      title: "Analytics",
+      url: "/analytics",
+      icon: BarChart3,
+      testId: "nav-analytics",
+      show: hasPermission(PERMISSION_TYPES.VIEW_ANALYTICS),
+    },
+    {
+      title: "Activity Logs",
+      url: "/activity",
+      icon: Activity,
+      testId: "nav-activity",
+      show: hasPermission(PERMISSION_TYPES.VIEW_DEPARTMENT_LOGS) || hasPermission(PERMISSION_TYPES.VIEW_ALL_LOGS),
+    },
+    {
+      title: "Configuration",
+      url: "/config",
+      icon: Settings,
+      testId: "nav-config",
+      show: hasPermission(PERMISSION_TYPES.MANAGE_SERVICE_CONFIG),
+    },
+  ];
+
+  const visibleMenuItems = mainMenuItems.filter(item => item.show);
+
+  const platformItems = [
+    {
+      title: "Metabase",
+      icon: Database,
+    },
+    {
+      title: "Chatwoot",
+      icon: MessageSquare,
+    },
+    {
+      title: "Typebot",
+      icon: FormInput,
+    },
+    {
+      title: "Mailcow",
+      icon: Mail,
+    },
+  ];
+
+  const getRoleBadge = () => {
+    if (isManagement) return { label: "Management", variant: "default" as const };
+    if (isDepartmentAdmin) return { label: "Dept Admin", variant: "secondary" as const };
+    if (isTechnician) return { label: "Technician", variant: "outline" as const };
+    return null;
+  };
+
+  const roleBadge = getRoleBadge();
 
   return (
     <Sidebar>
@@ -87,9 +115,18 @@ export function AppSidebar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <LayoutDashboard className="h-5 w-5" />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <h2 className="text-lg font-semibold text-sidebar-foreground">Admin Hub</h2>
-            <p className="text-xs text-muted-foreground">Multi-Platform Control</p>
+            <div className="flex items-center gap-2">
+              {roleBadge && (
+                <Badge variant={roleBadge.variant} className="text-xs">
+                  {roleBadge.label}
+                </Badge>
+              )}
+              {teamMember?.departmentCode && (
+                <span className="text-xs text-muted-foreground">{teamMember.departmentCode}</span>
+              )}
+            </div>
           </div>
         </div>
       </SidebarHeader>
@@ -98,7 +135,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainMenuItems.map((item) => {
+              {visibleMenuItems.map((item) => {
                 const isActive = location === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -115,26 +152,35 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Platforms</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {platformItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton>
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {isManagement && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Platforms</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {platformItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter className="p-4 border-t border-sidebar-border">
-        <p className="text-xs text-muted-foreground">
-          v1.0.0 • © 2024
-        </p>
+        <div className="space-y-1">
+          {teamMember && (
+            <p className="text-xs text-muted-foreground truncate">
+              {teamMember.firstName} {teamMember.lastName}
+            </p>
+          )}
+          <p className="text-xs text-muted-foreground">
+            v1.0.0 RBAC
+          </p>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

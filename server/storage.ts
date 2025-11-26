@@ -7,6 +7,13 @@ import {
   managedUsers,
   activityLogs,
   analyticsMetrics,
+  roles,
+  permissions,
+  rolePermissions,
+  tasks,
+  taskAssignments,
+  taskHistory,
+  worklogs,
   type User,
   type UpsertUser,
   type Department,
@@ -19,14 +26,32 @@ import {
   type InsertManagedUser,
   type ActivityLog,
   type AnalyticsMetric,
+  type Role,
+  type InsertRole,
+  type Permission,
+  type Task,
+  type InsertTask,
+  type TaskAssignment,
+  type TaskHistory,
+  type Worklog,
+  type InsertWorklog,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, sql, and, gte } from "drizzle-orm";
+import { eq, desc, sql, and, gte, or, inArray } from "drizzle-orm";
 
 export interface IStorage {
   // User operations (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+
+  // Role operations
+  getAllRoles(): Promise<Role[]>;
+  getRole(id: string): Promise<Role | undefined>;
+  getRoleByCode(code: string): Promise<Role | undefined>;
+
+  // Permission operations
+  getAllPermissions(): Promise<Permission[]>;
+  getPermissionsByRole(roleId: string): Promise<Permission[]>;
 
   // Department operations
   getAllDepartments(): Promise<Department[]>;
@@ -40,9 +65,33 @@ export interface IStorage {
   getAllTeamMembers(): Promise<TeamMember[]>;
   getTeamMembersByDepartment(departmentId: string): Promise<TeamMember[]>;
   getTeamMember(id: string): Promise<TeamMember | undefined>;
+  getTeamMemberByEmail(email: string): Promise<TeamMember | undefined>;
   createTeamMember(member: InsertTeamMember): Promise<TeamMember>;
   updateTeamMember(id: string, member: Partial<InsertTeamMember>): Promise<TeamMember>;
   deleteTeamMember(id: string): Promise<void>;
+
+  // Task operations
+  getAllTasks(): Promise<Task[]>;
+  getTasksByDepartment(departmentId: string): Promise<Task[]>;
+  getTasksByAssignee(teamMemberId: string): Promise<Task[]>;
+  getTask(id: string): Promise<Task | undefined>;
+  createTask(task: InsertTask): Promise<Task>;
+  updateTask(id: string, task: Partial<InsertTask>): Promise<Task>;
+  deleteTask(id: string): Promise<void>;
+
+  // Task assignment operations
+  getTaskAssignments(taskId: string): Promise<TaskAssignment[]>;
+  assignTask(taskId: string, teamMemberId: string, assignedById: string): Promise<TaskAssignment>;
+  unassignTask(assignmentId: string): Promise<void>;
+
+  // Task history operations
+  createTaskHistory(taskId: string, changedById: string, action: string, previousValue?: any, newValue?: any, notes?: string): Promise<TaskHistory>;
+  getTaskHistory(taskId: string): Promise<TaskHistory[]>;
+
+  // Worklog operations
+  createWorklog(worklog: InsertWorklog): Promise<Worklog>;
+  getWorklogsByTask(taskId: string): Promise<Worklog[]>;
+  getWorklogsByTeamMember(teamMemberId: string): Promise<Worklog[]>;
 
   // Service configuration operations
   getAllServices(): Promise<ServiceConfig[]>;
@@ -102,6 +151,41 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  // Role operations
+  async getAllRoles(): Promise<Role[]> {
+    return await db.select().from(roles).orderBy(roles.level);
+  }
+
+  async getRole(id: string): Promise<Role | undefined> {
+    const [role] = await db.select().from(roles).where(eq(roles.id, id));
+    return role;
+  }
+
+  async getRoleByCode(code: string): Promise<Role | undefined> {
+    const [role] = await db.select().from(roles).where(eq(roles.code, code));
+    return role;
+  }
+
+  // Permission operations
+  async getAllPermissions(): Promise<Permission[]> {
+    return await db.select().from(permissions).orderBy(permissions.category, permissions.name);
+  }
+
+  async getPermissionsByRole(roleId: string): Promise<Permission[]> {
+    return await db
+      .select({
+        id: permissions.id,
+        name: permissions.name,
+        code: permissions.code,
+        description: permissions.description,
+        category: permissions.category,
+        createdAt: permissions.createdAt,
+      })
+      .from(rolePermissions)
+      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
+      .where(eq(rolePermissions.roleId, roleId));
+  }
+
   // Department operations
   async getAllDepartments(): Promise<Department[]> {
     return await db.select().from(departments).orderBy(departments.name);
@@ -150,6 +234,11 @@ export class DatabaseStorage implements IStorage {
 
   async getTeamMember(id: string): Promise<TeamMember | undefined> {
     const [member] = await db.select().from(teamMembers).where(eq(teamMembers.id, id));
+    return member;
+  }
+
+  async getTeamMemberByEmail(email: string): Promise<TeamMember | undefined> {
+    const [member] = await db.select().from(teamMembers).where(eq(teamMembers.email, email));
     return member;
   }
 
@@ -334,6 +423,131 @@ export class DatabaseStorage implements IStorage {
       totalActivities: activityStats?.count || 0,
       servicesEnabled: serviceStats?.enabled || 0,
     };
+  }
+
+  // Task operations
+  async getAllTasks(): Promise<Task[]> {
+    return await db.select().from(tasks).orderBy(desc(tasks.createdAt));
+  }
+
+  async getTasksByDepartment(departmentId: string): Promise<Task[]> {
+    return await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.departmentId, departmentId))
+      .orderBy(desc(tasks.createdAt));
+  }
+
+  async getTasksByAssignee(teamMemberId: string): Promise<Task[]> {
+    return await db
+      .select()
+      .from(tasks)
+      .where(eq(tasks.assignedToId, teamMemberId))
+      .orderBy(desc(tasks.createdAt));
+  }
+
+  async getTask(id: string): Promise<Task | undefined> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
+    return task;
+  }
+
+  async createTask(task: InsertTask): Promise<Task> {
+    const [created] = await db.insert(tasks).values(task).returning();
+    return created;
+  }
+
+  async updateTask(id: string, task: Partial<InsertTask>): Promise<Task> {
+    const [updated] = await db
+      .update(tasks)
+      .set({ ...task, updatedAt: new Date() })
+      .where(eq(tasks.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    await db.delete(tasks).where(eq(tasks.id, id));
+  }
+
+  // Task assignment operations
+  async getTaskAssignments(taskId: string): Promise<TaskAssignment[]> {
+    return await db
+      .select()
+      .from(taskAssignments)
+      .where(and(eq(taskAssignments.taskId, taskId), eq(taskAssignments.isActive, true)));
+  }
+
+  async assignTask(taskId: string, teamMemberId: string, assignedById: string): Promise<TaskAssignment> {
+    const [assignment] = await db
+      .insert(taskAssignments)
+      .values({
+        taskId,
+        teamMemberId,
+        assignedById,
+        isActive: true,
+      })
+      .returning();
+    return assignment;
+  }
+
+  async unassignTask(assignmentId: string): Promise<void> {
+    await db
+      .update(taskAssignments)
+      .set({ isActive: false, unassignedAt: new Date() })
+      .where(eq(taskAssignments.id, assignmentId));
+  }
+
+  // Task history operations
+  async createTaskHistory(
+    taskId: string,
+    changedById: string,
+    action: string,
+    previousValue?: any,
+    newValue?: any,
+    notes?: string
+  ): Promise<TaskHistory> {
+    const [history] = await db
+      .insert(taskHistory)
+      .values({
+        taskId,
+        changedById,
+        action,
+        previousValue,
+        newValue,
+        notes,
+      })
+      .returning();
+    return history;
+  }
+
+  async getTaskHistory(taskId: string): Promise<TaskHistory[]> {
+    return await db
+      .select()
+      .from(taskHistory)
+      .where(eq(taskHistory.taskId, taskId))
+      .orderBy(desc(taskHistory.createdAt));
+  }
+
+  // Worklog operations
+  async createWorklog(worklog: InsertWorklog): Promise<Worklog> {
+    const [created] = await db.insert(worklogs).values(worklog).returning();
+    return created;
+  }
+
+  async getWorklogsByTask(taskId: string): Promise<Worklog[]> {
+    return await db
+      .select()
+      .from(worklogs)
+      .where(eq(worklogs.taskId, taskId))
+      .orderBy(desc(worklogs.createdAt));
+  }
+
+  async getWorklogsByTeamMember(teamMemberId: string): Promise<Worklog[]> {
+    return await db
+      .select()
+      .from(worklogs)
+      .where(eq(worklogs.teamMemberId, teamMemberId))
+      .orderBy(desc(worklogs.createdAt));
   }
 }
 

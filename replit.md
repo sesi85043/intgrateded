@@ -110,25 +110,40 @@ Preferred communication style: Simple, everyday language.
 
 ### Authentication & Authorization
 
-**Authentication Provider**: Replit Auth (OpenID Connect)
+**Authentication Provider**: Dual authentication system
+- Replit Auth (OpenID Connect) for production
+- Development bypass with team member login (`server/devAuth.ts`)
 
-**Implementation** (`server/replitAuth.ts`):
-- Passport.js strategy for OIDC integration
-- Discovery endpoint for Replit identity provider
-- Token management (access tokens, refresh tokens)
-- User session creation and maintenance
+**RBAC Implementation** (`server/rbac.ts`):
+- Three-tier role hierarchy: Technician → Department Admin → Management
+- 16 granular permissions covering tasks, departments, users, and analytics
+- Role-permission mappings stored in database
+- Department-based data segregation
 
-**Authorization Pattern**:
-- `isAuthenticated` middleware guards all API routes
-- User information attached to request object
-- Session-based authentication with PostgreSQL persistence
+**Roles**:
+1. **Management**: Full platform access, cross-department visibility
+2. **Department Admin**: Department-scoped access, team management
+3. **Technician**: Task execution, limited department access
+
+**Key Permissions**:
+- Task management: view_tasks, create_task, update_task, delete_task, assign_task
+- Department access: view_own_department, view_all_departments
+- User management: manage_department_users, manage_global_users
+- Analytics/Logs: view_analytics, view_department_logs, view_all_logs
+- Configuration: manage_service_config
+
+**Authorization Middleware**:
+- `isAuthenticated`: Basic authentication check
+- `isTeamMemberAuthenticated`: Team member with permissions
+- `requirePermission`: Single permission enforcement
+- `requireAnyPermission`: Any of multiple permissions
 
 **User Flow**:
 1. Unauthenticated users see landing page
-2. Login redirects to Replit Auth
-3. Callback creates/updates user record
-4. Session established with secure cookie
-5. Protected routes check authentication status
+2. Login via Replit Auth or dev login endpoint
+3. Team member record linked to user account
+4. Permissions loaded from role-permission mappings
+5. Protected routes check authentication and permissions
 
 ### External Dependencies
 

@@ -26,6 +26,7 @@ import ActivityPage from "@/pages/activity";
 import Config from "@/pages/config";
 import Departments from "@/pages/departments";
 import Team from "@/pages/team";
+import Tasks from "@/pages/tasks";
 import NotFound from "@/pages/not-found";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
@@ -114,6 +115,7 @@ function Router() {
     <AuthenticatedLayout>
       <Switch>
         <Route path="/" component={Dashboard} />
+        <Route path="/tasks" component={Tasks} />
         <Route path="/users" component={Users} />
         <Route path="/departments" component={Departments} />
         <Route path="/team" component={Team} />

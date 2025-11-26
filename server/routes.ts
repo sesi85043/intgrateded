@@ -3,13 +3,28 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 // Using development auth for local testing
-import { setupAuth, isAuthenticated } from "./devAuth";
+import { setupAuth, isAuthenticated, isTeamMemberAuthenticated } from "./devAuth";
 import {
   insertServiceConfigSchema,
   insertManagedUserSchema,
   insertDepartmentSchema,
   insertTeamMemberSchema,
+  insertTaskSchema,
+  insertWorklogSchema,
+  PERMISSION_TYPES,
+  ROLE_TYPES,
 } from "@shared/schema";
+import {
+  requirePermission,
+  requireAnyPermission,
+  requireRole,
+  requireRoleOrHigher,
+  requireDepartmentAccess,
+  hasPermission,
+  isRole,
+  canAccessDepartment,
+} from "./rbac";
+import bcrypt from "bcryptjs";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
@@ -411,6 +426,515 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching stats:", error);
       res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  // RBAC Routes - Roles and Permissions
+  app.get('/api/roles', isAuthenticated, async (req: any, res) => {
+    try {
+      const allRoles = await storage.getAllRoles();
+      res.json(allRoles);
+    } catch (error) {
+      console.error("Error fetching roles:", error);
+      res.status(500).json({ message: "Failed to fetch roles" });
+    }
+  });
+
+  app.get('/api/permissions', isAuthenticated, async (req: any, res) => {
+    try {
+      const allPermissions = await storage.getAllPermissions();
+      res.json(allPermissions);
+    } catch (error) {
+      console.error("Error fetching permissions:", error);
+      res.status(500).json({ message: "Failed to fetch permissions" });
+    }
+  });
+
+  app.get('/api/roles/:roleId/permissions', isAuthenticated, async (req: any, res) => {
+    try {
+      const { roleId } = req.params;
+      const rolePermissions = await storage.getPermissionsByRole(roleId);
+      res.json(rolePermissions);
+    } catch (error) {
+      console.error("Error fetching role permissions:", error);
+      res.status(500).json({ message: "Failed to fetch role permissions" });
+    }
+  });
+
+  // Task Routes
+  app.get('/api/tasks', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const { departmentId } = req.query;
+
+      let taskList;
+      
+      if (isRole(member, ROLE_TYPES.MANAGEMENT) || hasPermission(member, PERMISSION_TYPES.VIEW_ALL_DEPARTMENTS)) {
+        taskList = departmentId 
+          ? await storage.getTasksByDepartment(departmentId as string)
+          : await storage.getAllTasks();
+      } else if (isRole(member, ROLE_TYPES.DEPARTMENT_ADMIN)) {
+        taskList = await storage.getTasksByDepartment(member.departmentId);
+      } else {
+        taskList = await storage.getTasksByAssignee(member.id);
+      }
+
+      res.json(taskList);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      res.status(500).json({ message: "Failed to fetch tasks" });
+    }
+  });
+
+  app.get('/api/tasks/:id', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const task = await storage.getTask(id);
+      
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      const member = req.teamMember;
+      if (!canAccessDepartment(member, task.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      res.json(task);
+    } catch (error) {
+      console.error("Error fetching task:", error);
+      res.status(500).json({ message: "Failed to fetch task" });
+    }
+  });
+
+  app.post('/api/tasks', isTeamMemberAuthenticated, requireAnyPermission(PERMISSION_TYPES.CREATE_TASK, PERMISSION_TYPES.ASSIGN_TASK), async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const validatedData = insertTaskSchema.parse({
+        ...req.body,
+        createdById: member.id,
+        departmentId: req.body.departmentId || member.departmentId,
+      });
+
+      if (!canAccessDepartment(member, validatedData.departmentId)) {
+        return res.status(403).json({ message: "Cannot create task in this department" });
+      }
+
+      const task = await storage.createTask(validatedData);
+
+      await storage.createTaskHistory(task.id, member.id, "created", null, validatedData);
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "created_task",
+        "task",
+        task.id,
+        undefined,
+        { title: task.title, departmentId: task.departmentId }
+      );
+
+      res.json(task);
+    } catch (error) {
+      console.error("Error creating task:", error);
+      res.status(400).json({ message: "Failed to create task" });
+    }
+  });
+
+  app.patch('/api/tasks/:id', isTeamMemberAuthenticated, requirePermission(PERMISSION_TYPES.UPDATE_TASK), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const existingTask = await storage.getTask(id);
+      if (!existingTask) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (!canAccessDepartment(member, existingTask.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      const validatedData = insertTaskSchema.partial().parse(req.body);
+      
+      if (validatedData.status === 'completed' && existingTask.status !== 'completed') {
+        (validatedData as any).completedAt = new Date();
+      }
+
+      const task = await storage.updateTask(id, validatedData);
+
+      await storage.createTaskHistory(task.id, member.id, "updated", existingTask, validatedData);
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "updated_task",
+        "task",
+        task.id,
+        undefined,
+        { title: task.title, changes: Object.keys(validatedData) }
+      );
+
+      res.json(task);
+    } catch (error) {
+      console.error("Error updating task:", error);
+      res.status(400).json({ message: "Failed to update task" });
+    }
+  });
+
+  app.delete('/api/tasks/:id', isTeamMemberAuthenticated, requirePermission(PERMISSION_TYPES.DELETE_TASK), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const existingTask = await storage.getTask(id);
+      if (!existingTask) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (!canAccessDepartment(member, existingTask.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      await storage.deleteTask(id);
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "deleted_task",
+        "task",
+        id,
+        undefined,
+        { title: existingTask.title }
+      );
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      res.status(400).json({ message: "Failed to delete task" });
+    }
+  });
+
+  // Task Assignment Routes
+  app.post('/api/tasks/:id/assign', isTeamMemberAuthenticated, requirePermission(PERMISSION_TYPES.ASSIGN_TASK), async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { teamMemberId } = req.body;
+      const member = req.teamMember;
+
+      const task = await storage.getTask(id);
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (!canAccessDepartment(member, task.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      const assignment = await storage.assignTask(id, teamMemberId, member.id);
+      
+      await storage.updateTask(id, { assignedToId: teamMemberId });
+
+      await storage.createTaskHistory(task.id, member.id, "assigned", null, { assignedTo: teamMemberId });
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "assigned_task",
+        "task",
+        task.id,
+        undefined,
+        { assignedTo: teamMemberId }
+      );
+
+      res.json(assignment);
+    } catch (error) {
+      console.error("Error assigning task:", error);
+      res.status(400).json({ message: "Failed to assign task" });
+    }
+  });
+
+  app.get('/api/tasks/:id/history', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const task = await storage.getTask(id);
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (!canAccessDepartment(member, task.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      const history = await storage.getTaskHistory(id);
+      res.json(history);
+    } catch (error) {
+      console.error("Error fetching task history:", error);
+      res.status(500).json({ message: "Failed to fetch task history" });
+    }
+  });
+
+  // Worklog Routes
+  app.post('/api/worklogs', isTeamMemberAuthenticated, requirePermission(PERMISSION_TYPES.SUBMIT_WORKLOG), async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const validatedData = insertWorklogSchema.parse({
+        ...req.body,
+        teamMemberId: member.id,
+      });
+
+      const task = await storage.getTask(validatedData.taskId);
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (!canAccessDepartment(member, task.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      const worklog = await storage.createWorklog(validatedData);
+
+      await storage.createTaskHistory(task.id, member.id, "worklog_added", null, {
+        hoursWorked: validatedData.hoursWorked,
+        minutesWorked: validatedData.minutesWorked,
+      });
+
+      res.json(worklog);
+    } catch (error) {
+      console.error("Error creating worklog:", error);
+      res.status(400).json({ message: "Failed to create worklog" });
+    }
+  });
+
+  app.get('/api/tasks/:id/worklogs', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const task = await storage.getTask(id);
+      if (!task) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+
+      if (!canAccessDepartment(member, task.departmentId)) {
+        return res.status(403).json({ message: "Access denied to this task" });
+      }
+
+      const taskWorklogs = await storage.getWorklogsByTask(id);
+      res.json(taskWorklogs);
+    } catch (error) {
+      console.error("Error fetching worklogs:", error);
+      res.status(500).json({ message: "Failed to fetch worklogs" });
+    }
+  });
+
+  app.get('/api/my-worklogs', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const myWorklogs = await storage.getWorklogsByTeamMember(member.id);
+      res.json(myWorklogs);
+    } catch (error) {
+      console.error("Error fetching worklogs:", error);
+      res.status(500).json({ message: "Failed to fetch worklogs" });
+    }
+  });
+
+  // Enhanced Team Member Routes with RBAC
+  app.post('/api/team-members/create-with-password', 
+    isTeamMemberAuthenticated, 
+    requireAnyPermission(PERMISSION_TYPES.MANAGE_DEPARTMENT_USERS, PERMISSION_TYPES.MANAGE_GLOBAL_USERS), 
+    async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const { password, ...memberData } = req.body;
+
+      if (!hasPermission(member, PERMISSION_TYPES.MANAGE_GLOBAL_USERS)) {
+        if (memberData.departmentId !== member.departmentId) {
+          return res.status(403).json({ message: "Can only create members in your department" });
+        }
+        if (memberData.roleId) {
+          const targetRole = await storage.getRole(memberData.roleId);
+          if (targetRole && targetRole.code === ROLE_TYPES.MANAGEMENT) {
+            return res.status(403).json({ message: "Cannot create management users" });
+          }
+        }
+      }
+
+      const validatedData = insertTeamMemberSchema.parse(memberData);
+      
+      let passwordHash = null;
+      if (password) {
+        passwordHash = await bcrypt.hash(password, 10);
+      }
+
+      const newMember = await storage.createTeamMember({
+        ...validatedData,
+        passwordHash,
+      } as any);
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "created_team_member",
+        "team_member",
+        newMember.id,
+        undefined,
+        { email: newMember.email, role: newMember.role }
+      );
+
+      const { passwordHash: _, ...memberWithoutPassword } = newMember;
+      res.json(memberWithoutPassword);
+    } catch (error) {
+      console.error("Error creating team member:", error);
+      res.status(400).json({ message: "Failed to create team member" });
+    }
+  });
+
+  app.patch('/api/team-members/:id/deactivate', 
+    isTeamMemberAuthenticated, 
+    requireAnyPermission(PERMISSION_TYPES.MANAGE_DEPARTMENT_USERS, PERMISSION_TYPES.MANAGE_GLOBAL_USERS), 
+    async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const targetMember = await storage.getTeamMember(id);
+      if (!targetMember) {
+        return res.status(404).json({ message: "Team member not found" });
+      }
+
+      if (!hasPermission(member, PERMISSION_TYPES.MANAGE_GLOBAL_USERS)) {
+        if (targetMember.departmentId !== member.departmentId) {
+          return res.status(403).json({ message: "Can only deactivate members in your department" });
+        }
+      }
+
+      const updated = await storage.updateTeamMember(id, { status: "inactive" });
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "deactivated_team_member",
+        "team_member",
+        id,
+        undefined,
+        { email: targetMember.email }
+      );
+
+      res.json(updated);
+    } catch (error) {
+      console.error("Error deactivating team member:", error);
+      res.status(400).json({ message: "Failed to deactivate team member" });
+    }
+  });
+
+  app.patch('/api/team-members/:id/activate', 
+    isTeamMemberAuthenticated, 
+    requireAnyPermission(PERMISSION_TYPES.MANAGE_DEPARTMENT_USERS, PERMISSION_TYPES.MANAGE_GLOBAL_USERS), 
+    async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const member = req.teamMember;
+
+      const targetMember = await storage.getTeamMember(id);
+      if (!targetMember) {
+        return res.status(404).json({ message: "Team member not found" });
+      }
+
+      if (!hasPermission(member, PERMISSION_TYPES.MANAGE_GLOBAL_USERS)) {
+        if (targetMember.departmentId !== member.departmentId) {
+          return res.status(403).json({ message: "Can only activate members in your department" });
+        }
+      }
+
+      const updated = await storage.updateTeamMember(id, { status: "active" });
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "activated_team_member",
+        "team_member",
+        id,
+        undefined,
+        { email: targetMember.email }
+      );
+
+      res.json(updated);
+    } catch (error) {
+      console.error("Error activating team member:", error);
+      res.status(400).json({ message: "Failed to activate team member" });
+    }
+  });
+
+  app.patch('/api/team-members/:id/change-role', 
+    isTeamMemberAuthenticated, 
+    requirePermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS), 
+    async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { roleId } = req.body;
+      const member = req.teamMember;
+
+      const targetMember = await storage.getTeamMember(id);
+      if (!targetMember) {
+        return res.status(404).json({ message: "Team member not found" });
+      }
+
+      const newRole = await storage.getRole(roleId);
+      if (!newRole) {
+        return res.status(400).json({ message: "Invalid role" });
+      }
+
+      const updated = await storage.updateTeamMember(id, { 
+        roleId, 
+        role: newRole.code,
+      });
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "changed_team_member_role",
+        "team_member",
+        id,
+        undefined,
+        { email: targetMember.email, newRole: newRole.code }
+      );
+
+      res.json(updated);
+    } catch (error) {
+      console.error("Error changing team member role:", error);
+      res.status(400).json({ message: "Failed to change team member role" });
+    }
+  });
+
+  app.patch('/api/team-members/:id/change-department', 
+    isTeamMemberAuthenticated, 
+    requirePermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS), 
+    async (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const { departmentId } = req.body;
+      const member = req.teamMember;
+
+      const targetMember = await storage.getTeamMember(id);
+      if (!targetMember) {
+        return res.status(404).json({ message: "Team member not found" });
+      }
+
+      const dept = await storage.getDepartment(departmentId);
+      if (!dept) {
+        return res.status(400).json({ message: "Invalid department" });
+      }
+
+      const updated = await storage.updateTeamMember(id, { departmentId });
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "changed_team_member_department",
+        "team_member",
+        id,
+        undefined,
+        { email: targetMember.email, newDepartment: dept.code }
+      );
+
+      res.json(updated);
+    } catch (error) {
+      console.error("Error changing team member department:", error);
+      res.status(400).json({ message: "Failed to change team member department" });
     }
   });
 
