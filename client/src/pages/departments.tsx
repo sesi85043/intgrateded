@@ -33,8 +33,9 @@ export default function Departments() {
       toast({ title: "Department created successfully" });
       closeDialog();
     },
-    onError: () => {
-      toast({ title: "Failed to create department", variant: "destructive" });
+    onError: (error: any) => {
+      const errorMsg = error?.response?.data?.error || error?.message || "Failed to create department";
+      toast({ title: "Failed to create department", description: errorMsg, variant: "destructive" });
     },
   });
 

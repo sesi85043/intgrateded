@@ -61,9 +61,9 @@ export default function Config() {
     mutationFn: async (data: { serviceName: string; config: InsertServiceConfig }) => {
       const existingService = services?.find(s => s.serviceName === data.serviceName);
       if (existingService) {
-        return await apiRequest("PATCH", `/api/services/${existingService.id}`, data.config);
+        return await apiRequest(`/api/services/${existingService.id}`, "PATCH", data.config);
       } else {
-        return await apiRequest("POST", "/api/services", data.config);
+        return await apiRequest("/api/services", "POST", data.config);
       }
     },
     onSuccess: () => {
@@ -96,7 +96,7 @@ export default function Config() {
 
   const testConnectionMutation = useMutation({
     mutationFn: async (serviceName: string) => {
-      return await apiRequest("POST", `/api/services/${serviceName}/test`, undefined);
+      return await apiRequest(`/api/services/${serviceName}/test`, "POST", undefined);
     },
     onSuccess: (_, serviceName) => {
       toast({

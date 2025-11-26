@@ -48,8 +48,9 @@ export default function Team() {
       toast({ title: "Team member created successfully" });
       closeDialog();
     },
-    onError: () => {
-      toast({ title: "Failed to create team member", variant: "destructive" });
+    onError: (error: any) => {
+      const errorMsg = error?.response?.data?.error || error?.message || "Failed to create team member";
+      toast({ title: "Failed to create team member", description: errorMsg, variant: "destructive" });
     },
   });
 

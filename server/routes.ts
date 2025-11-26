@@ -52,8 +52,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(department);
     } catch (error) {
-      console.error("Error creating department:", error);
-      res.status(400).json({ message: "Failed to create department" });
+      console.error("Error creating department:", error instanceof Error ? error.message : error);
+      const message = error instanceof Error ? error.message : "Failed to create department";
+      res.status(400).json({ message, error: message });
     }
   });
 
@@ -126,8 +127,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(member);
     } catch (error) {
-      console.error("Error creating team member:", error);
-      res.status(400).json({ message: "Failed to create team member" });
+      console.error("Error creating team member:", error instanceof Error ? error.message : error);
+      const message = error instanceof Error ? error.message : "Failed to create team member";
+      res.status(400).json({ message, error: message });
     }
   });
 

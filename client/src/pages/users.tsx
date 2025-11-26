@@ -70,7 +70,7 @@ export default function Users() {
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertManagedUser) => {
-      return await apiRequest("POST", "/api/users", data);
+      return await apiRequest("/api/users", "POST", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
@@ -104,7 +104,7 @@ export default function Users() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: InsertManagedUser }) => {
-      return await apiRequest("PATCH", `/api/users/${id}`, data);
+      return await apiRequest(`/api/users/${id}`, "PATCH", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
@@ -137,7 +137,7 @@ export default function Users() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      return await apiRequest("DELETE", `/api/users/${id}`, undefined);
+      return await apiRequest(`/api/users/${id}`, "DELETE", undefined);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
