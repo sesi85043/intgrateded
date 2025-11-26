@@ -17,7 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
+import { Link } from "wouter";
 import Landing from "@/pages/landing";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
@@ -28,6 +29,7 @@ import Config from "@/pages/config";
 import Departments from "@/pages/departments";
 import Team from "@/pages/team";
 import Tasks from "@/pages/tasks";
+import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
@@ -78,6 +80,12 @@ function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <Link href="/profile">
+                    <DropdownMenuItem data-testid="button-profile">
+                      <User className="h-4 w-4 mr-2" />
+                      Profile Settings
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem onClick={handleLogout} data-testid="button-logout">
                     <LogOut className="h-4 w-4 mr-2" />
                     Logout
@@ -128,6 +136,7 @@ function Router() {
         <Route path="/analytics" component={Analytics} />
         <Route path="/activity" component={ActivityPage} />
         <Route path="/config" component={Config} />
+        <Route path="/profile" component={Profile} />
         <Route component={NotFound} />
       </Switch>
     </AuthenticatedLayout>

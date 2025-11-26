@@ -14,6 +14,15 @@ import {
   PERMISSION_TYPES,
   ROLE_TYPES,
 } from "@shared/schema";
+import { z } from "zod";
+
+const updateProfileSchema = z.object({
+  firstName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
+  phone: z.string().optional().nullable(),
+  currentPassword: z.string().optional(),
+  newPassword: z.string().min(6).optional(),
+}).strict();
 import {
   requirePermission,
   requireAnyPermission,
@@ -39,6 +48,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  // Profile routes - Update own profile
+  app.get('/api/profile', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      const { passwordHash, ...memberWithoutPassword } = member;
+      res.json(memberWithoutPassword);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
+  app.patch('/api/profile', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      
+      const parsed = updateProfileSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Invalid input", errors: parsed.error.errors });
+      }
+      
+      const { firstName, lastName, phone, currentPassword, newPassword } = parsed.data;
+
+      const updateData: any = {};
+      const changedFields: string[] = [];
+      
+      if (firstName !== undefined && firstName !== member.firstName) {
+        updateData.firstName = firstName;
+        changedFields.push('firstName');
+      }
+      if (lastName !== undefined && lastName !== member.lastName) {
+        updateData.lastName = lastName;
+        changedFields.push('lastName');
+      }
+      if (phone !== undefined && phone !== member.phone) {
+        updateData.phone = phone;
+        changedFields.push('phone');
+      }
+
+      // Handle password change separately
+      if (newPassword) {
+        if (!currentPassword) {
+          return res.status(400).json({ message: "Current password is required to change password" });
+        }
+
+        // Get full member with password hash
+        const fullMember = await storage.getTeamMember(member.id);
+        if (!fullMember?.passwordHash) {
+          return res.status(400).json({ message: "Cannot change password - no password set" });
+        }
+
+        const isValidPassword = await bcrypt.compare(currentPassword, fullMember.passwordHash);
+        if (!isValidPassword) {
+          return res.status(400).json({ message: "Current password is incorrect" });
+        }
+
+        updateData.passwordHash = await bcrypt.hash(newPassword, 10);
+        changedFields.push('password');
+      }
+
+      // Nothing to update
+      if (Object.keys(updateData).length === 0) {
+        const { passwordHash, ...memberWithoutPassword } = member;
+        return res.json(memberWithoutPassword);
+      }
+
+      const updatedMember = await storage.updateTeamMember(member.id, updateData);
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "updated_own_profile",
+        "team_member",
+        member.id,
+        undefined,
+        { fields: changedFields }
+      );
+
+      const { passwordHash, ...memberWithoutPassword } = updatedMember;
+      res.json(memberWithoutPassword);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(400).json({ message: "Failed to update profile" });
     }
   });
 
