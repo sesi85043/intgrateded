@@ -1,11 +1,9 @@
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { LayoutDashboard, Users, BarChart3, Shield, Zap, Database } from "lucide-react";
 
 export default function Landing() {
-  const handleLogin = () => {
-    window.location.href = "/api/login";
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -18,9 +16,11 @@ export default function Landing() {
               </div>
               <span className="text-xl font-semibold">Admin Hub</span>
             </div>
-            <Button onClick={handleLogin} data-testid="button-login">
-              Sign In
-            </Button>
+            <Link href="/login">
+              <Button data-testid="button-login">
+                Sign In
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -38,9 +38,11 @@ export default function Landing() {
           </div>
 
           <div className="flex justify-center gap-4">
-            <Button size="lg" onClick={handleLogin} data-testid="button-get-started">
-              Get Started
-            </Button>
+            <Link href="/login">
+              <Button size="lg" data-testid="button-get-started">
+                Get Started
+              </Button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">

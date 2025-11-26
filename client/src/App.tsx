@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import Landing from "@/pages/landing";
+import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
 import Users from "@/pages/users";
 import Analytics from "@/pages/analytics";
@@ -108,7 +109,12 @@ function Router() {
   }
 
   if (!isAuthenticated) {
-    return <Landing />;
+    return (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route component={Landing} />
+      </Switch>
+    );
   }
 
   return (

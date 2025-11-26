@@ -9,37 +9,60 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, UserPlus } from "lucide-react";
-import type { TeamMember, Department } from "@shared/schema";
+import type { TeamMember, Department, Role } from "@shared/schema";
 
 export default function Team() {
   const { toast } = useToast();
+  const { teamMember, isManagement, isDepartmentAdmin, hasPermission, PERMISSION_TYPES } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const [filterDept, setFilterDept] = useState<string>("all");
   const [formData, setFormData] = useState({
     departmentId: "",
+    roleId: "",
     employeeId: "",
     email: "",
     firstName: "",
     lastName: "",
     role: "technician",
     phone: "",
-    status: "active"
+    status: "active",
+    password: "",
   });
 
   const { data: departments = [] } = useQuery<Department[]>({
     queryKey: ["/api/departments"],
   });
 
+  const { data: roles = [] } = useQuery<Role[]>({
+    queryKey: ["/api/roles"],
+  });
+
   const { data: allMembers = [], isLoading } = useQuery<TeamMember[]>({
     queryKey: ["/api/team-members"],
   });
 
-  const members = filterDept === "all" 
-    ? allMembers 
-    : allMembers.filter(m => m.departmentId === filterDept);
+  const canManageUsers = hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS) || hasPermission(PERMISSION_TYPES.MANAGE_DEPARTMENT_USERS);
+  const canManageAllDepts = hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS);
+
+  const filteredMembers = (() => {
+    let result = allMembers;
+    
+    if (!isManagement && !canManageAllDepts && teamMember?.departmentId) {
+      result = result.filter(m => m.departmentId === teamMember.departmentId);
+    }
+    
+    if (filterDept !== "all") {
+      result = result.filter(m => m.departmentId === filterDept);
+    }
+    
+    return result;
+  })();
+
+  const members = filteredMembers;
 
   const createMutation = useMutation({
     mutationFn: (data: any) => apiRequest("/api/team-members", "POST", data),
@@ -91,6 +114,7 @@ export default function Team() {
     setEditingMember(member);
     setFormData({
       departmentId: member.departmentId,
+      roleId: member.roleId || "",
       employeeId: member.employeeId || "",
       email: member.email,
       firstName: member.firstName,
@@ -98,6 +122,7 @@ export default function Team() {
       role: member.role,
       phone: member.phone || "",
       status: member.status,
+      password: "",
     });
     setIsDialogOpen(true);
   };
@@ -107,13 +132,15 @@ export default function Team() {
     setEditingMember(null);
     setFormData({
       departmentId: "",
+      roleId: "",
       employeeId: "",
       email: "",
       firstName: "",
       lastName: "",
       role: "technician",
       phone: "",
-      status: "active"
+      status: "active",
+      password: "",
     });
   };
 
