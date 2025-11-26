@@ -89,7 +89,7 @@ export default async function runApp(
   server.listen(
     {
       port,
-      host: "localhost",
+      host: "0.0.0.0",
     },
     () => {
       log(`serving on port ${port}`);
