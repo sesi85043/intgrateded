@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Storage layer - Database operations using Drizzle ORM
+ * Copyright (c) 2025 DevPulse.Inc
+ * Designed for MM ALL ELECTRONICS
+ *
+ * Description: Database access helpers and queries used across the server.
+ */
 // Storage layer - Database operations using Drizzle ORM
 import {
   users,
@@ -310,6 +317,29 @@ export class DatabaseStorage implements IStorage {
 
   async createManagedUser(user: InsertManagedUser): Promise<ManagedUser> {
     const [created] = await db.insert(managedUsers).values(user).returning();
+    return created;
+  }
+
+  async getManagedUserByTeamMemberId(teamMemberId: string): Promise<ManagedUser | undefined> {
+    const [user] = await db.select().from(managedUsers).where(eq(managedUsers.teamMemberId, teamMemberId));
+    return user;
+  }
+
+  async upsertManagedUserForTeamMember(teamMemberId: string, payload: Partial<InsertManagedUser>): Promise<ManagedUser> {
+    const existing = await this.getManagedUserByTeamMemberId(teamMemberId);
+    if (existing) {
+      const updated = await this.updateManagedUser(existing.id, { ...payload });
+      return updated;
+    }
+    const created = await this.createManagedUser({
+      email: (payload as any).email || '',
+      fullName: (payload as any).fullName || '',
+      platforms: (payload as any).platforms || [],
+      platformUserIds: (payload as any).platformUserIds || {},
+      roles: (payload as any).roles || {},
+      status: (payload as any).status || 'active',
+      teamMemberId,
+    } as InsertManagedUser);
     return created;
   }
 

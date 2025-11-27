@@ -73,7 +73,7 @@ Key tables:
 - Mobile-responsive design
 
 ## Development Notes
-- Server runs on port 5000 (required for Replit)
+- Server runs on port 5000 
 - Development auth uses devAuth.ts with session-based authentication
 - Production should use replitAuth for proper authentication
 - Database: PostgreSQL via Drizzle ORM

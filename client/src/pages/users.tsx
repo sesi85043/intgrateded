@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Managed Users page
+ * Copyright (c) 2025 DevPulse.Inc
+ * Designed for MM ALL ELECTRONICS
+ *
+ * Description: Manage platform users and mappings to internal team members.
+ */
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -41,6 +48,7 @@ import { insertManagedUserSchema, type ManagedUser, type InsertManagedUser } fro
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Search, Edit, Trash2, UserX, UserCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { isUnauthorizedError } from "@/lib/authUtils";
 
 export default function Users() {
@@ -61,10 +69,11 @@ export default function Users() {
     defaultValues: {
       email: "",
       fullName: "",
-      platform: "",
+      platforms: [],
       role: "",
       status: "active",
-      platformUserId: "",
+      platformUserIds: {},
+      roles: {},
     },
   });
 
@@ -172,7 +181,7 @@ export default function Users() {
     const matchesSearch =
       user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesPlatform = platformFilter === "all" || user.platform === platformFilter;
+    const matchesPlatform = platformFilter === "all" || (Array.isArray(user.platforms) && user.platforms.includes(platformFilter));
     const matchesStatus = statusFilter === "all" || user.status === statusFilter;
     return matchesSearch && matchesPlatform && matchesStatus;
   });
@@ -181,10 +190,11 @@ export default function Users() {
     form.reset({
       email: "",
       fullName: "",
-      platform: "",
+      platforms: [],
       role: "",
       status: "active",
-      platformUserId: "",
+      platformUserIds: {},
+      roles: {},
     });
     setIsCreateOpen(true);
   };
@@ -193,10 +203,11 @@ export default function Users() {
     form.reset({
       email: user.email,
       fullName: user.fullName,
-      platform: user.platform,
+      platforms: Array.isArray(user.platforms) ? user.platforms : [],
       role: user.role || "",
       status: user.status,
-      platformUserId: user.platformUserId || "",
+      platformUserIds: user.platformUserIds || {},
+      roles: user.roles || {},
     });
     setEditingUser(user);
   };
@@ -288,9 +299,17 @@ export default function Users() {
                   <TableCell className="font-medium">{user.fullName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="capitalize">
-                      {user.platform}
-                    </Badge>
+                    <div className="flex gap-1 flex-wrap">
+                      {Array.isArray(user.platforms) && user.platforms.length > 0 ? (
+                        user.platforms.map((platform) => (
+                          <Badge key={platform} variant="outline" className="capitalize">
+                            {platform}
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-muted-foreground text-sm">None</span>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className="capitalize">{user.role || "N/A"}</TableCell>
                   <TableCell>
@@ -400,23 +419,35 @@ export default function Users() {
               />
               <FormField
                 control={form.control}
-                name="platform"
+                name="platforms"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Platform</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger data-testid="select-platform">
-                          <SelectValue placeholder="Select platform" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="metabase">Metabase</SelectItem>
-                        <SelectItem value="chatwoot">Chatwoot</SelectItem>
-                        <SelectItem value="typebot">Typebot</SelectItem>
-                        <SelectItem value="mailcow">Mailcow</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Platforms</FormLabel>
+                    <div className="space-y-2">
+                      {["metabase", "chatwoot", "typebot", "mailcow"].map((platform) => (
+                        <div key={platform} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`platform-${platform}`}
+                            checked={Array.isArray(field.value) && field.value.includes(platform)}
+                            onCheckedChange={(checked) => {
+                              const currentPlatforms = Array.isArray(field.value) ? field.value : [];
+                              if (checked) {
+                                field.onChange([...currentPlatforms, platform]);
+                              } else {
+                                field.onChange(currentPlatforms.filter((p) => p !== platform));
+                              }
+                            }}
+                            data-testid={`checkbox-platform-${platform}`}
+                          />
+                          <label
+                            htmlFor={`platform-${platform}`}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize cursor-pointer"
+                          >
+                            {platform}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

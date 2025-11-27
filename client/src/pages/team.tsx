@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Team management page
+ * Copyright (c) 2025 DevPulse.Inc
+ * Designed for MM ALL ELECTRONICS
+ *
+ * Description: UI for listing and managing team members.
+ */
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, UserPlus } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { TeamMember, Department, Role } from "@shared/schema";
 
 export default function Team() {
@@ -39,6 +47,10 @@ export default function Team() {
 
   const { data: roles = [] } = useQuery<Role[]>({
     queryKey: ["/api/roles"],
+  });
+
+  const { data: managedUsers = [] } = useQuery<any[]>({
+    queryKey: ["/api/users"],
   });
 
   const { data: allMembers = [], isLoading } = useQuery<TeamMember[]>({
@@ -101,6 +113,30 @@ export default function Team() {
     },
   });
 
+  // Assign platforms to existing team member
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
+  const [assigningMember, setAssigningMember] = useState<TeamMember | null>(null);
+  const [assignPlatforms, setAssignPlatforms] = useState<string[]>([]);
+  const [assignPlatformUserIds, setAssignPlatformUserIds] = useState<Record<string, string>>({});
+
+  const assignMutation = useMutation({
+    mutationFn: async ({ id, payload }: { id: string; payload: any }) => {
+      return await apiRequest(`/api/team-members/${id}/assign-platforms`, "POST", payload);
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/team-members"] });
+      toast({ title: "Platforms assigned", description: "Platform access updated for the team member." });
+      setIsAssignOpen(false);
+      setAssigningMember(null);
+      setAssignPlatforms([]);
+      setAssignPlatformUserIds({});
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message || err?.message || "Failed to assign platforms";
+      toast({ title: "Error", description: msg, variant: "destructive" });
+    }
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingMember) {
@@ -142,6 +178,19 @@ export default function Team() {
       status: "active",
       password: "",
     });
+  };
+
+  const openAssignDialog = (member: TeamMember) => {
+    setAssigningMember(member);
+    const m = managedUsers?.find((mu: any) => mu.team_member_id === member.id || mu.email === member.email);
+    if (m) {
+      setAssignPlatforms(Array.isArray(m.platforms) ? m.platforms : []);
+      setAssignPlatformUserIds(m.platformUserIds || {});
+    } else {
+      setAssignPlatforms([]);
+      setAssignPlatformUserIds({});
+    }
+    setIsAssignOpen(true);
   };
 
   const getDeptName = (deptId: string) => {
@@ -346,28 +395,36 @@ export default function Team() {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => openEditDialog(member)}
-                          data-testid={`button-edit-member-${member.employeeId}`}
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => {
-                            if (confirm(`Delete ${member.firstName} ${member.lastName}?`)) {
-                              deleteMutation.mutate(member.id);
-                            }
-                          }}
-                          data-testid={`button-delete-member-${member.employeeId}`}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openEditDialog(member)}
+                            data-testid={`button-edit-member-${member.employeeId}`}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => openAssignDialog(member)}
+                            data-testid={`button-assign-platforms-${member.employeeId}`}
+                          >
+                            <UserPlus className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              if (confirm(`Delete ${member.firstName} ${member.lastName}?`)) {
+                                deleteMutation.mutate(member.id);
+                              }
+                            }}
+                            data-testid={`button-delete-member-${member.employeeId}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -376,6 +433,49 @@ export default function Team() {
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Assign Platforms</DialogTitle>
+            <DialogDescription>
+              Assign platform access for {assigningMember ? `${assigningMember.firstName} ${assigningMember.lastName}` : ""}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-3">
+            {(["metabase", "chatwoot", "typebot", "mailcow"]).map((p) => (
+              <div key={p} className="flex items-center gap-3">
+                <Checkbox
+                  id={`assign-${p}`}
+                  checked={assignPlatforms.includes(p)}
+                  onCheckedChange={(val) => {
+                    if (val) setAssignPlatforms((s) => Array.from(new Set([...s, p])));
+                    else setAssignPlatforms((s) => s.filter((x) => x !== p));
+                  }}
+                />
+                <Label htmlFor={`assign-${p}`} className="capitalize">{p}</Label>
+                <Input
+                  placeholder="Platform user id (optional)"
+                  value={assignPlatformUserIds[p] || ""}
+                  onChange={(e) => setAssignPlatformUserIds((s) => ({ ...s, [p]: e.target.value }))}
+                  className="ml-auto w-44"
+                />
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAssignOpen(false)}>Cancel</Button>
+            <Button
+              onClick={() => {
+                if (!assigningMember) return;
+                assignMutation.mutate({ id: assigningMember.id, payload: { platforms: assignPlatforms, platformUserIds: assignPlatformUserIds } });
+              }}
+            >
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

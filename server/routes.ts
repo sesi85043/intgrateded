@@ -1,3 +1,10 @@
+/**
+ * @fileoverview API routes for Admin Hub
+ * Copyright (c) 2025 DevPulse.Inc
+ * Designed for MM ALL ELECTRONICS
+ *
+ * Description: Central Express route definitions for Admin Hub.
+ */
 // API routes for admin dashboard
 import type { Express } from "express";
 import { createServer, type Server } from "http";
@@ -34,6 +41,7 @@ import {
   canAccessDepartment,
 } from "./rbac";
 import bcrypt from "bcryptjs";
+import registerTeamManagedRoutes from './routes-team-managed';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
@@ -207,6 +215,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Team Member routes
+  // Register routes for assigning managed platform access to existing team members
+  registerTeamManagedRoutes(app, storage);
+
   app.get('/api/team-members', isAuthenticated, async (req: any, res) => {
     try {
       const { departmentId } = req.query;
@@ -417,8 +428,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "created_user",
         "managed_user",
         user.id,
-        validatedData.platform,
-        { email: validatedData.email, fullName: validatedData.fullName }
+        Array.isArray(validatedData.platforms) ? validatedData.platforms.join(", ") : "unknown",
+        { email: validatedData.email, fullName: validatedData.fullName, platforms: validatedData.platforms }
       );
 
       res.json(user);
@@ -441,8 +452,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "updated_user",
         "managed_user",
         id,
-        user.platform,
-        { email: user.email }
+        Array.isArray(user.platforms) ? user.platforms.join(", ") : "unknown",
+        { email: user.email, platforms: user.platforms }
       );
 
       res.json(user);

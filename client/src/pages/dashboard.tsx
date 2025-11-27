@@ -27,6 +27,27 @@ import type { ServiceConfig, ActivityLog, Task, TeamMember, Department } from "@
 function TechnicianDashboard() {
   const { teamMember } = useAuth();
 
+  // Fetch managed user record for the logged-in team member
+  const { data: myManagedUser } = useQuery<any | null>({
+    queryKey: ["/api/team-members", teamMember?.id, "managed-user"],
+    queryFn: async () => {
+      if (!teamMember) return null;
+      return await fetch(`/api/team-members/${teamMember.id}/managed-user`).then((r) => r.json());
+    },
+    enabled: !!teamMember?.id,
+  });
+
+  const { data: services = [] } = useQuery<any[]>({
+    queryKey: ["/api/services"],
+  });
+
+  const platformIcons: any = {
+    metabase: Database,
+    chatwoot: MessageSquare,
+    typebot: FormInput,
+    mailcow: Mail,
+  };
+
   const { data: myTasks = [], isLoading: tasksLoading } = useQuery<Task[]>({
     queryKey: ["/api/tasks"],
   });

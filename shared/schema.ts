@@ -215,9 +215,10 @@ export const managedUsers = pgTable("managed_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   email: varchar("email").notNull(),
   fullName: varchar("full_name").notNull(),
-  platform: varchar("platform", { length: 50 }).notNull(), // metabase, chatwoot, typebot, mailcow
-  platformUserId: varchar("platform_user_id"), // ID from the external platform
-  role: varchar("role", { length: 50 }), // admin, agent, viewer, etc.
+  teamMemberId: varchar("team_member_id").references(() => teamMembers.id),
+  platforms: varchar("platforms", { length: 50 }).array().default(sql`ARRAY[]::varchar[]`).notNull(), // array of platforms: metabase, chatwoot, typebot, mailcow
+  platformUserIds: jsonb("platform_user_ids").default(sql`'{}'::jsonb`).notNull(), // JSON mapping of platform names to their user IDs
+  roles: jsonb("roles").default(sql`'{}'::jsonb`).notNull(), // JSON mapping of platform names to their roles
   status: varchar("status", { length: 20 }).default('active').notNull(), // active, inactive, suspended
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -235,7 +236,7 @@ export type ManagedUser = typeof managedUsers.$inferSelect;
 // Activity logs for audit trail
 export const activityLogs = pgTable("activity_logs", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  adminId: varchar("admin_id").notNull().references(() => users.id),
+  adminId: varchar("admin_id").notNull().references(() => teamMembers.id),
   action: varchar("action", { length: 100 }).notNull(), // created_user, deleted_user, updated_config, etc.
   targetType: varchar("target_type", { length: 50 }), // user, config, etc.
   targetId: varchar("target_id"),

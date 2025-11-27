@@ -185,8 +185,11 @@ export function AppSidebar() {
             </p>
           )}
           <p className="text-xs text-muted-foreground">
-            v1.0.0 RBAC
+            <span className="font-semibold">@DevPulse.Inc</span>
           </p>
+          <div className="text-[10px] opacity-70">
+            &copy; {new Date().getFullYear()} MM ALL ELECTRONICS
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
