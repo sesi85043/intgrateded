@@ -20,6 +20,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Plus, Pencil, Trash2, UserPlus } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import PlatformBadge from "@/components/platform-badge";
 import type { TeamMember, Department, Role } from "@shared/schema";
 
 export default function Team() {
@@ -379,7 +380,18 @@ export default function Team() {
                   <TableRow key={member.id} data-testid={`row-member-${member.employeeId}`}>
                     <TableCell className="font-mono text-sm">{member.employeeId || "—"}</TableCell>
                     <TableCell className="font-medium">
-                      {member.firstName} {member.lastName}
+                      <div className="flex flex-col">
+                        <div>{member.firstName} {member.lastName}</div>
+                        <div className="mt-1 flex gap-2">
+                          {(() => {
+                            const m = managedUsers?.find((mu: any) => mu.team_member_id === member.id || mu.email === member.email);
+                            if (!m || !Array.isArray(m.platforms) || m.platforms.length === 0) return null;
+                            return m.platforms.map((p: string) => (
+                              <PlatformBadge key={p} platform={p} small />
+                            ));
+                          })()}
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell>{member.email}</TableCell>
                     <TableCell>{getDeptName(member.departmentId)}</TableCell>

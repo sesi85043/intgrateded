@@ -1072,6 +1072,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         captchaToken
       } = req.body;
 
+      // Map country codes to full names
+      const countryMap: Record<string, string> = {
+        "NG": "Nigeria",
+        "US": "United States",
+        "UK": "United Kingdom",
+        "CA": "Canada",
+        "AU": "Australia"
+      };
+
+      const countryName = countryMap[country] || country || 'Nigeria';
+
       // Validate CAPTCHA
       if (!validateCaptcha(captchaToken)) {
         return res.status(400).json({ message: "CAPTCHA verification failed. Please try again." });
@@ -1116,7 +1127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         city,
         state,
         postalCode,
-        country: country || 'Nigeria',
+        country: countryName,
         nextOfKin1Name,
         nextOfKin1Relationship,
         nextOfKin1Phone,

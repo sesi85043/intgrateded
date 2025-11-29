@@ -41,7 +41,7 @@ const registrationSchema = z.object({
   city: z.string().min(1, "City is required"),
   state: z.string().min(1, "State is required"),
   postalCode: z.string().min(1, "Postal code is required"),
-  country: z.string().default("Nigeria"),
+  country: z.string().min(1, "Country is required"),
   
   nextOfKin1Name: z.string().min(1, "Next of kin name is required"),
   nextOfKin1Relationship: z.string().min(1, "Relationship is required"),
@@ -69,6 +69,14 @@ const NIGERIAN_STATES = [
   "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara",
   "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau",
   "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
+];
+
+const COUNTRIES = [
+  { code: "NG", name: "Nigeria", states: NIGERIAN_STATES },
+  { code: "US", name: "United States", states: ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"] },
+  { code: "UK", name: "United Kingdom", states: ["England", "Scotland", "Wales", "Northern Ireland"] },
+  { code: "CA", name: "Canada", states: ["Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador", "Nova Scotia", "Ontario", "Prince Edward Island", "Quebec", "Saskatchewan"] },
+  { code: "AU", name: "Australia", states: ["New South Wales", "Queensland", "South Australia", "Tasmania", "Victoria", "Western Australia"] },
 ];
 
 const RELATIONSHIPS = [
@@ -115,7 +123,7 @@ export default function Register() {
       city: "",
       state: "",
       postalCode: "",
-      country: "Nigeria",
+      country: "NG",
       nextOfKin1Name: "",
       nextOfKin1Relationship: "",
       nextOfKin1Phone: "",
@@ -494,20 +502,23 @@ export default function Register() {
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="state">State *</Label>
+                        <Label htmlFor="state">State/Region *</Label>
                         <Select
                           value={form.watch("state")}
                           onValueChange={(value) => form.setValue("state", value)}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select state" />
+                            <SelectValue placeholder="Select state/region" />
                           </SelectTrigger>
                           <SelectContent>
-                            {NIGERIAN_STATES.map((state) => (
-                              <SelectItem key={state} value={state}>
-                                {state}
-                              </SelectItem>
-                            ))}
+                            {(() => {
+                              const selectedCountry = COUNTRIES.find(c => c.code === form.watch("country"));
+                              return selectedCountry ? selectedCountry.states.map((state) => (
+                                <SelectItem key={state} value={state}>
+                                  {state}
+                                </SelectItem>
+                              )) : null;
+                            })()}
                           </SelectContent>
                         </Select>
                         {form.formState.errors.state && (
@@ -529,13 +540,28 @@ export default function Register() {
                         )}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="country">Country</Label>
-                        <Input
-                          id="country"
-                          {...form.register("country")}
-                          defaultValue="Nigeria"
-                          disabled
-                        />
+                        <Label htmlFor="country">Country *</Label>
+                        <Select
+                          value={form.watch("country")}
+                          onValueChange={(value) => {
+                            form.setValue("country", value);
+                            form.setValue("state", "");
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select country" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {COUNTRIES.map((country) => (
+                              <SelectItem key={country.code} value={country.code}>
+                                {country.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {form.formState.errors.country && (
+                          <p className="text-sm text-destructive">{form.formState.errors.country.message}</p>
+                        )}
                       </div>
                     </div>
                   </div>

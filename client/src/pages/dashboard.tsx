@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 import { 
   Users, 
   Activity, 
@@ -20,12 +21,15 @@ import {
   Building2,
   UserCheck,
   BarChart3,
-  ArrowRight
+  ArrowRight,
+  ChevronDown
 } from "lucide-react";
+import PlatformBadge from "@/components/platform-badge";
 import type { ServiceConfig, ActivityLog, Task, TeamMember, Department } from "@shared/schema";
 
 function TechnicianDashboard() {
   const { teamMember } = useAuth();
+  const [platformsOpen, setPlatformsOpen] = useState(true);
 
   // Fetch managed user record for the logged-in team member
   const { data: myManagedUser } = useQuery<any | null>({
@@ -67,8 +71,81 @@ function TechnicianDashboard() {
         </p>
       </div>
 
+      {/* My Platforms - show assigned platforms and quick access links */}
+      <Card>
+        <CardHeader 
+          className="cursor-pointer flex flex-row items-center justify-between"
+          onClick={() => setPlatformsOpen(!platformsOpen)}
+        >
+          <div>
+            <CardTitle>My Platforms</CardTitle>
+            <CardDescription>Quick access to the platforms assigned to you</CardDescription>
+          </div>
+          <ChevronDown className={`h-5 w-5 transition-transform ${platformsOpen ? "rotate-180" : ""}`} />
+        </CardHeader>
+        
+        {platformsOpen && (
+          <CardContent className="pt-0">
+            {myManagedUser && Array.isArray(myManagedUser.platforms) && myManagedUser.platforms.length > 0 ? (
+              <div className="space-y-3">
+                {myManagedUser.platforms.map((p: string) => {
+                  const svc = services.find((s: any) => s.serviceName === p);
+                  const platformUserId = myManagedUser.platformUserIds ? myManagedUser.platformUserIds[p] : undefined;
+                  const accent = p === "metabase" ? "bg-purple-600" : p === "chatwoot" ? "bg-green-600" : p === "typebot" ? "bg-indigo-600" : "bg-amber-500";
+                  return (
+                    <div key={p} className="flex items-center justify-between p-4 rounded-lg border border-border hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-4">
+                        <div className={`${accent} w-1 h-12 rounded`} />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <PlatformBadge platform={p} />
+                            {platformUserId && <span className="text-xs text-muted-foreground">ID: {platformUserId}</span>}
+                          </div>
+                          <p className="text-xs text-muted-foreground">{svc ? svc.apiUrl : "Not configured"}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 ml-4">
+                        {svc && (
+                          <>
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                window.location.href = svc.apiUrl;
+                              }}
+                            >
+                              Open
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                if (!svc) return;
+                                const ssoUrl = platformUserId ? `${svc.apiUrl}?user_id=${encodeURIComponent(platformUserId)}` : svc.apiUrl;
+                                window.location.href = ssoUrl;
+                              }}
+                            >
+                              SSO
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>You don't have access to any platforms yet.</p>
+              </div>
+            )}
+          </CardContent>
+        )}
+      </Card>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
+        <div className="flex group rounded-md overflow-hidden">
+          <div className="bg-blue-600 w-1" />
+          <Card className="flex-1 transition-shadow group-hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Assigned Tasks</CardTitle>
             <ClipboardList className="h-4 w-4 text-muted-foreground" />
@@ -81,9 +158,12 @@ function TechnicianDashboard() {
               Total assigned to you
             </p>
           </CardContent>
-        </Card>
+          </Card>
+        </div>
 
-        <Card>
+        <div className="flex group rounded-md overflow-hidden">
+          <div className="bg-amber-500 w-1" />
+          <Card className="flex-1 transition-shadow group-hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">In Progress</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
@@ -96,9 +176,12 @@ function TechnicianDashboard() {
               Pending completion
             </p>
           </CardContent>
-        </Card>
+          </Card>
+        </div>
 
-        <Card>
+        <div className="flex group rounded-md overflow-hidden">
+          <div className="bg-green-600 w-1" />
+          <Card className="flex-1 transition-shadow group-hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Completed</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
@@ -111,7 +194,8 @@ function TechnicianDashboard() {
               Tasks finished
             </p>
           </CardContent>
-        </Card>
+          </Card>
+        </div>
       </div>
 
       <Card>
