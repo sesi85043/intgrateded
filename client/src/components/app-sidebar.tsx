@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,10 +14,39 @@ import {
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+
+interface ManagedUser {
+  id: string;
+  platforms: string[];
+  platformUserIds: Record<string, string>;
+}
+
+interface ServiceConfig {
+  id: string;
+  serviceName: string;
+  apiUrl: string;
+  enabled: boolean;
+}
 
 export function AppSidebar() {
   const [location] = useLocation();
   const { teamMember, hasPermission, isManagement, isDepartmentAdmin, isTechnician, PERMISSION_TYPES } = useAuth();
+
+  const { data: myManagedUser } = useQuery<ManagedUser | null>({
+    queryKey: ["/api/team-members", teamMember?.id, "managed-user"],
+    queryFn: async () => {
+      if (!teamMember) return null;
+      const res = await fetch(`/api/team-members/${teamMember.id}/managed-user`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    enabled: !!teamMember?.id,
+  });
+
+  const { data: services = [] } = useQuery<ServiceConfig[]>({
+    queryKey: ["/api/services"],
+  });
 
   const mainMenuItems = [
     {
@@ -159,19 +188,35 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {isManagement && (
+        {myManagedUser && Array.isArray(myManagedUser.platforms) && myManagedUser.platforms.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel>Platforms</SidebarGroupLabel>
+            <SidebarGroupLabel>My Platforms</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {platformItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {myManagedUser.platforms.map((platformName) => {
+                  const platformInfo = platformItems.find(p => p.title.toLowerCase() === platformName.toLowerCase());
+                  const service = services.find(s => s.serviceName.toLowerCase() === platformName.toLowerCase());
+                  const Icon = platformInfo?.icon || Database;
+                  const displayName = platformInfo?.title || platformName;
+                  
+                  return (
+                    <SidebarMenuItem key={platformName}>
+                      <SidebarMenuButton
+                        onClick={() => {
+                          if (service?.apiUrl) {
+                            window.open(service.apiUrl, '_blank');
+                          }
+                        }}
+                        className="cursor-pointer hover:bg-accent"
+                        data-testid={`platform-${platformName}`}
+                      >
+                        <Icon className="h-4 w-4" />
+                        <span className="flex-1">{displayName}</span>
+                        {service?.apiUrl && <ExternalLink className="h-3 w-3 opacity-50" />}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
