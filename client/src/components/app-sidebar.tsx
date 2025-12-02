@@ -46,6 +46,11 @@ export function AppSidebar() {
 
   const { data: services = [] } = useQuery<ServiceConfig[]>({
     queryKey: ["/api/services"],
+    queryFn: async () => {
+      const res = await fetch("/api/services");
+      if (!res.ok) return [];
+      return res.json();
+    },
   });
 
   const mainMenuItems = [
