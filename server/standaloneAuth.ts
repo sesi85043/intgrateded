@@ -1,3 +1,4 @@
+
 // Standalone Auth integration for admin authentication
 import * as client from "openid-client";
 import { Strategy, type VerifyFunction } from "openid-client/passport";
