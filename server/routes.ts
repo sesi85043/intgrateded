@@ -480,7 +480,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "deleted_user",
         "managed_user",
         id,
-        user.platform,
+        Array.isArray(user.platforms) ? user.platforms.join(", ") : "unknown",
         { email: user.email, fullName: user.fullName }
       );
 

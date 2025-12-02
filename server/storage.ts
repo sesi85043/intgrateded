@@ -401,12 +401,12 @@ export class DatabaseStorage implements IStorage {
   async getAnalyticsMetrics(): Promise<any> {
     const usersByPlatform = await db
       .select({
-        platform: managedUsers.platform,
+        platforms: managedUsers.platforms,
         total: sql<number>`count(*)::int`,
         active: sql<number>`count(*) filter (where ${managedUsers.status} = 'active')::int`,
       })
       .from(managedUsers)
-      .groupBy(managedUsers.platform);
+      .groupBy(managedUsers.platforms);
 
     const metrics: any = {
       metabase: { users: 0, active: 0 },
@@ -416,11 +416,13 @@ export class DatabaseStorage implements IStorage {
     };
 
     usersByPlatform.forEach((row) => {
-      if (metrics[row.platform]) {
-        metrics[row.platform] = {
-          users: row.total,
-          active: row.active,
-        };
+      if (row.platforms && Array.isArray(row.platforms)) {
+        row.platforms.forEach((platform) => {
+          if (metrics[platform]) {
+            metrics[platform].users += row.total;
+            metrics[platform].active += row.active;
+          }
+        });
       }
     });
 
