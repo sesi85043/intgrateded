@@ -1114,7 +1114,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Hash the password
       const passwordHash = await bcrypt.hash(password, 10);
 
-      // Create pending registration
+      // Create pending registration (for OTP audit trail)
       const registration = await storage.createPendingRegistration({
         email,
         passwordHash,
@@ -1138,6 +1138,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         nextOfKin2Phone,
         nextOfKin2Email: nextOfKin2Email || null,
         nextOfKin2Address: nextOfKin2Address || null,
+      });
+
+      // ALSO create team_member entry with isVerified = false
+      // This allows both approval workflows to work together
+      const teamMember = await storage.createTeamMember({
+        departmentId,
+        email,
+        firstName,
+        lastName,
+        role: 'technician', // Default role, can be changed on approval
+        passwordHash,
+        phone: phone || '',
+        status: 'active',
+        isVerified: false, // Locked until approved
       });
 
       // Generate OTP for approval (valid for 24 hours)
@@ -1314,36 +1328,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
         selectedRole = await storage.getRoleByCode(ROLE_TYPES.TECHNICIAN);
       }
 
-      // Create the team member from the registration
-      const newMember = await storage.createTeamMember({
-        email: registration.email,
-        passwordHash: registration.passwordHash,
-        firstName: registration.firstName,
-        lastName: registration.lastName,
-        phone: registration.phone,
-        departmentId: registration.departmentId,
-        roleId: selectedRole?.id,
-        role: selectedRole?.code || ROLE_TYPES.TECHNICIAN,
-        employeeId: employeeId || null,
-        status: 'active',
-        // Extended fields
-        addressLine1: registration.addressLine1,
-        addressLine2: registration.addressLine2,
-        city: registration.city,
-        state: registration.state,
-        postalCode: registration.postalCode,
-        country: registration.country,
-        nextOfKin1Name: registration.nextOfKin1Name,
-        nextOfKin1Relationship: registration.nextOfKin1Relationship,
-        nextOfKin1Phone: registration.nextOfKin1Phone,
-        nextOfKin1Email: registration.nextOfKin1Email,
-        nextOfKin1Address: registration.nextOfKin1Address,
-        nextOfKin2Name: registration.nextOfKin2Name,
-        nextOfKin2Relationship: registration.nextOfKin2Relationship,
-        nextOfKin2Phone: registration.nextOfKin2Phone,
-        nextOfKin2Email: registration.nextOfKin2Email,
-        nextOfKin2Address: registration.nextOfKin2Address,
-      });
+      // Get the existing team member created during registration
+      const existingMember = await storage.getTeamMemberByEmail(registration.email);
+      
+      let newMember;
+      if (existingMember) {
+        // Update existing member to verify and set role
+        newMember = await storage.updateTeamMember(existingMember.id, {
+          isVerified: true,
+          roleId: selectedRole?.id,
+          role: selectedRole?.code || ROLE_TYPES.TECHNICIAN,
+          employeeId: employeeId || null,
+          // Update extended fields from registration
+          addressLine1: registration.addressLine1,
+          addressLine2: registration.addressLine2,
+          city: registration.city,
+          state: registration.state,
+          postalCode: registration.postalCode,
+          country: registration.country,
+          nextOfKin1Name: registration.nextOfKin1Name,
+          nextOfKin1Relationship: registration.nextOfKin1Relationship,
+          nextOfKin1Phone: registration.nextOfKin1Phone,
+          nextOfKin1Email: registration.nextOfKin1Email,
+          nextOfKin1Address: registration.nextOfKin1Address,
+          nextOfKin2Name: registration.nextOfKin2Name,
+          nextOfKin2Relationship: registration.nextOfKin2Relationship,
+          nextOfKin2Phone: registration.nextOfKin2Phone,
+          nextOfKin2Email: registration.nextOfKin2Email,
+          nextOfKin2Address: registration.nextOfKin2Address,
+        } as any);
+      } else {
+        // Fallback: Create new member if somehow it doesn't exist
+        newMember = await storage.createTeamMember({
+          email: registration.email,
+          passwordHash: registration.passwordHash,
+          firstName: registration.firstName,
+          lastName: registration.lastName,
+          phone: registration.phone,
+          departmentId: registration.departmentId,
+          roleId: selectedRole?.id,
+          role: selectedRole?.code || ROLE_TYPES.TECHNICIAN,
+          employeeId: employeeId || null,
+          status: 'active',
+          isVerified: true,
+          addressLine1: registration.addressLine1,
+          addressLine2: registration.addressLine2,
+          city: registration.city,
+          state: registration.state,
+          postalCode: registration.postalCode,
+          country: registration.country,
+          nextOfKin1Name: registration.nextOfKin1Name,
+          nextOfKin1Relationship: registration.nextOfKin1Relationship,
+          nextOfKin1Phone: registration.nextOfKin1Phone,
+          nextOfKin1Email: registration.nextOfKin1Email,
+          nextOfKin1Address: registration.nextOfKin1Address,
+          nextOfKin2Name: registration.nextOfKin2Name,
+          nextOfKin2Relationship: registration.nextOfKin2Relationship,
+          nextOfKin2Phone: registration.nextOfKin2Phone,
+          nextOfKin2Email: registration.nextOfKin2Email,
+          nextOfKin2Address: registration.nextOfKin2Address,
+        });
+      }
 
       // Mark OTP as used
       await storage.markOtpAsUsed(validOtp.id, member.id);
@@ -1514,6 +1559,129 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
       res.status(500).json({ message: "Failed to mark all notifications as read" });
+    }
+  });
+
+  // Admin: Get pending users awaiting approval
+  app.get('/api/admin/pending-users', isTeamMemberAuthenticated, requireRole(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const members = await storage.getAllTeamMembers();
+      const pendingUsers = members.filter(m => !m.isVerified);
+      
+      // Return without password hash
+      const safeUsers = pendingUsers.map(({ passwordHash, ...user }) => user);
+      res.json(safeUsers);
+    } catch (error) {
+      console.error("Error fetching pending users:", error);
+      res.status(500).json({ message: "Failed to fetch pending users" });
+    }
+  });
+
+  // Admin: Approve a user (also updates pending registration if exists)
+  app.patch('/api/admin/approve-user/:userId', isTeamMemberAuthenticated, requireRole(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const adminId = req.teamMember.id;
+
+      const user = await storage.getTeamMember(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (user.isVerified) {
+        return res.status(400).json({ message: "User is already verified" });
+      }
+
+      // Update user to verified
+      const updatedUser = await storage.updateTeamMember(userId, { isVerified: true } as any);
+
+      // Also update pending registration if it exists
+      const pendingReg = await storage.getPendingRegistrationByEmail(user.email);
+      if (pendingReg && pendingReg.status === 'pending') {
+        await storage.updatePendingRegistration(pendingReg.id, {
+          status: 'approved',
+          reviewedById: adminId,
+          reviewedAt: new Date(),
+        });
+        
+        // Mark any OTP as used
+        const otps = await storage.getAllApprovalOtps(pendingReg.id);
+        if (otps && otps.length > 0) {
+          for (const otp of otps) {
+            if (!otp.isUsed) {
+              await storage.markOtpAsUsed(otp.id, adminId);
+            }
+          }
+        }
+      }
+
+      // Log the activity
+      await storage.createActivityLog(
+        adminId,
+        "approved_user",
+        "team_member",
+        userId,
+        undefined,
+        { email: user.email, approvedAt: new Date().toISOString() }
+      );
+
+      // Return without password hash
+      const { passwordHash, ...safeUser } = updatedUser;
+      res.json(safeUser);
+    } catch (error) {
+      console.error("Error approving user:", error);
+      res.status(500).json({ message: "Failed to approve user" });
+    }
+  });
+
+  // Admin: Reject a user (also updates pending registration if exists)
+  app.delete('/api/admin/reject-user/:userId', isTeamMemberAuthenticated, requireRole(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const adminId = req.teamMember.id;
+      const { reason } = req.body;
+
+      const user = await storage.getTeamMember(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (user.isVerified) {
+        return res.status(400).json({ message: "Cannot reject an already verified user" });
+      }
+
+      // Check for pending registration and reject it first
+      const pendingReg = await storage.getPendingRegistrationByEmail(user.email);
+      if (pendingReg && pendingReg.status === 'pending') {
+        await storage.updatePendingRegistration(pendingReg.id, {
+          status: 'rejected',
+          rejectionReason: reason || 'Rejected by admin',
+          reviewedById: adminId,
+          reviewedAt: new Date(),
+        });
+      }
+
+      // Log the rejection
+      await storage.createActivityLog(
+        adminId,
+        "rejected_user",
+        "team_member",
+        userId,
+        undefined,
+        { email: user.email, reason: reason || "No reason provided", rejectedAt: new Date().toISOString() }
+      );
+
+      // Instead of deleting, mark as not verified (rejected state)
+      // This preserves any associated data (tasks, etc.) and prevents deletion conflicts
+      await storage.updateTeamMember(userId, {
+        isVerified: false,
+        // Optionally add a rejection note/timestamp if your schema supports it
+      });
+
+      res.json({ message: "User rejected successfully" });
+    } catch (error) {
+      console.error("Error rejecting user:", error);
+      res.status(500).json({ message: "Failed to reject user" });
     }
   });
 

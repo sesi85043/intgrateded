@@ -143,8 +143,8 @@ async function seed() {
       deptMap[d.code] = d;
     });
 
-    // 5. Create Default Admin User (Management)
-    console.log("Creating default admin user...");
+    // 5. Create Super Admin User (Management Role)
+    console.log("Creating super admin user...");
     const passwordHash = await bcrypt.hash("admin123", 10);
     
     const adminUser = await db.insert(teamMembers).values({
@@ -158,96 +158,15 @@ async function seed() {
       passwordHash: passwordHash,
       phone: "",
       status: "active",
+      isVerified: true, // Super admin is always verified
     }).returning();
 
-    console.log("Created admin user: admin@company.com / admin123");
-
-    // 6. Create sample users for each role/department
-    console.log("Creating sample users...");
-    
-    const sampleUsers = [
-      // Department Admins for each department
-      {
-        departmentId: deptMap["HA"].id,
-        roleId: roleMap[ROLE_TYPES.DEPARTMENT_ADMIN].id,
-        employeeId: "HA-ADMIN",
-        email: "ha.admin@company.com",
-        firstName: "HA",
-        lastName: "Admin",
-        role: "admin",
-        passwordHash: passwordHash,
-        status: "active" as const,
-      },
-      {
-        departmentId: deptMap["HHP"].id,
-        roleId: roleMap[ROLE_TYPES.DEPARTMENT_ADMIN].id,
-        employeeId: "HHP-ADMIN",
-        email: "hhp.admin@company.com",
-        firstName: "HHP",
-        lastName: "Admin",
-        role: "admin",
-        passwordHash: passwordHash,
-        status: "active" as const,
-      },
-      {
-        departmentId: deptMap["DTV"].id,
-        roleId: roleMap[ROLE_TYPES.DEPARTMENT_ADMIN].id,
-        employeeId: "DTV-ADMIN",
-        email: "dtv.admin@company.com",
-        firstName: "DTV",
-        lastName: "Admin",
-        role: "admin",
-        passwordHash: passwordHash,
-        status: "active" as const,
-      },
-      // Technicians for each department
-      {
-        departmentId: deptMap["HA"].id,
-        roleId: roleMap[ROLE_TYPES.TECHNICIAN].id,
-        employeeId: "HA-TECH1",
-        email: "ha.tech1@company.com",
-        firstName: "John",
-        lastName: "Smith",
-        role: "technician",
-        passwordHash: passwordHash,
-        status: "active" as const,
-      },
-      {
-        departmentId: deptMap["HHP"].id,
-        roleId: roleMap[ROLE_TYPES.TECHNICIAN].id,
-        employeeId: "HHP-TECH1",
-        email: "hhp.tech1@company.com",
-        firstName: "Jane",
-        lastName: "Doe",
-        role: "technician",
-        passwordHash: passwordHash,
-        status: "active" as const,
-      },
-      {
-        departmentId: deptMap["DTV"].id,
-        roleId: roleMap[ROLE_TYPES.TECHNICIAN].id,
-        employeeId: "DTV-TECH1",
-        email: "dtv.tech1@company.com",
-        firstName: "Mike",
-        lastName: "Johnson",
-        role: "technician",
-        passwordHash: passwordHash,
-        status: "active" as const,
-      },
-    ];
-
-    await db.insert(teamMembers).values(sampleUsers);
-    console.log(`Created ${sampleUsers.length} sample users`);
+    console.log("Created super admin user: admin@company.com / admin123");
 
     console.log("\n=== Seed Complete ===");
-    console.log("\nTest Accounts (password: admin123):");
-    console.log("Management: admin@company.com");
-    console.log("HA Dept Admin: ha.admin@company.com");
-    console.log("HHP Dept Admin: hhp.admin@company.com");
-    console.log("DTV Dept Admin: dtv.admin@company.com");
-    console.log("HA Technician: ha.tech1@company.com");
-    console.log("HHP Technician: hhp.tech1@company.com");
-    console.log("DTV Technician: dtv.tech1@company.com");
+    console.log("\nSuper Admin Account (password: admin123):");
+    console.log("Email: admin@company.com");
+    console.log("\nNo demo accounts created - users must sign up and await approval");
 
   } catch (error) {
     console.error("Seed error:", error);

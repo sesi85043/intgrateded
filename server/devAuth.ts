@@ -102,6 +102,10 @@ export async function setupAuth(app: Express) {
         return res.status(401).json({ message: "Account is deactivated" });
       }
 
+      if (!member.isVerified) {
+        return res.status(401).json({ message: "Account is pending admin approval" });
+      }
+
       if (!member.passwordHash) {
         return res.status(401).json({ message: "Password not set for this account" });
       }

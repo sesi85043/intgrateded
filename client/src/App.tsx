@@ -33,6 +33,7 @@ import Profile from "@/pages/profile";
 import NotFound from "@/pages/not-found";
 import Register from "@/pages/register";
 import Registrations from "@/pages/registrations";
+import PendingApprovals from "@/pages/pending-approvals";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -141,6 +142,7 @@ function Router() {
         <Route path="/config" component={Config} />
         <Route path="/profile" component={Profile} />
         <Route path="/registrations" component={Registrations} />
+        <Route path="/pending-approvals" component={PendingApprovals} />
         <Route component={NotFound} />
       </Switch>
     </AuthenticatedLayout>

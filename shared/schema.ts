@@ -151,6 +151,7 @@ export const teamMembers = pgTable("team_members", {
   passwordHash: text("password_hash"), // For local auth
   phone: varchar("phone", { length: 20 }),
   status: varchar("status", { length: 20 }).default('active').notNull(),
+  isVerified: boolean("is_verified").default(false).notNull(), // Admin approval flag for new signups
   lastLoginAt: timestamp("last_login_at"),
   
   // Residential Address

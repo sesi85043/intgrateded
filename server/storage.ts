@@ -667,6 +667,13 @@ export class DatabaseStorage implements IStorage {
     return otp;
   }
 
+  async getAllApprovalOtps(registrationId: string): Promise<ApprovalOtp[]> {
+    return await db
+      .select()
+      .from(approvalOtps)
+      .where(eq(approvalOtps.registrationId, registrationId));
+  }
+
   async markOtpAsUsed(otpId: string, usedById: string): Promise<void> {
     await db
       .update(approvalOtps)

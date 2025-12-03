@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink, CheckCircle2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -95,6 +95,13 @@ export function AppSidebar() {
       icon: UserPlus,
       testId: "nav-registrations",
       show: hasPermission(PERMISSION_TYPES.MANAGE_GLOBAL_USERS),
+    },
+    {
+      title: "Pending Approvals",
+      url: "/pending-approvals",
+      icon: CheckCircle2,
+      testId: "nav-pending-approvals",
+      show: isManagement,
     },
     {
       title: "Analytics",
