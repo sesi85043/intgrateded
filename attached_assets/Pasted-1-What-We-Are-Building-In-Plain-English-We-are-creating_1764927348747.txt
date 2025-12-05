@@ -1,0 +1,121 @@
+1. What We Are Building (In Plain English)
+
+We are creating one central dashboard where your employees can handle all customer communication — WhatsApp messages, emails, and automated chats — without switching between different apps.
+
+Think of it as:
+
+One place to manage every customer message from every department.
+
+2. The Purpose
+
+Right now, communication is spread across multiple tools and inboxes.
+After this system is completed:
+
+Staff will log in once to the Admin Hub.
+
+All emails and WhatsApp messages will automatically go to the correct department.
+
+Each department only sees their own messages.
+
+Managers can monitor conversations and team performance.
+
+Customers receive faster, cleaner, more organized support.
+
+3. The Main Tools & What They Do
+
+Here is what each system does, in simple terms:
+
+1. Mailcow – The Email Manager
+
+Receives all company emails (example: support@dtv...).
+Connects those emails into the communication system.
+
+2. WhatsApp Gateway (Evolution API)
+
+Connects company WhatsApp numbers to the system.
+
+3. Typebot – The “Receptionist” Chatbot
+
+Asks customers what department they want (“Sales”, “DTV”, etc.).
+Sends them to the right team automatically.
+
+4. Chatwoot – The Communication Engine
+
+This is where email + WhatsApp messages come together.
+It organizes everything into Inboxes (like “DTV Inbox”, “Sales Inbox”).
+
+5. Admin Hub – The Staff Dashboard
+
+This is what your employees will use.
+It displays Chatwoot inside your portal so staff don’t jump between systems.
+
+4. How the System Works (Simple Scenarios)
+A. When a Customer Sends an Email
+
+Email arrives in Mailcow
+
+Mailcow forwards it to Chatwoot
+
+Chatwoot creates a ticket in the correct department
+
+Department staff answer the email inside the Admin Hub
+
+Customer receives the reply as a normal email
+
+B. When a Customer Messages on WhatsApp
+
+Customer sends “Hi”
+
+Typebot asks “Which department do you want?”
+
+Customer chooses (e.g., DTV Support)
+
+Typebot sends the message to that department
+
+Staff talk to the customer live inside Admin Hub
+
+5. How Departments Are Organized
+
+Each department becomes a Team inside Chatwoot.
+
+Example:
+
+DTV Department
+
+Inbox Email: support.dtv@company.co.za
+
+Team Members: kayntulo.dtv@company.co.za
+
+Staff in DTV only see DTV conversations
+
+This structure is repeated for Sales, Accounts, etc.
+
+6. User Access Levels (Simple View)
+1. Super Admin
+
+Sees all departments
+
+Sees all chats and all emails
+
+Full system control
+
+2. Department Head
+
+Only sees their department
+
+Can monitor all conversations in their team
+
+3. Staff Member
+
+Only sees conversations assigned to them
+
+Or unassigned chats within their own department
+
+7. The Benefits (Non-Technical Summary)
+
+✔ No more switching between apps
+✔ Faster handling of customer messages
+✔ Zero confusion about who must answer what
+✔ Consistent customer experience across WhatsApp & Email
+✔ Clear accountability by department
+✔ Scales easily as new teams are added
