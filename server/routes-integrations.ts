@@ -17,6 +17,7 @@ import {
   typebotFlows,
   departmentEmailSettings,
   mailcowConfig,
+  managedUsers,
   insertChatwootConfigSchema,
   insertChatwootTeamSchema,
   insertChatwootInboxSchema,
@@ -32,6 +33,7 @@ import { isTeamMemberAuthenticated } from "./devAuth";
 import { requirePermission, requireRoleOrHigher } from "./rbac";
 import { PERMISSION_TYPES, ROLE_TYPES } from "@shared/schema";
 import { storage } from "./storage";
+import { provisioning } from "./provisioning";
 
 export default function registerIntegrationRoutes(app: Express) {
   // ============================================
@@ -858,6 +860,240 @@ export default function registerIntegrationRoutes(app: Express) {
     } catch (error) {
       console.error("Error fetching integration status:", error);
       res.status(500).json({ message: "Failed to fetch integration status" });
+    }
+  });
+
+  // ============================================
+  // PLATFORM PROVISIONING ROUTES
+  // ============================================
+
+  // Provision a team member on external platforms (Mailcow + Chatwoot)
+  app.post('/api/integrations/provision/:teamMemberId', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { teamMemberId } = req.params;
+      const { createMailbox = true, createChatwootAgent = true, assignToTeam = true } = req.body;
+
+      // Get team member
+      const member = await storage.getTeamMember(teamMemberId);
+      if (!member) {
+        return res.status(404).json({ message: "Team member not found" });
+      }
+
+      // Get department
+      const department = await storage.getDepartment(member.departmentId);
+      if (!department) {
+        return res.status(404).json({ message: "Department not found" });
+      }
+
+      // Run provisioning
+      const result = await provisioning.provisionTeamMember(member, department, {
+        createMailbox,
+        createChatwootAgent,
+        assignToTeam,
+      });
+
+      // Log activity
+      await storage.createActivityLog(
+        req.teamMember.id,
+        "provisioned_team_member",
+        "team_member",
+        teamMemberId,
+        undefined,
+        {
+          username: result.username,
+          email: result.generatedEmail,
+          mailcowSuccess: result.mailcow?.success,
+          chatwootSuccess: result.chatwoot?.success,
+        }
+      );
+
+      res.json({
+        success: true,
+        message: "Provisioning completed",
+        result,
+      });
+    } catch (error) {
+      console.error("Error provisioning team member:", error);
+      res.status(500).json({ message: "Failed to provision team member" });
+    }
+  });
+
+  // Get provisioning status for a team member
+  app.get('/api/integrations/provision/:teamMemberId/status', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { teamMemberId } = req.params;
+
+      // Check Chatwoot agent mapping
+      const [chatwootAgent] = await db.select()
+        .from(chatwootAgents)
+        .where(eq(chatwootAgents.teamMemberId, teamMemberId));
+
+      // Check managed users for platform info
+      const [managedUser] = await db.select()
+        .from(managedUsers)
+        .where(eq(managedUsers.teamMemberId, teamMemberId));
+
+      res.json({
+        chatwoot: {
+          provisioned: !!chatwootAgent,
+          agentId: chatwootAgent?.chatwootAgentId || null,
+          email: chatwootAgent?.chatwootAgentEmail || null,
+        },
+        mailcow: {
+          provisioned: managedUser?.platforms?.includes('mailcow') || false,
+          email: (managedUser?.platformUserIds as any)?.mailcow || null,
+        },
+        platforms: managedUser?.platforms || [],
+      });
+    } catch (error) {
+      console.error("Error fetching provisioning status:", error);
+      res.status(500).json({ message: "Failed to fetch provisioning status" });
+    }
+  });
+
+  // Test provisioning connections
+  app.post('/api/integrations/provision/test-connections', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const [mailcowResult, chatwootResult] = await Promise.all([
+        provisioning.testMailcowConnection(),
+        provisioning.testChatwootConnection(),
+      ]);
+
+      res.json({
+        mailcow: mailcowResult,
+        chatwoot: chatwootResult,
+      });
+    } catch (error) {
+      console.error("Error testing provisioning connections:", error);
+      res.status(500).json({ message: "Failed to test connections" });
+    }
+  });
+
+  // Generate Chatwoot SSO URL for current user
+  app.get('/api/integrations/chatwoot/sso-login', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const member = req.teamMember;
+      
+      // Get Chatwoot agent email for SSO
+      const [agentMapping] = await db.select()
+        .from(chatwootAgents)
+        .where(eq(chatwootAgents.teamMemberId, member.id));
+
+      const ssoEmail = agentMapping?.chatwootAgentEmail || member.email;
+      const ssoUrl = await provisioning.getChatwootSSOUrl(ssoEmail);
+
+      if (!ssoUrl) {
+        // Fall back to regular embed URL
+        const [config] = await db.select().from(chatwootConfig).limit(1);
+        if (!config) {
+          return res.status(400).json({ message: "Chatwoot not configured" });
+        }
+        return res.json({
+          ssoEnabled: false,
+          embedUrl: `${config.instanceUrl}/app/accounts/${config.accountId}/dashboard`,
+        });
+      }
+
+      res.json({
+        ssoEnabled: true,
+        ssoUrl,
+      });
+    } catch (error) {
+      console.error("Error generating SSO URL:", error);
+      res.status(500).json({ message: "Failed to generate SSO URL" });
+    }
+  });
+
+  // Preview username that would be generated
+  app.post('/api/integrations/provision/preview-username', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { firstName, lastName } = req.body;
+
+      if (!firstName || !lastName) {
+        return res.status(400).json({ message: "First name and last name are required" });
+      }
+
+      const [mailcowConf] = await db.select().from(mailcowConfig).limit(1);
+      const domain = mailcowConf?.domain || 'mmallelectronics.co.za';
+
+      const username = await provisioning.generateUsername(firstName, lastName, domain);
+
+      res.json({
+        username,
+        email: `${username}@${domain}`,
+        domain,
+      });
+    } catch (error) {
+      console.error("Error previewing username:", error);
+      res.status(500).json({ message: "Failed to preview username" });
+    }
+  });
+
+  // Bulk provision multiple team members
+  app.post('/api/integrations/provision/bulk', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { teamMemberIds, createMailbox = true, createChatwootAgent = true } = req.body;
+
+      if (!teamMemberIds || !Array.isArray(teamMemberIds) || teamMemberIds.length === 0) {
+        return res.status(400).json({ message: "Team member IDs are required" });
+      }
+
+      const results = [];
+      for (const teamMemberId of teamMemberIds) {
+        const member = await storage.getTeamMember(teamMemberId);
+        if (!member) {
+          results.push({ teamMemberId, success: false, error: "Member not found" });
+          continue;
+        }
+
+        const department = await storage.getDepartment(member.departmentId);
+        if (!department) {
+          results.push({ teamMemberId, success: false, error: "Department not found" });
+          continue;
+        }
+
+        try {
+          const result = await provisioning.provisionTeamMember(member, department, {
+            createMailbox,
+            createChatwootAgent,
+            assignToTeam: true,
+          });
+
+          results.push({
+            teamMemberId,
+            success: true,
+            username: result.username,
+            email: result.generatedEmail,
+            mailcow: result.mailcow,
+            chatwoot: result.chatwoot,
+          });
+        } catch (err) {
+          results.push({
+            teamMemberId,
+            success: false,
+            error: err instanceof Error ? err.message : "Provisioning failed",
+          });
+        }
+      }
+
+      // Log activity
+      await storage.createActivityLog(
+        req.teamMember.id,
+        "bulk_provisioned_team_members",
+        "team_member",
+        undefined,
+        undefined,
+        { count: teamMemberIds.length, results }
+      );
+
+      res.json({
+        success: true,
+        totalRequested: teamMemberIds.length,
+        results,
+      });
+    } catch (error) {
+      console.error("Error bulk provisioning:", error);
+      res.status(500).json({ message: "Failed to bulk provision team members" });
     }
   });
 }

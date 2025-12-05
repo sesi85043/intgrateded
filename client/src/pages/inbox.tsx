@@ -419,7 +419,7 @@ export default function Inbox() {
           ) : statsError ? (
             <div className="p-4 rounded-lg border bg-muted/50 text-center">
               <p className="text-sm text-muted-foreground">
-                Unable to load conversation statistics. <Button variant="link" className="p-0 h-auto" onClick={() => refetchStats()}>Retry</Button>
+                Unable to load conversation statistics. <Button variant="ghost" className="p-0 h-auto underline" onClick={() => refetchStats()}>Retry</Button>
               </p>
             </div>
           ) : stats?.available ? (

@@ -1298,7 +1298,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/registrations/:id/approve', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
       const { id } = req.params;
-      const { otpCode, roleId, employeeId } = req.body;
+      const { otpCode, roleId, employeeId, provisionPlatforms = false } = req.body;
       const member = req.teamMember;
 
       if (!otpCode) {
@@ -1425,6 +1425,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { approvedBy: `${member.firstName} ${member.lastName}` }
       );
 
+      // Optionally provision on external platforms (Mailcow + Chatwoot)
+      let provisioningResult = null;
+      if (provisionPlatforms) {
+        try {
+          const { provisioning } = await import('./provisioning');
+          const department = await storage.getDepartment(registration.departmentId);
+          if (department) {
+            provisioningResult = await provisioning.provisionTeamMember(newMember, department, {
+              createMailbox: true,
+              createChatwootAgent: true,
+              assignToTeam: true,
+            });
+            
+            // Log provisioning activity
+            await storage.createActivityLog(
+              member.userId || member.id,
+              "provisioned_on_approval",
+              "team_member",
+              newMember.id,
+              undefined,
+              { 
+                mailcowSuccess: provisioningResult.mailcow?.success,
+                chatwootSuccess: provisioningResult.chatwoot?.success,
+                generatedEmail: provisioningResult.generatedEmail,
+              }
+            );
+          }
+        } catch (provError) {
+          console.error("Provisioning error (non-blocking):", provError);
+          // Don't fail the approval, just log the error
+        }
+      }
+
       res.json({
         message: "Registration approved successfully",
         teamMember: {
@@ -1433,7 +1466,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           firstName: newMember.firstName,
           lastName: newMember.lastName,
           role: newMember.role,
-        }
+        },
+        provisioning: provisioningResult ? {
+          success: provisioningResult.mailcow?.success || provisioningResult.chatwoot?.success,
+          generatedEmail: provisioningResult.generatedEmail,
+          mailcow: provisioningResult.mailcow,
+          chatwoot: provisioningResult.chatwoot,
+        } : null,
       });
     } catch (error: any) {
       console.error("Error approving registration:", error);
