@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink, CheckCircle2 } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink, CheckCircle2, Link2, Inbox, MessageCircle } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -123,6 +123,27 @@ export function AppSidebar() {
       icon: Settings,
       testId: "nav-config",
       show: hasPermission(PERMISSION_TYPES.MANAGE_SERVICE_CONFIG),
+    },
+    {
+      title: "Integrations",
+      url: "/integrations",
+      icon: Link2,
+      testId: "nav-integrations",
+      show: isManagement,
+    },
+    {
+      title: "Dept. Channels",
+      url: "/department-channels",
+      icon: MessageCircle,
+      testId: "nav-department-channels",
+      show: isManagement || isDepartmentAdmin,
+    },
+    {
+      title: "Inbox",
+      url: "/inbox",
+      icon: Inbox,
+      testId: "nav-inbox",
+      show: true,
     },
   ];
 

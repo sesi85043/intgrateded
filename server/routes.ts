@@ -42,6 +42,7 @@ import {
 } from "./rbac";
 import bcrypt from "bcryptjs";
 import registerTeamManagedRoutes from './routes-team-managed';
+import registerIntegrationRoutes from './routes-integrations';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
@@ -217,6 +218,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Team Member routes
   // Register routes for assigning managed platform access to existing team members
   registerTeamManagedRoutes(app, storage);
+
+  // Register communication integration routes (Chatwoot, Evolution API, Typebot, Mailcow)
+  registerIntegrationRoutes(app);
 
   app.get('/api/team-members', isAuthenticated, async (req: any, res) => {
     try {

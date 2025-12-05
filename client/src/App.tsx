@@ -34,6 +34,9 @@ import NotFound from "@/pages/not-found";
 import Register from "@/pages/register";
 import Registrations from "@/pages/registrations";
 import PendingApprovals from "@/pages/pending-approvals";
+import Integrations from "@/pages/integrations";
+import DepartmentChannels from "@/pages/department-channels";
+import Inbox from "@/pages/inbox";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -143,6 +146,9 @@ function Router() {
         <Route path="/profile" component={Profile} />
         <Route path="/registrations" component={Registrations} />
         <Route path="/pending-approvals" component={PendingApprovals} />
+        <Route path="/integrations" component={Integrations} />
+        <Route path="/department-channels" component={DepartmentChannels} />
+        <Route path="/inbox" component={Inbox} />
         <Route component={NotFound} />
       </Switch>
     </AuthenticatedLayout>

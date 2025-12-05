@@ -512,3 +512,256 @@ export const staffRegistrationSchema = z.object({
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
+
+// ============================================
+// COMMUNICATION INTEGRATION TABLES
+// ============================================
+
+// Chatwoot Configuration - Stores Chatwoot instance settings
+export const chatwootConfig = pgTable("chatwoot_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  instanceUrl: text("instance_url").notNull(),
+  apiAccessToken: text("api_access_token").notNull(),
+  accountId: integer("account_id").notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  ssoEnabled: boolean("sso_enabled").default(false).notNull(),
+  webhookSecret: text("webhook_secret"),
+  lastSyncAt: timestamp("last_sync_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertChatwootConfigSchema = createInsertSchema(chatwootConfig).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastSyncAt: true,
+});
+
+export type InsertChatwootConfig = z.infer<typeof insertChatwootConfigSchema>;
+export type ChatwootConfig = typeof chatwootConfig.$inferSelect;
+
+// Chatwoot Teams - Maps Chatwoot teams to departments
+export const chatwootTeams = pgTable("chatwoot_teams", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  departmentId: varchar("department_id").notNull().references(() => departments.id, { onDelete: 'cascade' }),
+  chatwootTeamId: integer("chatwoot_team_id").notNull(),
+  chatwootTeamName: varchar("chatwoot_team_name", { length: 100 }).notNull(),
+  autoAssign: boolean("auto_assign").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertChatwootTeamSchema = createInsertSchema(chatwootTeams).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertChatwootTeam = z.infer<typeof insertChatwootTeamSchema>;
+export type ChatwootTeam = typeof chatwootTeams.$inferSelect;
+
+// Chatwoot Inboxes - Maps inboxes to departments
+export const chatwootInboxes = pgTable("chatwoot_inboxes", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  departmentId: varchar("department_id").notNull().references(() => departments.id, { onDelete: 'cascade' }),
+  chatwootInboxId: integer("chatwoot_inbox_id").notNull(),
+  chatwootInboxName: varchar("chatwoot_inbox_name", { length: 100 }).notNull(),
+  inboxType: varchar("inbox_type", { length: 30 }).notNull(), // email, whatsapp, web
+  enabled: boolean("enabled").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertChatwootInboxSchema = createInsertSchema(chatwootInboxes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertChatwootInbox = z.infer<typeof insertChatwootInboxSchema>;
+export type ChatwootInbox = typeof chatwootInboxes.$inferSelect;
+
+// Chatwoot Agent Mapping - Links team members to Chatwoot agents
+export const chatwootAgents = pgTable("chatwoot_agents", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  teamMemberId: varchar("team_member_id").notNull().references(() => teamMembers.id, { onDelete: 'cascade' }),
+  chatwootAgentId: integer("chatwoot_agent_id").notNull(),
+  chatwootAgentEmail: varchar("chatwoot_agent_email"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertChatwootAgentSchema = createInsertSchema(chatwootAgents).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertChatwootAgent = z.infer<typeof insertChatwootAgentSchema>;
+export type ChatwootAgent = typeof chatwootAgents.$inferSelect;
+
+// Evolution API Configuration - WhatsApp gateway settings
+export const evolutionApiConfig = pgTable("evolution_api_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  instanceUrl: text("instance_url").notNull(),
+  apiKey: text("api_key").notNull(),
+  instanceName: varchar("instance_name", { length: 100 }).notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  webhookUrl: text("webhook_url"),
+  qrCodeData: text("qr_code_data"),
+  connectionStatus: varchar("connection_status", { length: 30 }).default('disconnected'), // connected, disconnected, connecting
+  lastConnectedAt: timestamp("last_connected_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertEvolutionApiConfigSchema = createInsertSchema(evolutionApiConfig).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastConnectedAt: true,
+  qrCodeData: true,
+  connectionStatus: true,
+});
+
+export type InsertEvolutionApiConfig = z.infer<typeof insertEvolutionApiConfigSchema>;
+export type EvolutionApiConfig = typeof evolutionApiConfig.$inferSelect;
+
+// WhatsApp Numbers - Maps WhatsApp numbers to departments via Evolution API
+export const whatsappNumbers = pgTable("whatsapp_numbers", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  evolutionConfigId: varchar("evolution_config_id").notNull().references(() => evolutionApiConfig.id, { onDelete: 'cascade' }),
+  departmentId: varchar("department_id").references(() => departments.id),
+  phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
+  displayName: varchar("display_name", { length: 100 }),
+  isDefault: boolean("is_default").default(false).notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertWhatsappNumberSchema = createInsertSchema(whatsappNumbers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertWhatsappNumber = z.infer<typeof insertWhatsappNumberSchema>;
+export type WhatsappNumber = typeof whatsappNumbers.$inferSelect;
+
+// Typebot Configuration - Chatbot flow settings
+export const typebotConfig = pgTable("typebot_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  instanceUrl: text("instance_url").notNull(),
+  apiToken: text("api_token").notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertTypebotConfigSchema = createInsertSchema(typebotConfig).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertTypebotConfig = z.infer<typeof insertTypebotConfigSchema>;
+export type TypebotConfig = typeof typebotConfig.$inferSelect;
+
+// Typebot Flows - Maps Typebot flows to departments for routing
+export const typebotFlows = pgTable("typebot_flows", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  typebotConfigId: varchar("typebot_config_id").notNull().references(() => typebotConfig.id, { onDelete: 'cascade' }),
+  departmentId: varchar("department_id").references(() => departments.id),
+  typebotId: varchar("typebot_id", { length: 100 }).notNull(),
+  flowName: varchar("flow_name", { length: 100 }).notNull(),
+  flowDescription: text("flow_description"),
+  triggerKeywords: varchar("trigger_keywords", { length: 255 }).array().default(sql`ARRAY[]::varchar[]`),
+  isMainMenu: boolean("is_main_menu").default(false).notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertTypebotFlowSchema = createInsertSchema(typebotFlows).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertTypebotFlow = z.infer<typeof insertTypebotFlowSchema>;
+export type TypebotFlow = typeof typebotFlows.$inferSelect;
+
+// Department Email Settings - Email configuration per department
+export const departmentEmailSettings = pgTable("department_email_settings", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  departmentId: varchar("department_id").notNull().references(() => departments.id, { onDelete: 'cascade' }).unique(),
+  parentEmail: varchar("parent_email").notNull(), // e.g., support.dtv@company.com
+  imapHost: varchar("imap_host", { length: 255 }),
+  imapPort: integer("imap_port").default(993),
+  imapUsername: varchar("imap_username"),
+  imapPassword: text("imap_password"),
+  imapUseSsl: boolean("imap_use_ssl").default(true).notNull(),
+  smtpHost: varchar("smtp_host", { length: 255 }),
+  smtpPort: integer("smtp_port").default(587),
+  smtpUsername: varchar("smtp_username"),
+  smtpPassword: text("smtp_password"),
+  smtpUseTls: boolean("smtp_use_tls").default(true).notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  lastSyncAt: timestamp("last_sync_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertDepartmentEmailSettingsSchema = createInsertSchema(departmentEmailSettings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastSyncAt: true,
+});
+
+export type InsertDepartmentEmailSettings = z.infer<typeof insertDepartmentEmailSettingsSchema>;
+export type DepartmentEmailSettings = typeof departmentEmailSettings.$inferSelect;
+
+// Mailcow Configuration - Email server integration
+export const mailcowConfig = pgTable("mailcow_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  instanceUrl: text("instance_url").notNull(),
+  apiKey: text("api_key").notNull(),
+  domain: varchar("domain", { length: 255 }).notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  lastSyncAt: timestamp("last_sync_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertMailcowConfigSchema = createInsertSchema(mailcowConfig).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastSyncAt: true,
+});
+
+export type InsertMailcowConfig = z.infer<typeof insertMailcowConfigSchema>;
+export type MailcowConfig = typeof mailcowConfig.$inferSelect;
+
+// Communication Channels - Unified view of all channels
+export const CHANNEL_TYPES = {
+  EMAIL: 'email',
+  WHATSAPP: 'whatsapp',
+  WEB_CHAT: 'web_chat',
+} as const;
+
+export type ChannelType = typeof CHANNEL_TYPES[keyof typeof CHANNEL_TYPES];
+
+// Conversation status types
+export const CONVERSATION_STATUS = {
+  OPEN: 'open',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  SNOOZED: 'snoozed',
+} as const;
+
+export type ConversationStatus = typeof CONVERSATION_STATUS[keyof typeof CONVERSATION_STATUS];
