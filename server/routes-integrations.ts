@@ -60,19 +60,40 @@ export default function registerIntegrationRoutes(app: Express) {
   // Create or update Chatwoot configuration
   app.post('/api/integrations/chatwoot/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
-      const validatedData = insertChatwootConfigSchema.parse(req.body);
+      const { apiAccessToken, webhookSecret, ...otherData } = req.body;
       
       // Check if config already exists
       const [existing] = await db.select().from(chatwootConfig).limit(1);
       
+      // Build update data, preserving existing tokens if new ones aren't provided
+      const updateData: any = { ...otherData, updatedAt: new Date() };
+      
+      // Only update apiAccessToken if a new one is provided (non-empty, non-masked)
+      if (apiAccessToken && apiAccessToken.trim() && !apiAccessToken.startsWith('••••')) {
+        updateData.apiAccessToken = apiAccessToken;
+      } else if (!existing) {
+        // For new configs, token is required
+        return res.status(400).json({ message: "API Access Token is required for new configuration" });
+      }
+      
+      // Only update webhookSecret if a new one is provided
+      if (webhookSecret && webhookSecret.trim() && !webhookSecret.startsWith('••••')) {
+        updateData.webhookSecret = webhookSecret;
+      }
+      
       let result;
       if (existing) {
         [result] = await db.update(chatwootConfig)
-          .set({ ...validatedData, updatedAt: new Date() })
+          .set(updateData)
           .where(eq(chatwootConfig.id, existing.id))
           .returning();
       } else {
-        [result] = await db.insert(chatwootConfig).values(validatedData).returning();
+        // For new configs, use the provided token
+        [result] = await db.insert(chatwootConfig).values({
+          ...updateData,
+          apiAccessToken: apiAccessToken,
+          webhookSecret: webhookSecret || null,
+        }).returning();
       }
 
       await storage.createActivityLog(
@@ -83,7 +104,11 @@ export default function registerIntegrationRoutes(app: Express) {
         "chatwoot"
       );
 
-      res.json({ ...result, apiAccessToken: '••••••••' + result.apiAccessToken.slice(-4) });
+      res.json({ 
+        ...result, 
+        apiAccessToken: '••••••••' + result.apiAccessToken.slice(-4),
+        webhookSecret: result.webhookSecret ? '••••••••' + result.webhookSecret.slice(-4) : null 
+      });
     } catch (error) {
       console.error("Error saving Chatwoot config:", error);
       res.status(400).json({ message: "Failed to save Chatwoot configuration" });
@@ -253,18 +278,31 @@ export default function registerIntegrationRoutes(app: Express) {
   // Create or update Evolution API configuration
   app.post('/api/integrations/evolution/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
-      const validatedData = insertEvolutionApiConfigSchema.parse(req.body);
+      const { apiKey, ...otherData } = req.body;
       
       const [existing] = await db.select().from(evolutionApiConfig).limit(1);
+      
+      // Build update data, preserving existing API key if new one isn't provided
+      const updateData: any = { ...otherData, updatedAt: new Date() };
+      
+      // Only update apiKey if a new one is provided (non-empty, non-masked)
+      if (apiKey && apiKey.trim() && !apiKey.startsWith('••••')) {
+        updateData.apiKey = apiKey;
+      } else if (!existing) {
+        return res.status(400).json({ message: "API Key is required for new configuration" });
+      }
       
       let result;
       if (existing) {
         [result] = await db.update(evolutionApiConfig)
-          .set({ ...validatedData, updatedAt: new Date() })
+          .set(updateData)
           .where(eq(evolutionApiConfig.id, existing.id))
           .returning();
       } else {
-        [result] = await db.insert(evolutionApiConfig).values(validatedData).returning();
+        [result] = await db.insert(evolutionApiConfig).values({
+          ...updateData,
+          apiKey: apiKey,
+        }).returning();
       }
 
       await storage.createActivityLog(
@@ -485,18 +523,31 @@ export default function registerIntegrationRoutes(app: Express) {
   // Create or update Mailcow configuration
   app.post('/api/integrations/mailcow/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
-      const validatedData = insertMailcowConfigSchema.parse(req.body);
+      const { apiKey, ...otherData } = req.body;
       
       const [existing] = await db.select().from(mailcowConfig).limit(1);
+      
+      // Build update data, preserving existing API key if new one isn't provided
+      const updateData: any = { ...otherData, updatedAt: new Date() };
+      
+      // Only update apiKey if a new one is provided (non-empty, non-masked)
+      if (apiKey && apiKey.trim() && !apiKey.startsWith('••••')) {
+        updateData.apiKey = apiKey;
+      } else if (!existing) {
+        return res.status(400).json({ message: "API Key is required for new configuration" });
+      }
       
       let result;
       if (existing) {
         [result] = await db.update(mailcowConfig)
-          .set({ ...validatedData, updatedAt: new Date() })
+          .set(updateData)
           .where(eq(mailcowConfig.id, existing.id))
           .returning();
       } else {
-        [result] = await db.insert(mailcowConfig).values(validatedData).returning();
+        [result] = await db.insert(mailcowConfig).values({
+          ...updateData,
+          apiKey: apiKey,
+        }).returning();
       }
 
       await storage.createActivityLog(
@@ -692,6 +743,82 @@ export default function registerIntegrationRoutes(app: Express) {
     } catch (error) {
       console.error("Error getting department inbox:", error);
       res.status(500).json({ message: "Failed to get department inbox" });
+    }
+  });
+
+  // Get conversation statistics from Chatwoot
+  app.get('/api/integrations/chatwoot/stats', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const [config] = await db.select().from(chatwootConfig).limit(1);
+      if (!config || !config.enabled) {
+        return res.json({ 
+          open: 0, 
+          pending: 0, 
+          resolved: 0, 
+          unassigned: 0,
+          available: false 
+        });
+      }
+
+      const member = req.teamMember;
+      
+      // Get department inbox if not management
+      let inboxFilter = '';
+      if (member.roleCode !== 'management') {
+        const [inbox] = await db.select()
+          .from(chatwootInboxes)
+          .where(eq(chatwootInboxes.departmentId, member.departmentId));
+        if (inbox) {
+          inboxFilter = `&inbox_id=${inbox.chatwootInboxId}`;
+        }
+      }
+
+      // Fetch conversation counts from Chatwoot API
+      const fetchConversationCount = async (status: string) => {
+        try {
+          const response = await fetch(
+            `${config.instanceUrl}/api/v1/accounts/${config.accountId}/conversations?status=${status}${inboxFilter}`,
+            {
+              headers: {
+                'api_access_token': config.apiAccessToken,
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          if (response.ok) {
+            const data = await response.json();
+            return data.meta?.all_count || data.payload?.length || 0;
+          }
+          return 0;
+        } catch (e) {
+          return 0;
+        }
+      };
+
+      const [open, pending, resolved] = await Promise.all([
+        fetchConversationCount('open'),
+        fetchConversationCount('pending'),
+        fetchConversationCount('resolved'),
+      ]);
+
+      res.json({
+        open,
+        pending,
+        resolved,
+        unassigned: 0, // Would need separate API call
+        available: true,
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Error fetching Chatwoot stats:", error);
+      res.json({ 
+        open: 0, 
+        pending: 0, 
+        resolved: 0, 
+        unassigned: 0,
+        available: false,
+        error: "Failed to fetch statistics" 
+      });
     }
   });
 
