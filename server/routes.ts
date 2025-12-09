@@ -9,8 +9,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-// Using development auth for local testing
-import { setupAuth, isAuthenticated, isTeamMemberAuthenticated } from "./devAuth";
+// Use environment-based auth router (dev / replit / standalone)
+import { setupAuth, isAuthenticated, isTeamMemberAuthenticated } from "./auth";
 import {
   insertServiceConfigSchema,
   insertManagedUserSchema,
@@ -21,6 +21,7 @@ import {
   PERMISSION_TYPES,
   ROLE_TYPES,
 } from "@shared/schema";
+import { createMailcowMailbox } from './provisioning';
 import { z } from "zod";
 
 const updateProfileSchema = z.object({
@@ -436,7 +437,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { email: validatedData.email, fullName: validatedData.fullName, platforms: validatedData.platforms }
       );
 
-      res.json(user);
+      // Try to provision a Mailcow mailbox for this managed user (optional)
+      let generatedEmail = null;
+      try {
+        // Derive first/last name from fullName if available
+        const fullName = validatedData.fullName || '';
+        const parts = fullName.trim().split(/\s+/);
+        const firstName = parts.length > 0 ? parts[0] : 'user';
+        const lastName = parts.length > 1 ? parts.slice(1).join('.') : 'user';
+        const deptTag = 'staff';
+
+        generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
+      } catch (emailErr) {
+        console.error('Failed to provision Mailcow mailbox:', emailErr);
+      }
+
+      res.json({ user, generatedEmail });
     } catch (error) {
       console.error("Error creating user:", error);
       res.status(400).json({ message: "Failed to create user" });
