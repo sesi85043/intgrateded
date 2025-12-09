@@ -444,8 +444,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const fullName = validatedData.fullName || '';
         const parts = fullName.trim().split(/\s+/);
         const firstName = parts.length > 0 ? parts[0] : 'user';
-        const lastName = parts.length > 1 ? parts.slice(1).join('.') : 'user';
-        const deptTag = 'staff';
+        const lastName = parts.length > 1 ? parts.slice(1).join(' ') : 'user';
+
+        // Determine department tag for email (prefer department code, fallback to name)
+        let deptTag = 'staff';
+        if (validatedData.teamMemberId) {
+          try {
+            const teamMember = await storage.getTeamMember(validatedData.teamMemberId);
+            if (teamMember && teamMember.departmentId) {
+              const dept = await storage.getDepartment(teamMember.departmentId);
+              if (dept) {
+                deptTag = (dept.code || dept.name || 'staff').toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+              }
+            }
+          } catch (dErr) {
+            console.warn('Could not resolve department for mailbox tag, defaulting to staff', dErr);
+          }
+        }
 
         generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
       } catch (emailErr) {
