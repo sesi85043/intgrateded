@@ -33,7 +33,7 @@ import { isTeamMemberAuthenticated } from "./devAuth";
 import { requirePermission, requireRoleOrHigher } from "./rbac";
 import { PERMISSION_TYPES, ROLE_TYPES } from "@shared/schema";
 import { storage } from "./storage";
-import { provisioning } from "./provisioning";
+// import { provisioning } from "./provisioning"; // TODO: Re-implement full provisioning class if needed
 
 export default function registerIntegrationRoutes(app: Express) {
   // ============================================
@@ -886,32 +886,12 @@ export default function registerIntegrationRoutes(app: Express) {
       }
 
       // Run provisioning
-      const result = await provisioning.provisionTeamMember(member, department, {
-        createMailbox,
-        createChatwootAgent,
-        assignToTeam,
+      // TODO: Re-implement using simpler approach from routes.ts
+      res.status(501).json({
+        success: false,
+        message: "Full team member provisioning not yet re-implemented. Use managed user provisioning in routes.ts instead.",
       });
-
-      // Log activity
-      await storage.createActivityLog(
-        req.teamMember.id,
-        "provisioned_team_member",
-        "team_member",
-        teamMemberId,
-        undefined,
-        {
-          username: result.username,
-          email: result.generatedEmail,
-          mailcowSuccess: result.mailcow?.success,
-          chatwootSuccess: result.chatwoot?.success,
-        }
-      );
-
-      res.json({
-        success: true,
-        message: "Provisioning completed",
-        result,
-      });
+      return;
     } catch (error) {
       console.error("Error provisioning team member:", error);
       res.status(500).json({ message: "Failed to provision team member" });
@@ -954,14 +934,10 @@ export default function registerIntegrationRoutes(app: Express) {
   // Test provisioning connections
   app.post('/api/integrations/provision/test-connections', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
-      const [mailcowResult, chatwootResult] = await Promise.all([
-        provisioning.testMailcowConnection(),
-        provisioning.testChatwootConnection(),
-      ]);
-
-      res.json({
-        mailcow: mailcowResult,
-        chatwoot: chatwootResult,
+      // TODO: Implement connection testing
+      res.status(501).json({
+        mailcow: { success: false, message: "Test not yet implemented" },
+        chatwoot: { success: false, message: "Test not yet implemented" },
       });
     } catch (error) {
       console.error("Error testing provisioning connections:", error);
@@ -980,7 +956,7 @@ export default function registerIntegrationRoutes(app: Express) {
         .where(eq(chatwootAgents.teamMemberId, member.id));
 
       const ssoEmail = agentMapping?.chatwootAgentEmail || member.email;
-      const ssoUrl = await provisioning.getChatwootSSOUrl(ssoEmail);
+      const ssoUrl = null; // TODO: Implement SSO URL generation
 
       if (!ssoUrl) {
         // Fall back to regular embed URL
@@ -1016,13 +992,15 @@ export default function registerIntegrationRoutes(app: Express) {
       const [mailcowConf] = await db.select().from(mailcowConfig).limit(1);
       const domain = mailcowConf?.domain || 'mmallelectronics.co.za';
 
-      const username = await provisioning.generateUsername(firstName, lastName, domain);
-
-      res.json({
+      // TODO: Implement username generation using simplified approach
+      const username = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+      res.status(501).json({
         username,
         email: `${username}@${domain}`,
         domain,
+        message: "Simplified preview - full collision handling not yet implemented"
       });
+      return;
     } catch (error) {
       console.error("Error previewing username:", error);
       res.status(500).json({ message: "Failed to preview username" });
@@ -1053,21 +1031,13 @@ export default function registerIntegrationRoutes(app: Express) {
         }
 
         try {
-          const result = await provisioning.provisionTeamMember(member, department, {
-            createMailbox,
-            createChatwootAgent,
-            assignToTeam: true,
-          });
-
+          // TODO: Re-implement full provisioning
           results.push({
             teamMemberId,
-            success: true,
-            username: result.username,
-            email: result.generatedEmail,
-            mailcow: result.mailcow,
-            chatwoot: result.chatwoot,
+            success: false,
+            error: "Full provisioning not yet re-implemented"
           });
-        } catch (err) {
+          continue;
           results.push({
             teamMemberId,
             success: false,
