@@ -58,3 +58,9 @@ export async function createMailcowMailbox(firstName: string, lastName: string, 
 
   return { email, password };
 }
+
+// Export as a namespace for routes-integrations
+export const provisioning = {
+  generateSecurePassword,
+  createMailcowMailbox,
+};

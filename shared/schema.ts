@@ -225,6 +225,14 @@ export const mailcowConfig = pgTable("mailcow_config", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const insertMailcowConfigSchema = createInsertSchema(mailcowConfig).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  lastSyncAt: true,
+});
+
+export type InsertMailcowConfig = z.infer<typeof insertMailcowConfigSchema>;
 export type MailcowConfig = typeof mailcowConfig.$inferSelect;
 
 // Managed users across platforms
@@ -740,28 +748,6 @@ export const insertDepartmentEmailSettingsSchema = createInsertSchema(department
 
 export type InsertDepartmentEmailSettings = z.infer<typeof insertDepartmentEmailSettingsSchema>;
 export type DepartmentEmailSettings = typeof departmentEmailSettings.$inferSelect;
-
-// Mailcow Configuration - Email server integration
-export const mailcowConfig = pgTable("mailcow_config", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  instanceUrl: text("instance_url").notNull(),
-  apiKey: text("api_key").notNull(),
-  domain: varchar("domain", { length: 255 }).notNull(),
-  enabled: boolean("enabled").default(true).notNull(),
-  lastSyncAt: timestamp("last_sync_at"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-export const insertMailcowConfigSchema = createInsertSchema(mailcowConfig).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  lastSyncAt: true,
-});
-
-export type InsertMailcowConfig = z.infer<typeof insertMailcowConfigSchema>;
-export type MailcowConfig = typeof mailcowConfig.$inferSelect;
 
 // Communication Channels - Unified view of all channels
 export const CHANNEL_TYPES = {
