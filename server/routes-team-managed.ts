@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { isAuthenticated } from './devAuth';
+import { isAuthenticated } from './auth';
 
 export default function registerTeamManagedRoutes(app: Express, storage: any) {
   app.post('/api/team-members/:id/assign-platforms', isAuthenticated, async (req: any, res) => {

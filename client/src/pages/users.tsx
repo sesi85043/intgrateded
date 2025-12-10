@@ -53,6 +53,9 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 
 export default function Users() {
   const { toast } = useToast();
+  type GeneratedEmail = { email: string; password: string } | null;
+  const [generatedEmail, setGeneratedEmail] = useState<GeneratedEmail>(null);
+  const [showProvisionModal, setShowProvisionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [platformFilter, setPlatformFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -64,7 +67,8 @@ export default function Users() {
     queryKey: ["/api/users"],
   });
 
-  const form = useForm<InsertManagedUser>({
+  // Use a flexible form type so we can include UI-only fields (provisionMailbox)
+  const form = useForm<any>({
     resolver: zodResolver(insertManagedUserSchema),
     defaultValues: {
       email: "",
@@ -74,6 +78,8 @@ export default function Users() {
       status: "active",
       platformUserIds: {},
       roles: {},
+      teamMemberId: "",
+      provisionMailbox: true,
     },
   });
 
@@ -81,7 +87,7 @@ export default function Users() {
     mutationFn: async (data: InsertManagedUser) => {
       return await apiRequest("/api/users", "POST", data);
     },
-    onSuccess: () => {
+    onSuccess: (resp: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
       setIsCreateOpen(false);
@@ -90,6 +96,15 @@ export default function Users() {
         title: "User created",
         description: "The user has been created successfully.",
       });
+      // If backend returned generatedEmail (mailbox provisioning), show modal
+      try {
+        if (resp && resp.generatedEmail) {
+          setGeneratedEmail(resp.generatedEmail);
+          setShowProvisionModal(true);
+        }
+      } catch (e) {
+        console.warn('No generatedEmail in response', e);
+      }
     },
     onError: (error: Error) => {
       if (isUnauthorizedError(error)) {
@@ -111,11 +126,17 @@ export default function Users() {
     },
   });
 
+  // Load team members for the dropdown so admin can attach a managed user to a team member
+  const { data: teamMembers } = useQuery({
+    queryKey: ["/api/team-members"],
+    queryFn: async () => await apiRequest("/api/team-members", "GET"),
+  });
+
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: InsertManagedUser }) => {
       return await apiRequest(`/api/users/${id}`, "PATCH", data);
     },
-    onSuccess: () => {
+    onSuccess: (resp: any) => {
       queryClient.invalidateQueries({ queryKey: ["/api/users"] });
       setEditingUser(null);
       form.reset();
@@ -123,6 +144,14 @@ export default function Users() {
         title: "User updated",
         description: "The user has been updated successfully.",
       });
+      try {
+        if (resp && resp.generatedEmail) {
+          setGeneratedEmail(resp.generatedEmail);
+          setShowProvisionModal(true);
+        }
+      } catch (e) {
+        console.warn("No generatedEmail in update response", e);
+      }
     },
     onError: (error: Error) => {
       if (isUnauthorizedError(error)) {
@@ -208,6 +237,9 @@ export default function Users() {
       status: user.status,
       platformUserIds: user.platformUserIds || {},
       roles: user.roles || {},
+      teamMemberId: (user as any).teamMemberId || "",
+      // default to false when editing to avoid accidental reprovision
+      provisionMailbox: false,
     });
     setEditingUser(user);
   };
@@ -308,6 +340,10 @@ export default function Users() {
                         ))
                       ) : (
                         <span className="text-muted-foreground text-sm">None</span>
+                      )}
+                      {/* Mailbox indicator */}
+                      {(user.platformUserIds && (user.platformUserIds as any).mailcow) && (
+                        <Badge variant="secondary">Mailbox</Badge>
                       )}
                     </div>
                   </TableCell>
@@ -452,6 +488,43 @@ export default function Users() {
                   </FormItem>
                 )}
               />
+              {/* Team Member (optional) */}
+              <FormField
+                control={form.control}
+                name="teamMemberId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Team Member (optional)</FormLabel>
+                    <FormControl>
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger data-testid="select-team-member">
+                          <SelectValue placeholder="Link to a team member (for department)" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">None</SelectItem>
+                          {Array.isArray(teamMembers) && teamMembers.map((tm: any) => (
+                            <SelectItem key={tm.id} value={tm.id}>{tm.firstName} {tm.lastName} — {tm.email}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Provision mailbox toggle */}
+              <FormItem>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="provision-mailbox"
+                    checked={!!form.getValues().provisionMailbox}
+                    onCheckedChange={(val) => form.setValue('provisionMailbox', !!val)}
+                    data-testid="checkbox-provision-mailbox"
+                  />
+                  <label htmlFor="provision-mailbox" className="text-sm">Provision Mailbox (Mailcow)</label>
+                </div>
+              </FormItem>
               <FormField
                 control={form.control}
                 name="role"
@@ -541,6 +614,56 @@ export default function Users() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+        {/* Provisioned Email Modal */}
+        <Dialog open={showProvisionModal} onOpenChange={(open) => { if (!open) { setShowProvisionModal(false); setGeneratedEmail(null); } }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Email Provisioned</DialogTitle>
+              <DialogDescription>
+                This password will only be shown once. Copy or download the credentials now.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Email</label>
+                <div className="flex items-center justify-between gap-4">
+                  <code className="break-all">{generatedEmail?.email}</code>
+                  <div className="flex gap-2">
+                    <Button onClick={async () => { if (generatedEmail?.email) { await navigator.clipboard.writeText(generatedEmail.email); toast({ title: 'Copied', description: 'Email copied to clipboard' }); } }}>Copy</Button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Password</label>
+                <div className="flex items-center justify-between gap-4">
+                  <code className="break-all">{generatedEmail?.password}</code>
+                  <div className="flex gap-2">
+                    <Button onClick={async () => { if (generatedEmail?.password) { await navigator.clipboard.writeText(generatedEmail.password); toast({ title: 'Copied', description: 'Password copied to clipboard' }); } }}>Copy</Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button onClick={() => {
+                  // download CSV
+                  if (!generatedEmail) return;
+                  const content = `email,password\n${generatedEmail.email},${generatedEmail.password}\n`;
+                  const blob = new Blob([content], { type: 'text/csv' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `credentials-${generatedEmail.email.replace(/[@]/g, '-')}.csv`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}>Download</Button>
+                <Button onClick={() => { setShowProvisionModal(false); setGeneratedEmail(null); }}>Done</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
     </div>
   );
 }

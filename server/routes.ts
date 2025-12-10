@@ -438,33 +438,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       // Try to provision a Mailcow mailbox for this managed user (optional)
+      // The frontend can send `provisionMailbox` boolean in the body to opt-in/out.
       let generatedEmail = null;
-      try {
-        // Derive first/last name from fullName if available
-        const fullName = validatedData.fullName || '';
-        const parts = fullName.trim().split(/\s+/);
-        const firstName = parts.length > 0 ? parts[0] : 'user';
-        const lastName = parts.length > 1 ? parts.slice(1).join(' ') : 'user';
+      const provisionMailbox = req.body?.provisionMailbox !== false; // default true
+      if (provisionMailbox) {
+        try {
+          // Derive first/last name from fullName if available
+          const fullName = validatedData.fullName || '';
+          const parts = fullName.trim().split(/\s+/);
+          const firstName = parts.length > 0 ? parts[0] : 'user';
+          const lastName = parts.length > 1 ? parts.slice(1).join(' ') : 'user';
 
-        // Determine department tag for email (prefer department code, fallback to name)
-        let deptTag = 'staff';
-        if (validatedData.teamMemberId) {
-          try {
-            const teamMember = await storage.getTeamMember(validatedData.teamMemberId);
-            if (teamMember && teamMember.departmentId) {
-              const dept = await storage.getDepartment(teamMember.departmentId);
-              if (dept) {
-                deptTag = (dept.code || dept.name || 'staff').toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+          // Determine department tag for email (prefer department code, fallback to name)
+          let deptTag = 'staff';
+          if (validatedData.teamMemberId) {
+            try {
+              const teamMember = await storage.getTeamMember(validatedData.teamMemberId);
+              if (teamMember && teamMember.departmentId) {
+                const dept = await storage.getDepartment(teamMember.departmentId);
+                if (dept) {
+                  deptTag = (dept.code || dept.name || 'staff').toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+                }
               }
+            } catch (dErr) {
+              console.warn('Could not resolve department for mailbox tag, defaulting to staff', dErr);
             }
-          } catch (dErr) {
-            console.warn('Could not resolve department for mailbox tag, defaulting to staff', dErr);
+          }
+
+          generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
+
+          // Activity log: provisioning success
+          try {
+            await storage.createActivityLog(
+              req.user.claims.sub,
+              'provision_mailbox',
+              'managed_user',
+              user.id,
+              'mailcow',
+              { success: true, email: generatedEmail?.email }
+            );
+          } catch (logErr) {
+            console.warn('Failed to write provisioning activity log', logErr);
+          }
+        } catch (emailErr) {
+          console.error('Failed to provision Mailcow mailbox:', emailErr);
+          // Activity log: provisioning failure
+          try {
+            await storage.createActivityLog(
+              req.user.claims.sub,
+              'provision_mailbox',
+              'managed_user',
+              user.id,
+              'mailcow',
+              { success: false, error: (emailErr && emailErr.message) || String(emailErr) }
+            );
+          } catch (logErr) {
+            console.warn('Failed to write provisioning failure activity log', logErr);
           }
         }
-
-        generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
-      } catch (emailErr) {
-        console.error('Failed to provision Mailcow mailbox:', emailErr);
+      } else {
+        // Admin chose to skip mailbox provisioning — log that choice
+        try {
+          await storage.createActivityLog(
+            req.user.claims.sub,
+            'provision_mailbox_skipped',
+            'managed_user',
+            user.id,
+            'mailcow',
+            { success: null }
+          );
+        } catch (logErr) {
+          console.warn('Failed to write provisioning-skipped activity log', logErr);
+        }
       }
 
       res.json({ user, generatedEmail });
@@ -479,9 +524,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const validatedData = insertManagedUserSchema.partial().parse(req.body);
       
+      const existingUser = await storage.getManagedUser(id);
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const user = await storage.updateManagedUser(id, validatedData);
-      
-      // Log activity
+
+      // Log activity for update
       await storage.createActivityLog(
         req.user.claims.sub,
         "updated_user",
@@ -491,7 +541,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { email: user.email, platforms: user.platforms }
       );
 
-      res.json(user);
+      // Optionally provision a Mailcow mailbox during update if requested
+      let generatedEmail = null;
+      const provisionMailbox = req.body?.provisionMailbox === true; // only provision when explicitly true on edit
+      if (provisionMailbox) {
+        try {
+          const fullName = validatedData.fullName || existingUser.fullName || '';
+          const parts = fullName.trim().split(/\s+/);
+          const firstName = parts.length > 0 ? parts[0] : 'user';
+          const lastName = parts.length > 1 ? parts.slice(1).join(' ') : 'user';
+
+          // Determine department tag (prefer updated teamMemberId, fallback to existing)
+          let deptTag = 'staff';
+          const teamMemberId = validatedData.teamMemberId || (existingUser as any).teamMemberId;
+          if (teamMemberId) {
+            try {
+              const teamMember = await storage.getTeamMember(teamMemberId);
+              if (teamMember && teamMember.departmentId) {
+                const dept = await storage.getDepartment(teamMember.departmentId);
+                if (dept) {
+                  deptTag = (dept.code || dept.name || 'staff').toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+                }
+              }
+            } catch (dErr) {
+              console.warn('Could not resolve department for mailbox tag during update, defaulting to staff', dErr);
+            }
+          }
+
+          generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
+
+          // Update managed user to record mailbox info in platformUserIds
+          try {
+            const mergedPlatformIds = {
+              ...(existingUser.platformUserIds || {}),
+              ...(user.platformUserIds || {}),
+              mailcow: generatedEmail?.email,
+            };
+            await storage.updateManagedUser(id, { platformUserIds: mergedPlatformIds });
+          } catch (updErr) {
+            console.warn('Failed to update managed user with mailcow info', updErr);
+          }
+
+          // Activity log: provisioning success
+          try {
+            await storage.createActivityLog(
+              req.user.claims.sub,
+              'provision_mailbox',
+              'managed_user',
+              id,
+              'mailcow',
+              { success: true, email: generatedEmail?.email }
+            );
+          } catch (logErr) {
+            console.warn('Failed to write provisioning activity log (update)', logErr);
+          }
+        } catch (emailErr) {
+          console.error('Failed to provision Mailcow mailbox during update:', emailErr);
+          try {
+            await storage.createActivityLog(
+              req.user.claims.sub,
+              'provision_mailbox',
+              'managed_user',
+              id,
+              'mailcow',
+              { success: false, error: (emailErr && emailErr.message) || String(emailErr) }
+            );
+          } catch (logErr) {
+            console.warn('Failed to write provisioning failure activity log (update)', logErr);
+          }
+        }
+      }
+
+      // Return updated user and any generatedEmail so frontend can show credentials
+      res.json({ user: await storage.getManagedUser(id), generatedEmail });
     } catch (error) {
       console.error("Error updating user:", error);
       res.status(400).json({ message: "Failed to update user" });

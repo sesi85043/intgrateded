@@ -24,8 +24,8 @@ export async function setupVite(app: Express, server: Server) {
     customLogger: {
       ...viteLogger,
       error: (msg, options) => {
+        // Forward error to vite logger but do not exit process on warnings
         viteLogger.error(msg, options);
-        process.exit(1);
       },
     },
     server: serverOptions,

@@ -211,6 +211,22 @@ export const insertServiceConfigSchema = createInsertSchema(serviceConfigs).omit
 export type InsertServiceConfig = z.infer<typeof insertServiceConfigSchema>;
 export type ServiceConfig = typeof serviceConfigs.$inferSelect;
 
+// Mailcow-specific configuration (kept separate for convenience)
+export const mailcowConfig = pgTable("mailcow_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  instanceUrl: varchar("instance_url"),
+  apiKey: text("api_key"),
+  domain: varchar("domain"),
+  enabled: boolean("enabled").default(true).notNull(),
+  connectionStatus: varchar("connection_status"),
+  lastConnectedAt: timestamp("last_connected_at"),
+  lastSyncAt: timestamp("last_sync_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type MailcowConfig = typeof mailcowConfig.$inferSelect;
+
 // Managed users across platforms
 export const managedUsers = pgTable("managed_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
