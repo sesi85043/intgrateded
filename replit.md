@@ -39,7 +39,16 @@ Admin Hub is a unified platform management application that centralizes control 
 - Run `npm run start` to start the production server
 - Production server runs on port 5000
 
+## User Provisioning Flow
+When a user registers and gets approved by management:
+1. **Mailcow Integration**: Auto-generates company email (`surname.firstname_department@domain`)
+2. **Chatwoot Integration**: Creates agent account and assigns to department's team
+3. **Managed Users**: Tracks platform accounts linked to each team member
+
+Provisioning is triggered via the approval workflow or manually via `/api/integrations/provision/:teamMemberId`.
+
 ## Recent Changes
 - December 10, 2025: Initial setup in Replit environment
 - Fixed duplicate mailcowConfig export in schema
-- Added provisioning export for routes-integrations
+- Implemented full provisionTeamMember function with Mailcow + Chatwoot integration
+- Auto-assigns Chatwoot agents to their department teams on approval
