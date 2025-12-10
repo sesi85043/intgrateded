@@ -1037,7 +1037,7 @@ export default function registerIntegrationRoutes(app: Express) {
             success: false,
             error: "Full provisioning not yet re-implemented"
           });
-          continue;
+        } catch (err) {
           results.push({
             teamMemberId,
             success: false,
