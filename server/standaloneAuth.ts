@@ -78,6 +78,11 @@ export async function setupAuth(app: Express) {
   const config = await getOidcConfig();
 
   const verify: VerifyFunction = async (
+      if (!config) {
+        console.log('[auth] OIDC config not available, skipping OpenID Connect setup');
+        return;
+      }
+
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
