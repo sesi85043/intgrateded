@@ -134,14 +134,7 @@ export default function Login() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-              <p>Demo Accounts (password: admin123)</p>
-              <div className="mt-2 space-y-1 text-xs">
-                <p><strong>Management:</strong> admin@company.com</p>
-                <p><strong>Dept Admin:</strong> ha.admin@company.com</p>
-                <p><strong>Technician:</strong> ha.tech1@company.com</p>
-              </div>
-            </div>
+            {/* Demo accounts removed for production deployment */}
 
             <div className="mt-6 pt-6 border-t text-center">
               <p className="text-sm text-muted-foreground mb-2">New staff member?</p>
