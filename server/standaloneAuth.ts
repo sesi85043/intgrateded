@@ -12,9 +12,14 @@ import { storage } from "./storage";
 
 const getOidcConfig = memoize(
   async () => {
+    // Return null if required env vars are not set
+    if (!process.env.ISSUER_URL || !process.env.STANDALONE_ID) {
+      console.warn('[auth] Standalone auth: missing ISSUER_URL or STANDALONE_ID, skipping OIDC setup');
+      return null;
+    }
     return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.STANDALONE_ID!
+      new URL(process.env.ISSUER_URL),
+      process.env.STANDALONE_ID
     );
   },
   { maxAge: 3600 * 1000 }
@@ -71,6 +76,11 @@ export async function setupAuth(app: Express) {
   app.use(passport.session());
 
   const config = await getOidcConfig();
+
+  if (!config) {
+    console.log('[auth] OIDC config not available, skipping OpenID Connect setup');
+    return;
+  }
 
   const verify: VerifyFunction = async (
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
