@@ -1,0 +1,74 @@
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox> Set-Location -Path 'C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded'; $env:PORT='5001'; npm run dev
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index-dev.ts
+
+1:19:50 PM [express] serving on port 5001
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+1:20:21 PM [express] GET /api/auth/user 401 in 7ms :: {"message":"Unauthorized"}
+Login error: error: password authentication failed for user "username"
+    at C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async <anonymous> (C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\node_modules\src\node-postgres\session.ts:104:19)
+    at async DatabaseStorage.getTeamMemberByEmail (C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\server\storage.ts:255:22)
+    at async <anonymous> (C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\server\devAuth.ts:96:22) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+1:20:28 PM [express] POST /api/auth/login 500 in 223ms :: {"message":"Login failed"}
+Error fetching departments: error: password authentication failed for user "username"
+    at C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\node_modules\pg-pool\index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async <anonymous> (C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\node_modules\src\node-postgres\session.ts:104:19)
+    at async DatabaseStorage.getAllDepartments (C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\server\storage.ts:205:12)
+    at async <anonymous> (C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded\server\routes.ts:1347:27) {
+  length: 104,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+1:20:46 PM [express] GET /api/public/departments 500 in 158ms :: {"message":"Failed to fetch departm…
+1:21:00 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded> Set-Location -Path 'C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded'; echo $env:DATABASE_URL
+postgres://username:password@localhost:5432/letsdo
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded> # show DATABASE_URL if set in the current shell
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded> Get-ChildItem Env:DATABASE_URL
+
+
+Name                           Value
+----                           -----
+DATABASE_URL                   postgres://username:password@localhost:5432/letsdo
+
+
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded> 
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded> # show other DB env vars
+PS C:\Users\MM_SD\Downloads\intgrateded - inbox\intgrateded> Get-ChildItem Env:DB_USER
