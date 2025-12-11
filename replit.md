@@ -76,7 +76,30 @@ const userTeamIds = await storage.getTeamIdsForMember(userId);
 const messages = await fetchMessagesForTeams(userTeamIds);
 ```
 
+### Team API Endpoints
+```
+GET  /api/teams                  - List all teams
+GET  /api/teams/:id              - Get single team
+POST /api/teams                  - Create team (Management only)
+PATCH /api/teams/:id             - Update team (Management only)
+DELETE /api/teams/:id            - Delete team (Management only)
+GET  /api/teams/:id/members      - Get members in a team
+POST /api/teams/:teamId/members/:memberId   - Add member to team
+DELETE /api/teams/:teamId/members/:memberId - Remove member from team
+GET  /api/my-teams               - Get current user's teams
+GET  /api/my-team-ids            - Get current user's team IDs (for filtering)
+GET  /api/team-members/:id/teams - Get teams for a specific member
+```
+
+### Default Login
+- **Email**: admin@company.com
+- **Password**: admin123
+
+See `docs/TIERED_SUPPORT_IMPLEMENTATION_GUIDE.md` for complete implementation details.
+
 ## Recent Changes
+- December 11, 2025: Added Team API endpoints for tiered support management
+- December 11, 2025: Seeded database with default teams (All Staff, HA, HHP, DTV) and admin user
 - December 11, 2025: Implemented tiered support architecture with teams and many-to-many membership
 - December 10, 2025: Initial setup in Replit environment
 - Fixed duplicate mailcowConfig export in schema
