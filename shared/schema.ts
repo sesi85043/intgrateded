@@ -137,6 +137,45 @@ export const insertDepartmentSchema = createInsertSchema(departments).omit({
 export type InsertDepartment = z.infer<typeof insertDepartmentSchema>;
 export type Department = typeof departments.$inferSelect;
 
+// ============================================
+// TEAMS - Internal communication teams (for tiered support)
+// ============================================
+
+// Team types for categorization
+export const TEAM_TYPES = {
+  ALL_STAFF: 'all_staff',      // Parent email - everyone sees
+  DEPARTMENT: 'department',     // Department-specific team
+  CUSTOM: 'custom',            // Custom team (managers only, etc.)
+} as const;
+
+export type TeamType = typeof TEAM_TYPES[keyof typeof TEAM_TYPES];
+
+// Teams table - Internal teams for message routing (many-to-many with staff)
+export const teams = pgTable("teams", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  code: varchar("code", { length: 30 }).notNull().unique(), // all_staff, sales, tech, etc.
+  description: text("description"),
+  teamType: varchar("team_type", { length: 30 }).notNull().default('custom'), // all_staff, department, custom
+  departmentId: varchar("department_id").references(() => departments.id), // Link to department if department-specific
+  chatwootTeamId: integer("chatwoot_team_id"), // Corresponding Chatwoot team ID
+  chatwootInboxId: integer("chatwoot_inbox_id"), // Corresponding Chatwoot inbox ID
+  emailAddress: varchar("email_address"), // Email address for this team (e.g., sales@company.com)
+  isDefault: boolean("is_default").default(false).notNull(), // If true, all new staff auto-join
+  status: varchar("status", { length: 20 }).default('active').notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertTeamSchema = createInsertSchema(teams).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertTeam = z.infer<typeof insertTeamSchema>;
+export type Team = typeof teams.$inferSelect;
+
 // Team Members table - Company employees with department assignments and RBAC
 export const teamMembers = pgTable("team_members", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -188,6 +227,20 @@ export const insertTeamMemberSchema = createInsertSchema(teamMembers).omit({
 
 export type InsertTeamMember = z.infer<typeof insertTeamMemberSchema>;
 export type TeamMember = typeof teamMembers.$inferSelect;
+
+// Team Member Teams - Junction table for many-to-many (staff can be in multiple teams)
+export const teamMemberTeams = pgTable("team_member_teams", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  teamMemberId: varchar("team_member_id").notNull().references(() => teamMembers.id, { onDelete: 'cascade' }),
+  teamId: varchar("team_id").notNull().references(() => teams.id, { onDelete: 'cascade' }),
+  addedAt: timestamp("added_at").defaultNow(),
+  addedById: varchar("added_by_id").references(() => teamMembers.id),
+  isActive: boolean("is_active").default(true).notNull(),
+}, (table) => [
+  index("IDX_team_member_teams_unique").on(table.teamMemberId, table.teamId),
+]);
+
+export type TeamMemberTeam = typeof teamMemberTeams.$inferSelect;
 
 // Service configurations for external platforms
 export const serviceConfigs = pgTable("service_configs", {

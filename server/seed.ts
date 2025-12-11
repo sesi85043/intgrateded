@@ -5,8 +5,11 @@ import {
   rolePermissions, 
   departments, 
   teamMembers,
+  teams,
+  teamMemberTeams,
   ROLE_TYPES,
-  PERMISSION_TYPES 
+  PERMISSION_TYPES,
+  TEAM_TYPES
 } from "@shared/schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
@@ -163,9 +166,67 @@ async function seed() {
 
     console.log("Created super admin user: admin@company.com / admin123");
 
+    // 6. Create Teams for Tiered Support Architecture
+    console.log("Creating teams for tiered support...");
+    
+    // Create "All Staff" team - everyone auto-joins this
+    const allStaffTeam = await db.insert(teams).values({
+      name: "All Staff",
+      code: "all_staff",
+      description: "Parent team - All staff members receive messages sent to main support email",
+      teamType: TEAM_TYPES.ALL_STAFF,
+      emailAddress: "support@allelectronics.co.za",
+      isDefault: true, // New staff auto-join
+      status: "active",
+    }).returning();
+    console.log("Created 'All Staff' team");
+
+    // Create department-specific teams
+    const departmentTeams = [];
+    for (const dept of insertedDepts) {
+      const teamCode = dept.code.toLowerCase() + "_team";
+      const deptTeam = await db.insert(teams).values({
+        name: `${dept.name} Team`,
+        code: teamCode,
+        description: `Team for ${dept.name} department - Only ${dept.name} staff see these messages`,
+        teamType: TEAM_TYPES.DEPARTMENT,
+        departmentId: dept.id,
+        emailAddress: `${dept.code.toLowerCase()}@allelectronics.co.za`,
+        isDefault: false,
+        status: "active",
+      }).returning();
+      departmentTeams.push(deptTeam[0]);
+      console.log(`Created '${dept.name} Team'`);
+    }
+
+    // 7. Add admin to all teams
+    console.log("Adding admin to all teams...");
+    
+    // Add to All Staff team
+    await db.insert(teamMemberTeams).values({
+      teamMemberId: adminUser[0].id,
+      teamId: allStaffTeam[0].id,
+      isActive: true,
+    });
+
+    // Add admin to all department teams (management sees everything)
+    for (const deptTeam of departmentTeams) {
+      await db.insert(teamMemberTeams).values({
+        teamMemberId: adminUser[0].id,
+        teamId: deptTeam.id,
+        isActive: true,
+      });
+    }
+    console.log("Admin added to all teams");
+
     console.log("\n=== Seed Complete ===");
     console.log("\nSuper Admin Account (password: admin123):");
     console.log("Email: admin@company.com");
+    console.log("\nTeams Created:");
+    console.log("- All Staff (everyone auto-joins - for support@ emails)");
+    console.log("- Home Appliances Team (HA department)");
+    console.log("- Home Entertainment Products Team (HHP department)");
+    console.log("- Digital Television Team (DTV department)");
     console.log("\nNo demo accounts created - users must sign up and await approval");
 
   } catch (error) {

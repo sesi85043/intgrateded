@@ -10,6 +10,8 @@ import {
   users,
   departments,
   teamMembers,
+  teams,
+  teamMemberTeams,
   serviceConfigs,
   managedUsers,
   activityLogs,
@@ -30,6 +32,9 @@ import {
   type InsertDepartment,
   type TeamMember,
   type InsertTeamMember,
+  type Team,
+  type InsertTeam,
+  type TeamMemberTeam,
   type ServiceConfig,
   type InsertServiceConfig,
   type ManagedUser,
@@ -750,6 +755,197 @@ export class DatabaseStorage implements IStorage {
       .from(pendingRegistrations)
       .where(eq(pendingRegistrations.status, 'pending'));
     return result?.count || 0;
+  }
+
+  // ============================================
+  // TEAM OPERATIONS - Tiered Support Architecture
+  // ============================================
+
+  // Get all teams
+  async getAllTeams(): Promise<Team[]> {
+    return await db.select().from(teams).orderBy(teams.name);
+  }
+
+  // Get team by ID
+  async getTeam(id: string): Promise<Team | undefined> {
+    const [team] = await db.select().from(teams).where(eq(teams.id, id));
+    return team;
+  }
+
+  // Get team by code
+  async getTeamByCode(code: string): Promise<Team | undefined> {
+    const [team] = await db.select().from(teams).where(eq(teams.code, code));
+    return team;
+  }
+
+  // Create a new team
+  async createTeam(team: InsertTeam): Promise<Team> {
+    const [created] = await db.insert(teams).values(team).returning();
+    return created;
+  }
+
+  // Update a team
+  async updateTeam(id: string, team: Partial<InsertTeam>): Promise<Team> {
+    const [updated] = await db
+      .update(teams)
+      .set({ ...team, updatedAt: new Date() })
+      .where(eq(teams.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Delete a team
+  async deleteTeam(id: string): Promise<void> {
+    await db.delete(teams).where(eq(teams.id, id));
+  }
+
+  // Get teams for a specific team member (many-to-many)
+  async getTeamsForMember(teamMemberId: string): Promise<Team[]> {
+    return await db
+      .select({
+        id: teams.id,
+        name: teams.name,
+        code: teams.code,
+        description: teams.description,
+        teamType: teams.teamType,
+        departmentId: teams.departmentId,
+        chatwootTeamId: teams.chatwootTeamId,
+        chatwootInboxId: teams.chatwootInboxId,
+        emailAddress: teams.emailAddress,
+        isDefault: teams.isDefault,
+        status: teams.status,
+        createdAt: teams.createdAt,
+        updatedAt: teams.updatedAt,
+      })
+      .from(teamMemberTeams)
+      .innerJoin(teams, eq(teamMemberTeams.teamId, teams.id))
+      .where(and(eq(teamMemberTeams.teamMemberId, teamMemberId), eq(teamMemberTeams.isActive, true)));
+  }
+
+  // Get team IDs for a member (for filtering messages)
+  async getTeamIdsForMember(teamMemberId: string): Promise<string[]> {
+    const memberTeams = await db
+      .select({ teamId: teamMemberTeams.teamId })
+      .from(teamMemberTeams)
+      .where(and(eq(teamMemberTeams.teamMemberId, teamMemberId), eq(teamMemberTeams.isActive, true)));
+    return memberTeams.map(t => t.teamId);
+  }
+
+  // Get team members for a specific team
+  async getMembersInTeam(teamId: string): Promise<TeamMember[]> {
+    return await db
+      .select({
+        id: teamMembers.id,
+        userId: teamMembers.userId,
+        departmentId: teamMembers.departmentId,
+        roleId: teamMembers.roleId,
+        employeeId: teamMembers.employeeId,
+        email: teamMembers.email,
+        firstName: teamMembers.firstName,
+        lastName: teamMembers.lastName,
+        role: teamMembers.role,
+        passwordHash: teamMembers.passwordHash,
+        phone: teamMembers.phone,
+        status: teamMembers.status,
+        isVerified: teamMembers.isVerified,
+        lastLoginAt: teamMembers.lastLoginAt,
+        addressLine1: teamMembers.addressLine1,
+        addressLine2: teamMembers.addressLine2,
+        city: teamMembers.city,
+        state: teamMembers.state,
+        postalCode: teamMembers.postalCode,
+        country: teamMembers.country,
+        nextOfKin1Name: teamMembers.nextOfKin1Name,
+        nextOfKin1Relationship: teamMembers.nextOfKin1Relationship,
+        nextOfKin1Phone: teamMembers.nextOfKin1Phone,
+        nextOfKin1Email: teamMembers.nextOfKin1Email,
+        nextOfKin1Address: teamMembers.nextOfKin1Address,
+        nextOfKin2Name: teamMembers.nextOfKin2Name,
+        nextOfKin2Relationship: teamMembers.nextOfKin2Relationship,
+        nextOfKin2Phone: teamMembers.nextOfKin2Phone,
+        nextOfKin2Email: teamMembers.nextOfKin2Email,
+        nextOfKin2Address: teamMembers.nextOfKin2Address,
+        createdAt: teamMembers.createdAt,
+        updatedAt: teamMembers.updatedAt,
+      })
+      .from(teamMemberTeams)
+      .innerJoin(teamMembers, eq(teamMemberTeams.teamMemberId, teamMembers.id))
+      .where(and(eq(teamMemberTeams.teamId, teamId), eq(teamMemberTeams.isActive, true)));
+  }
+
+  // Add a team member to a team (upsert to prevent duplicates)
+  async addMemberToTeam(teamMemberId: string, teamId: string, addedById?: string): Promise<TeamMemberTeam> {
+    // Check if membership exists (including inactive)
+    const [existing] = await db
+      .select()
+      .from(teamMemberTeams)
+      .where(and(eq(teamMemberTeams.teamMemberId, teamMemberId), eq(teamMemberTeams.teamId, teamId)));
+    
+    if (existing) {
+      // Reactivate if inactive
+      if (!existing.isActive) {
+        const [updated] = await db
+          .update(teamMemberTeams)
+          .set({ isActive: true, addedAt: new Date(), addedById })
+          .where(eq(teamMemberTeams.id, existing.id))
+          .returning();
+        return updated;
+      }
+      return existing;
+    }
+    
+    // Create new membership
+    const [membership] = await db
+      .insert(teamMemberTeams)
+      .values({
+        teamMemberId,
+        teamId,
+        addedById,
+        isActive: true,
+      })
+      .returning();
+    return membership;
+  }
+
+  // Remove a team member from a team (soft delete)
+  async removeMemberFromTeam(teamMemberId: string, teamId: string): Promise<void> {
+    await db
+      .update(teamMemberTeams)
+      .set({ isActive: false })
+      .where(and(eq(teamMemberTeams.teamMemberId, teamMemberId), eq(teamMemberTeams.teamId, teamId)));
+  }
+
+  // Check if member is in team
+  async isMemberInTeam(teamMemberId: string, teamId: string): Promise<boolean> {
+    const [result] = await db
+      .select({ id: teamMemberTeams.id })
+      .from(teamMemberTeams)
+      .where(
+        and(
+          eq(teamMemberTeams.teamMemberId, teamMemberId),
+          eq(teamMemberTeams.teamId, teamId),
+          eq(teamMemberTeams.isActive, true)
+        )
+      );
+    return !!result;
+  }
+
+  // Get default teams (teams that new members auto-join)
+  async getDefaultTeams(): Promise<Team[]> {
+    return await db.select().from(teams).where(eq(teams.isDefault, true));
+  }
+
+  // Auto-join new member to default teams
+  async autoJoinDefaultTeams(teamMemberId: string): Promise<void> {
+    const defaultTeams = await this.getDefaultTeams();
+    for (const team of defaultTeams) {
+      await this.addMemberToTeam(teamMemberId, team.id);
+    }
+  }
+
+  // Get teams by department (for department-specific routing)
+  async getTeamsByDepartment(departmentId: string): Promise<Team[]> {
+    return await db.select().from(teams).where(eq(teams.departmentId, departmentId));
   }
 }
 

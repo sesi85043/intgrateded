@@ -1032,6 +1032,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         passwordHash,
       } as any);
 
+      // Auto-join default teams (All Staff, department team)
+      await storage.autoJoinDefaultTeams(newMember.id);
+      
+      // Also add to their department's team if it exists
+      const deptTeams = await storage.getTeamsByDepartment(newMember.departmentId);
+      for (const team of deptTeams) {
+        await storage.addMemberToTeam(newMember.id, team.id, member.id);
+      }
+
       await storage.createActivityLog(
         member.userId || member.id,
         "created_team_member",
@@ -1545,6 +1554,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           nextOfKin2Email: registration.nextOfKin2Email,
           nextOfKin2Address: registration.nextOfKin2Address,
         });
+      }
+
+      // Auto-join default teams (All Staff) and department team on approval
+      await storage.autoJoinDefaultTeams(newMember.id);
+      const deptTeams = await storage.getTeamsByDepartment(registration.departmentId);
+      for (const team of deptTeams) {
+        await storage.addMemberToTeam(newMember.id, team.id, member.id);
       }
 
       // Mark OTP as used

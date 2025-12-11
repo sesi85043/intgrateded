@@ -47,7 +47,37 @@ When a user registers and gets approved by management:
 
 Provisioning is triggered via the approval workflow or manually via `/api/integrations/provision/:teamMemberId`.
 
+## Tiered Support Architecture
+
+The Admin Hub implements a tiered support system for message routing:
+
+### How It Works
+- **Parent Email (support@allelectronics.co.za)**: Messages go to the "All Staff" team - everyone sees them
+- **Department Emails (ha@, hhp@, dtv@)**: Messages only visible to that department's team members
+
+### Teams Structure
+1. **All Staff Team** (`all_staff`): Default team - all new staff auto-join. Receives parent email messages.
+2. **Department Teams** (HA, HHP, DTV): Only members of that department join. Receives department-specific messages.
+
+### Database Tables
+- `teams`: Internal teams for message routing
+- `team_member_teams`: Many-to-many junction table (staff can be in multiple teams)
+
+### Key Storage Methods
+- `getTeamsForMember(teamMemberId)`: Get all teams a staff member belongs to
+- `getTeamIdsForMember(teamMemberId)`: Get team IDs for filtering messages
+- `getMembersInTeam(teamId)`: Get all staff in a specific team
+- `addMemberToTeam()` / `removeMemberFromTeam()`: Manage team membership
+- `autoJoinDefaultTeams(teamMemberId)`: Auto-enroll new staff in default teams
+
+### Message Filtering Logic
+```typescript
+const userTeamIds = await storage.getTeamIdsForMember(userId);
+const messages = await fetchMessagesForTeams(userTeamIds);
+```
+
 ## Recent Changes
+- December 11, 2025: Implemented tiered support architecture with teams and many-to-many membership
 - December 10, 2025: Initial setup in Replit environment
 - Fixed duplicate mailcowConfig export in schema
 - Implemented full provisionTeamMember function with Mailcow + Chatwoot integration
