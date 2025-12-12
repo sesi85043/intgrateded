@@ -51,16 +51,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+  // NOTE: We support a development-only auth bypass. This SHOULD NEVER be enabled in
+  // production. To enable locally set `DEV_AUTH_BYPASS=true` and ensure NODE_ENV !== "production".
+  // The bypass allows rapid local testing without compiling the frontend or logging in.
+  if (process.env.DEV_AUTH_BYPASS === "true" && process.env.NODE_ENV !== "production") {
+    // --- DEV AUTH BYPASS START ---
+    // Gated behind DEV_AUTH_BYPASS and restricted to non-production environments.
+    app.get('/api/auth/user', (_req, res) => {
+      console.warn("⚠️  Development-only auth bypass is enabled. This must NOT be used in production.");
+      return res.json({
+        id: 1,
+        username: "Manager_Demo",
+        email: "manager_demo@example.com",
+        role: "admin",
+        isAdmin: true,
+        permissions: ["all"],
+      });
+    });
+    // --- DEV AUTH BYPASS END ---
+  } else {
+    app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+      try {
+        const userId = req.user.claims.sub;
+        const user = await storage.getUser(userId);
+        res.json(user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Failed to fetch user" });
+      }
+    });
+  }
 
   // Profile routes - Update own profile
   app.get('/api/profile', isTeamMemberAuthenticated, async (req: any, res) => {
