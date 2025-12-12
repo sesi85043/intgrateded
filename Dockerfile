@@ -24,6 +24,9 @@ RUN npm install -g pm2 && \
 # Copy package files for production install
 COPY package.json package-lock.json ./
 
+# Copy tsconfig so tsconfig-paths can resolve path aliases at runtime
+COPY tsconfig.json ./
+
 # Install only production dependencies  
 RUN npm ci --omit=dev
 
