@@ -7,7 +7,6 @@ import express, {
   NextFunction,
 } from "express";
 import cors from 'cors';
-import cors from 'cors';
 
 import { registerRoutes } from "./routes";
 
@@ -52,6 +51,10 @@ const origins = corsOrigin ? corsOrigin.split(',').map(s => s.trim()) : defaultO
 console.log('[auth] CORS allowed origins:', origins);
 app.use(cors({
   origin: function (origin, callback) {
+    // In development or Replit environment, allow all origins
+    if (process.env.NODE_ENV === 'development' || process.env.REPL_ID) {
+      return callback(null, true);
+    }
     // allow requests with no origin (like curl / Postman) as well
     if (!origin || origins.indexOf(origin) !== -1) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
