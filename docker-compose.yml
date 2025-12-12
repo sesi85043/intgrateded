@@ -42,6 +42,10 @@ services:
       PORT: 5000
       DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-postgres}
       SESSION_SECRET: ${SESSION_SECRET:-your-secure-session-secret-change-this}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      SESSION_COOKIE_SAME_SITE: ${SESSION_COOKIE_SAME_SITE:-lax}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-adminhub.sid}
+      CORS_ORIGIN: ${CORS_ORIGIN:-}
       NODE_OPTIONS: --max-old-space-size=1024
     ports:
       # Map external port (CHANGE_ME) to internal container port 5000
