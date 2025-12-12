@@ -8,13 +8,15 @@ async function loadAuthModule() {
       return (mod as any).default || mod;
     }
 
-    if (process.env.REPL_ID || process.env.REPLIT_DEV_DOMAIN) {
-      const mod = await import("./replitAuth");
+    // In development mode, use devAuth for password-based login
+    // This takes priority over Replit OIDC auth in development
+    if (process.env.NODE_ENV === "development") {
+      const mod = await import("./devAuth");
       return (mod as any).default || mod;
     }
 
-    if (process.env.NODE_ENV === "development") {
-      const mod = await import("./devAuth");
+    if (process.env.REPL_ID || process.env.REPLIT_DEV_DOMAIN) {
+      const mod = await import("./replitAuth");
       return (mod as any).default || mod;
     }
 
