@@ -71,6 +71,12 @@ if [ ! -f ".env.production" ]; then
 fi
 log_success "All configuration files present"
 
+# Load env vars from .env.production so docker-compose picks up SESSION_COOKIE_* and CORS settings
+log_info "Loading environment variables from .env.production"
+set -a
+. ./.env.production
+set +a
+
 # Step 4: Create necessary directories
 log_info "Step 4: Setting up directories..."
 mkdir -p logs
