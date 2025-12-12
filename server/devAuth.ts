@@ -29,13 +29,20 @@ const DEV_USER = {
 };
 
 export function getSession() {
+  const secureFlag = process.env.SESSION_COOKIE_SECURE ? process.env.SESSION_COOKIE_SECURE === 'true' : false;
+  const sameSiteVal = process.env.SESSION_COOKIE_SAME_SITE as any || (secureFlag ? 'none' : 'lax');
+
+  console.log(`[auth] Dev session cookie secure=${secureFlag} sameSite=${sameSiteVal}`);
+
   return session({
+    name: process.env.SESSION_COOKIE_NAME || 'adminhub.sid',
     secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: secureFlag,
+      sameSite: sameSiteVal,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     },
   });
@@ -75,6 +82,7 @@ async function ensureDevTeamMember(): Promise<string | null> {
 }
 
 export async function setupAuth(app: Express) {
+  app.set('trust proxy', 1);
   app.use(getSession());
 
   app.get("/api/dev-login", async (req: any, res) => {

@@ -32,14 +32,21 @@ export function getSession() {
     ttl: sessionTtl,
     tableName: "sessions",
   });
+  const secureFlag = process.env.SESSION_COOKIE_SECURE ? process.env.SESSION_COOKIE_SECURE === 'true' : (process.env.NODE_ENV === 'production');
+  const sameSiteVal = process.env.SESSION_COOKIE_SAME_SITE as any || (secureFlag ? 'none' : 'lax');
+
+  console.log(`[auth] Replit session cookie secure=${secureFlag} sameSite=${sameSiteVal}`);
+
   return session({
+    name: process.env.SESSION_COOKIE_NAME || 'adminhub.sid',
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: secureFlag,
+      sameSite: sameSiteVal,
       maxAge: sessionTtl,
     },
   });

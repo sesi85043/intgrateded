@@ -6,6 +6,7 @@ import express, {
   Response,
   NextFunction,
 } from "express";
+import cors from 'cors';
 
 import { registerRoutes } from "./routes";
 
@@ -33,6 +34,14 @@ app.use(express.json({
   }
 }));
 app.use(express.urlencoded({ extended: false }));
+
+// Optional CORS configuration to allow frontend on a different origin to 
+// set cookies via `credentials: include`. Configure via CORS_ORIGIN (comma separated list).
+const corsOrigin = process.env.CORS_ORIGIN;
+if (corsOrigin) {
+  const origins = corsOrigin.split(',').map(s => s.trim());
+  app.use(cors({ origin: origins, credentials: true } as any));
+}
 
 app.use((req, res, next) => {
   const start = Date.now();
