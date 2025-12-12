@@ -40,3 +40,15 @@ export async function serveStatic(app: Express, _server: Server) {
 (async () => {
   await runApp(serveStatic);
 })();
+
+// Add process-level handlers to log unhandled errors and rejections.
+// Avoid crashing silently or rethrowing errors that bubble up.
+process.on('uncaughtException', (err) => {
+  console.error('[process] Uncaught Exception:', err && (err.stack || err));
+  // For now we do not exit immediately; pm2 or the orchestrator will handle restarts.
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[process] Unhandled Promise Rejection at:', promise, 'reason:', reason);
+  // Optionally add logic to notify or gracefully shutdown. Keep the process alive to avoid 502s.
+});
