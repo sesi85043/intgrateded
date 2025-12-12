@@ -11,6 +11,7 @@ import {
   chatwootTeams,
   chatwootInboxes,
   chatwootAgents,
+  teamMembers,
   evolutionApiConfig,
   whatsappNumbers,
   typebotConfig,
@@ -218,6 +219,36 @@ export default function registerIntegrationRoutes(app: Express) {
     } catch (error) {
       console.error("Error fetching Chatwoot agents:", error);
       res.status(500).json({ message: "Failed to fetch Chatwoot agents" });
+    }
+  });
+
+  // Create Chatwoot agent mapping (link team member to a Chatwoot agent)
+  app.post('/api/integrations/chatwoot/agents', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const validatedData = insertChatwootAgentSchema.parse(req.body);
+
+      // Validate team member exists
+      const [member] = await db.select().from(teamMembers).where(eq(teamMembers.id, validatedData.teamMemberId));
+      if (!member) {
+        return res.status(400).json({ message: 'Team member not found' });
+      }
+
+      // Insert mapping into chatwoot_agents
+      const [agent] = await db.insert(chatwootAgents).values(validatedData).returning();
+
+      // Create an activity log for audit purposes
+      await storage.createActivityLog(
+        req.teamMember.id,
+        'created_chatwoot_agent',
+        'chatwoot_agent',
+        agent.id,
+        'chatwoot'
+      );
+
+      res.json(agent);
+    } catch (error) {
+      console.error('Error creating Chatwoot agent mapping:', error);
+      res.status(400).json({ message: 'Failed to create Chatwoot agent mapping' });
     }
   });
 
