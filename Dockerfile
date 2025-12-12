@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy all source files
 COPY . .
 
-# Install all dependencies (including dev)
-RUN npm ci
+# Install all dependencies (including dev) - use `npm install` to avoid lockfile mismatches across npm versions
+RUN npm install
 
 # Build the application
 RUN npm run build
