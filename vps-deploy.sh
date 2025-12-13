@@ -71,11 +71,23 @@ if [ ! -f ".env.production" ]; then
 fi
 log_success "All configuration files present"
 
-# Load env vars from .env.production so docker-compose picks up SESSION_COOKIE_* and CORS settings
+# Load env vars from .env.production so docker compose picks up SESSION_COOKIE_* and CORS settings
 log_info "Loading environment variables from .env.production"
 set -a
 . ./.env.production
 set +a
+
+# Get service port and host for default CORS origin insertion (used below)
+EXTERNAL_PORT=$(grep "EXTERNAL_PORT" .env.production | cut -d '=' -f2)
+VPS_IP=$(hostname -I | awk '{print $1}')
+ORIGIN="http://${VPS_IP}:${EXTERNAL_PORT}"
+
+# Detect docker compose style (v2 `docker compose` vs v1 `docker-compose`)
+if docker compose version >/dev/null 2>&1; then
+    DOCKER_COMPOSE_CMD=("docker" "compose" "--env-file" ".env.production")
+else
+    DOCKER_COMPOSE_CMD=("docker-compose")
+fi
 
 # Step 4: Create necessary directories
 log_info "Step 4: Setting up directories..."
@@ -83,19 +95,84 @@ mkdir -p logs
 mkdir -p migrations
 log_success "Directories ready"
 
+# Utility: ensure a CORS origin exists in .env.production without injecting duplicate entries
+ensure_cors_origin() {
+    local FILE=".env.production"
+    local ORIGIN_VAL="$1"
+    if ! grep -q "$ORIGIN_VAL" "$FILE" >/dev/null 2>&1; then
+        if grep -q '^CORS_ORIGIN=' "$FILE" >/dev/null 2>&1; then
+            # Use a capture group (\1) rather than the & replacement so PowerShell escaping is not required.
+            # Use | as the sed delimiter to avoid needing to escape / in the URL.
+            sed -i "s|^\(CORS_ORIGIN=.*\)|\1,$ORIGIN_VAL|" "$FILE"
+        else
+            echo "CORS_ORIGIN=$ORIGIN_VAL" >> "$FILE"
+        fi
+    fi
+}
+
+# Utility: ensure session cookie settings for cross-site requests are correctly configured
+ensure_session_cookie_settings() {
+    local FILE=".env.production"
+    # Desired values for cross-site (frontend port != backend port)
+    local SAMESITE_VAL="none"
+    local SECURE_VAL="false"
+
+    # Update or append SESSION_COOKIE_SAME_SITE (matches docker-compose env name)
+    if grep -q "^SESSION_COOKIE_SAME_SITE=" "$FILE" >/dev/null 2>&1; then
+        sed -i "s|^SESSION_COOKIE_SAME_SITE=.*|SESSION_COOKIE_SAME_SITE=$SAMESITE_VAL|" "$FILE"
+    else
+        echo "SESSION_COOKIE_SAME_SITE=$SAMESITE_VAL" >> "$FILE"
+    fi
+
+    # Update or append SESSION_COOKIE_SECURE
+    if grep -q "^SESSION_COOKIE_SECURE=" "$FILE" >/dev/null 2>&1; then
+        sed -i "s|^SESSION_COOKIE_SECURE=.*|SESSION_COOKIE_SECURE=$SECURE_VAL|" "$FILE"
+    else
+        echo "SESSION_COOKIE_SECURE=$SECURE_VAL" >> "$FILE"
+    fi
+}
+
 # Step 5: Stop existing containers (if any)
-log_info "Step 5: Cleaning up existing containers..."
-docker-compose down 2>/dev/null || true
+log_info "Step 5: Ensuring CORS origin and session cookie settings, and cleaning up existing containers..."
+ensure_cors_origin "$ORIGIN"
+ensure_session_cookie_settings
+"${DOCKER_COMPOSE_CMD[@]}" down 2>/dev/null || true
 log_success "Cleanup complete"
 
 # Step 6: Build Docker images
 log_info "Step 6: Building Docker images..."
-docker-compose build --no-cache
+"${DOCKER_COMPOSE_CMD[@]}" build --no-cache
 log_success "Images built successfully"
 
 # Step 7: Start containers
 log_info "Step 7: Starting containers..."
-docker-compose up -d
+# Before starting, ensure the host EXTERNAL_PORT is free (avoid Docker bind errors)
+check_port_owner() {
+    local PORT="$1"
+    if command -v ss >/dev/null 2>&1; then
+        ss -ltnp | grep -E ":${PORT}\b" || true
+    elif command -v netstat >/dev/null 2>&1; then
+        netstat -tulpn | grep ":${PORT}\b" || true
+    elif command -v lsof >/dev/null 2>&1; then
+        lsof -i :"${PORT}" -P -n || true
+    else
+        echo "(no ss/netstat/lsof available to check port)"
+    fi
+}
+
+if [ -n "${EXTERNAL_PORT}" ]; then
+    log_info "Checking whether host port ${EXTERNAL_PORT} is available..."
+    PORT_INFO="$(check_port_owner "${EXTERNAL_PORT}")"
+    if [ -n "${PORT_INFO}" ]; then
+        log_error "Port ${EXTERNAL_PORT} appears to be in use on the host. Details:\n${PORT_INFO}"
+        log_error "Please stop the process using this port or change EXTERNAL_PORT in .env.production and retry. Example checks: 'ss -ltnp | grep :${EXTERNAL_PORT}' or 'docker ps'"
+        exit 1
+    else
+        log_success "Port ${EXTERNAL_PORT} appears free"
+    fi
+fi
+
+"${DOCKER_COMPOSE_CMD[@]}" up -d
 log_success "Containers started"
 
 # Step 8: Wait for services
@@ -122,7 +199,7 @@ fi
 log_info "Step 11: Verifying deployment..."
 echo ""
 echo -e "${BLUE}Container Status:${NC}"
-docker-compose ps
+"${DOCKER_COMPOSE_CMD[@]}" ps
 echo ""
 
 # Get exposed port

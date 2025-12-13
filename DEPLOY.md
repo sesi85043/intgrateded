@@ -100,6 +100,64 @@ Troubleshooting notes
 - Use `docker logs adminhub-app -n 200` to inspect 500/502 errors and `psql` to inspect the DB for missing columns.
 - If `createChatwootAgent` fails, check Chatwoot `api_access_token` and account id (Chatwoot config).
 
+PowerShell / Windows SSH note
+```
+# When calling long remote commands from PowerShell, prefer single quotes around the whole remote command
+# so PowerShell does not interpret characters like `&`. Example (safe for PowerShell):
+ssh root@158.220.107.106 'cd /opt/adminhub && \
+if ! grep -q "http://158.220.107.106:9100" .env.production 2>/dev/null; then \
+  if grep -q "^CORS_ORIGIN=" .env.production 2>/dev/null; then sed -i "s|^\(CORS_ORIGIN=.*\)|\1,http://158.220.107.106:9100|" .env.production; else echo "CORS_ORIGIN=http://158.220.107.106:9100" >> .env.production; fi; \
+fi && \
+docker compose --env-file .env.production down && docker compose --env-file .env.production pull --ignore-pull-failures && docker compose --env-file .env.production build --no-cache app && docker compose --env-file .env.production up -d app && docker compose --env-file .env.production logs -f --tail 200 app'
+```
+This uses a sed expression with a capture group (\1) rather than `&` so the line can be safely included inside single quotes from PowerShell.
+
+Session cookie fix (PowerShell-safe)
+```
+# Set session cookie SAMESITE=None and SECURE=false so cookies work across ports (frontend:9100 -> backend:5000)
+ssh root@158.220.107.106 'cd /opt/adminhub && \
+if grep -q "^SESSION_COOKIE_SAMESITE=" .env 2>/dev/null; then sed -i "s|^SESSION_COOKIE_SAMESITE=.*|SESSION_COOKIE_SAMESITE=none|" .env; else echo "SESSION_COOKIE_SAMESITE=none" >> .env; fi; \
+if grep -q "^SESSION_COOKIE_SECURE=" .env 2>/dev/null; then sed -i "s|^SESSION_COOKIE_SECURE=.*|SESSION_COOKIE_SECURE=false|" .env; else echo "SESSION_COOKIE_SECURE=false" >> .env; fi; \
+if grep -q "^SESSION_COOKIE_SAMESITE=" .env.production 2>/dev/null; then sed -i "s|^SESSION_COOKIE_SAMESITE=.*|SESSION_COOKIE_SAMESITE=none|" .env.production; else echo "SESSION_COOKIE_SAMESITE=none" >> .env.production; fi; \
+if grep -q "^SESSION_COOKIE_SECURE=" .env.production 2>/dev/null; then sed -i "s|^SESSION_COOKIE_SECURE=.*|SESSION_COOKIE_SECURE=false|" .env.production; else echo "SESSION_COOKIE_SECURE=false" >> .env.production; fi; \
+docker compose --env-file .env.production up -d app && docker compose --env-file .env.production logs -f --tail 200 app'
+```
+
+After the restart, you should see the following lines in the app logs:
+
+```
+[auth] Replit session cookie secure=false sameSite=none
+```
+
+If you do, try logging in again from the frontend (port 9100) and then call `/api/auth/user`; it should now return 200 and show the user object (cookie will stick across ports).
+
+Port already allocated (Bind for 0.0.0.0:8080 failed)
+```
+# If deploy fails with an error like:
+#   Bind for 0.0.0.0:8080 failed: port is already allocated
+# then some process on the host is already bound to the app's external port (EXTERNAL_PORT in .env.production).
+
+# Quick diagnostic commands (run on the VPS):
+ss -ltnp | grep :8080 || true
+# or
+sudo lsof -i :8080 -P -n || true
+# or (if ss/netstat not available)
+netstat -tulpn | grep :8080 || true
+
+# If output shows a PID/process, either stop that service / kill the PID or change EXTERNAL_PORT in .env.production and redeploy.
+# Also check Docker containers for port mappings:
+docker ps --format "{{.ID}}\t{{.Names}}\t{{.Ports}}" | grep 8080 || true
+
+# Example fixes
+# 1) Stop the process/service using the port, e.g. if it's systemd-managed:
+sudo systemctl stop <service-name>
+
+# 2) Or stop the container using the port:
+docker stop <container-id-or-name> && docker rm <container-id-or-name>
+
+# 3) Or change EXTERNAL_PORT in .env.production to a free port and re-run deploy. Remember to update CORS accordingly.
+
+
 Security considerations
 - Use HTTPS in production and set `SESSION_COOKIE_SECURE=true` when serving over HTTPS.
 - Keep `SESSION_SECRET` secure and do not commit `.env` to Git.

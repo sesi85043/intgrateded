@@ -1,5 +1,4 @@
-import pkg from 'pg';
-const { Client } = pkg;
+import { Client } from 'pg';
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:0109115188087@Kdn@postgres:5432/postgres';
 

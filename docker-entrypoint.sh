@@ -46,7 +46,7 @@ fi
 
 # Run migrations (ALTER TABLE statements for existing tables)
 echo "[db] Running database migrations..."
-if node dist/run-migration.js 2>&1; then
+if node dist/run-migration.cjs 2>&1; then
   echo "[db] ✓ Migrations completed"
 else
   echo "[db] ⚠️ Migrations skipped (tables may not exist yet)"
@@ -54,7 +54,7 @@ fi
 
 # Run seed (creates initial data)
 echo "[db] Running database seed..."
-if node dist/run-seed.js 2>&1; then
+if node dist/run-seed.cjs 2>&1; then
   echo "[db] ✓ Seed completed"
 else
   echo "[db] ⚠️ Seed skipped or already applied"
