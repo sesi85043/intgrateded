@@ -18,7 +18,7 @@ export function log(message: string, source = "express") {
     hour12: true,
   });
 
-  console.log(`${formattedTime} [${source}] ${message}`);
+  console.log(\\ [\] \\);
 }
 
 export const app = express();
@@ -38,8 +38,8 @@ app.use(express.json({
 }));
 app.use(express.urlencoded({ extended: false }));
 
-// Optional CORS configuration to allow frontend on a different origin to
-// set cookies via `credentials: include`. Configure via CORS_ORIGIN (comma separated list).
+// CORS configuration - allows all origins in dev mode for Replit proxy
+const isDev = process.env.NODE_ENV === 'development';
 const corsOrigin = process.env.CORS_ORIGIN?.trim();
 const defaultOrigins = [
   'http://158.220.107.106:8080',
@@ -48,7 +48,7 @@ const defaultOrigins = [
   'http://localhost:8080',
 ];
 const origins = corsOrigin ? corsOrigin.split(',').map(s => s.trim()) : defaultOrigins;
-console.log('[auth] CORS allowed origins:', origins);
+console.log('[auth] CORS allowed origins:', isDev ? 'ALL (development mode)' : origins);
 app.use(cors({
   origin: function (origin, callback) {
     // In development or Replit environment, allow all origins
@@ -60,7 +60,7 @@ app.use(cors({
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-} as any));
+}));
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -76,13 +76,13 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+      let logLine = \\ \ \ in \ms\;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        logLine += \ :: \\;
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+        logLine = logLine.slice(0, 79) + "";
       }
 
       log(logLine);
@@ -99,7 +99,7 @@ app.use((req, res, next) => {
     const originalSend = res.send;
     res.send = function (body: any) {
       const cookie = res.getHeader('set-cookie');
-      console.log(`[auth] set-cookie header for ${req.path}:`, cookie);
+      console.log(\[auth] set-cookie header for \:\, cookie);
       return originalSend.call(this, body);
     } as any;
   }
@@ -107,14 +107,22 @@ app.use((req, res, next) => {
 });
 
 // Body parser JSON error handler - produce a friendly 400 instead of crashing
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  if (err instanceof SyntaxError && 'body' in err) {
-    console.warn('[express] JSON parse error:', err.message);
-    return res.status(400).json({ message: 'Malformed JSON in request body' });
-  }
-  // fallback to other error handlers
-  return _next(err);
-});
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    if (err instanceof SyntaxError && 'body' in err) {
+      console.warn('[express] JSON parse error:', err.message);
+      return res.status(400).json({ message: 'Malformed JSON in request body' });
+    }
+    // fallback to other error handlers - log and return a safe response instead
+    console.error('[express] Uncaught error in request handler:', err && err.stack ? err.stack : err);
+    try {
+      // avoid crashing the process from an unhandled error here by responding with a 500
+      return res.status(500).json({ message: 'Internal Server Error' });
+    } catch (sendErr) {
+      console.error('[express] Failed sending error response', sendErr);
+      // If sending the response fails, just return next to avoid rethrowing
+      return _next(sendErr);
+    }
+  });
 
 export default async function runApp(
   setup: (app: Express, server: Server) => Promise<void>,
@@ -124,9 +132,9 @@ export default async function runApp(
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
+    console.error('[express] Global error handler responding:', { status, message, stack: err && err.stack });
     res.status(status).json({ message });
-    throw err;
+    // Do not rethrow - keep the server alive and let the container/pm2 handle restarts if necessary
   });
 
   // importantly run the final setup after setting up all the other routes so
@@ -144,7 +152,7 @@ export default async function runApp(
       host: "0.0.0.0",
     },
     () => {
-      log(`serving on port ${port}`);
+      log(\serving on port \\);
     }
   );
 }

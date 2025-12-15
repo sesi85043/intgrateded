@@ -118,7 +118,15 @@ export async function setupAuth(app: Express) {
         return res.status(401).json({ message: "Password not set for this account" });
       }
 
-      const isValid = await bcrypt.compare(password, member.passwordHash);
+      let isValid = false;
+      try {
+        isValid = await bcrypt.compare(password, member.passwordHash);
+      } catch (bcryptErr) {
+        console.error('[auth] bcrypt compare failed:', bcryptErr && (bcryptErr.stack || bcryptErr));
+        // Avoid crashing: treat as invalid credentials
+        isValid = false;
+      }
+
       if (!isValid) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
