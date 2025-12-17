@@ -1,0 +1,112 @@
+This is a comprehensive Design Brief & Technical Specification for your Unified Communication System.
+
+This document serves as the blueprint for connecting Mailcow, Chatwoot, Evolution API, Typebot, and your Admin Hub into a single, logical workflow based on your Department structure.
+Design Brief: Integrated Departmental Communication System
+1. Executive Summary
+
+The goal is to create a "Single Pane of Glass" within the Admin Hub. Users (Employees) will log in to the Admin Hub and interact with customers via WhatsApp and Email without ever leaving the dashboard. All incoming communications will be automatically routed to the correct Department (e.g., DTV, Sales, Accounts) based on the "Parent Email" or the WhatsApp selection.
+2. System Architecture
+
+We are building a Hub-and-Spoke model where Chatwoot is the engine, and Admin Hub is the steering wheel.
+The Stack Roles:
+
+    Mailcow: The Email Server. Handles incoming mail for support.dtv@... and kayntulo.dtv@....
+
+    Evolution API: The WhatsApp Gateway. Connects your phone numbers to the code.
+
+    Typebot: The "Receptionist." It asks "Who do you want to talk to?" and routes the chat.
+
+    Chatwoot: The Aggregator. It takes emails and chats and puts them into "Inboxes."
+
+    Admin Hub: The User Interface. Your staff sees Chatwoot inside this dashboard.
+
+3. Department Structure & Logic
+
+We will replicate your organizational structure inside Chatwoot using Teams.
+Example Department: DTV (Digital TV)
+
+    Department ID: DTV
+
+    Parent Email (The Inbox): support.dtv@mmallelectronics.co.za
+
+        Logic: Any email sent here automatically opens a Ticket in the Chatwoot "DTV Inbox."
+
+    Staff Members (The Agents): kayntulo.dtv@mmallelectronics.co.za
+
+        Logic: Kayntulo logs into Admin Hub. He is assigned to the "DTV Team." He sees only tickets assigned to DTV.
+
+4. The Workflow Scenarios
+Workflow A: The Email Flow (Mailcow → Chatwoot)
+
+    Customer sends an email to support.dtv@mmallelectronics.co.za.
+
+    Mailcow receives the email.
+
+    Forwarding Rule: Mailcow is configured to forward a copy of this email to the unique Chatwoot Inbound Address for the DTV Inbox.
+
+    Chatwoot creates a new conversation.
+
+    Admin Hub: Kayntulo sees a red notification badge. He opens "Inbox," sees the email, and replies.
+
+    Customer receives the reply from support.dtv@....
+
+Workflow B: The WhatsApp Flow (Evolution → Typebot → Chatwoot)
+
+    Customer sends "Hi" to your WhatsApp number.
+
+    Evolution API wakes up Typebot.
+
+    Typebot sends a menu:
+
+        1. DTV Support
+
+        2. Sales
+
+        3. Accounts
+
+    Customer selects "1".
+
+    Typebot Logic: The bot triggers the "Handoff" block. It explicitly assigns the conversation to the Chatwoot Team: DTV.
+
+    Admin Hub: The DTV team gets a ping. They accept the chat and talk in real-time.
+
+5. Implementation Roadmap (Step-by-Step)
+Phase 1: Mailcow & Email Setup
+
+    Task: Create "Parent Emails" in Mailcow (e.g., support.dtv, sales.dept).
+
+    Task: Create "User Emails" in Mailcow for staff (e.g., kayntulo.dtv).
+
+    Task: Configure IMAP/SMTP in Chatwoot.
+
+        Action: In Chatwoot, create an "Email Inbox" for DTV. Enter the IMAP credentials for support.dtv. Now Chatwoot reads that email account every minute.
+
+Phase 2: Chatwoot Organization
+
+    Task: Create Teams inside Chatwoot: "DTV Team", "Sales Team".
+
+    Task: Invite Users (Agents) to Chatwoot using their kayntulo.dtv email addresses.
+
+    Task: Assign Agents to their specific Teams. (Kayntulo → DTV Team).
+
+Phase 3: WhatsApp Intelligence (Typebot)
+
+    Task: Design the flow in Typebot.
+
+    Task: Add the Logic Block:
+
+        If User chooses DTV -> Assign to Inbox ID 2 (DTV).
+
+        If User chooses Sales -> Assign to Inbox ID 3 (Sales).
+
+Phase 4: The Admin Hub Integration
+
+    Task: Embed the Chatwoot Interface into Admin Hub using the Shared Cookie method (so they don't have to log in twice).
+
+    Task: Build the Sidebar links to open specific views (e.g., "My Tickets" vs "All DTV Tickets").
+
+6. Access Control Matrix
+Role	Admin Hub Access	Chatwoot Access	Can See...
+Super Admin	Full Access	Administrator	All Departments, All Emails, All WhatsApps.
+Dept Head	Dept Dashboard	Agent (Lead)	All emails/chats within their Department.
+Staff (Kayntulo)	Employee View	Agent	Only chats assigned to them or unassigned in their Dept.

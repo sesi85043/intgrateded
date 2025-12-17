@@ -1,0 +1,29 @@
+feature is designed to move your new staff member onboarding process from an instant sign-up to a secure, verified, and controlled workflow that requires management approval.
+
+📝 Core Goal
+
+To allow new staff members to securely submit all required personal and emergency contact information, and then place their account into a 'Pending' status until an Admin officially reviews and activates their access.
+
+🔑 Key Components (What It Does)
+
+    1. Extended Data Collection: Instead of just getting an email and password, the system now securely collects all necessary HR/compliance details upfront, including Residential Address and Two Next of Kin contacts.
+
+    2. Non-Robot Verification (CAPTCHA): A simple challenge is included on the registration form to confirm the user is a human and prevent automated sign-ups (bots).
+
+    3. Pending Account Creation: The user's information is saved, and their password is encrypted, but their account is marked as 'Pending'. They cannot log in yet.
+
+    4. Admin Notification & OTP: A notification (like a "pop-up" or alert) is sent to the designated management/HR staff. This notification includes a One-Time Password (OTP) that only the manager can use.
+
+    5. Admin Approval: The manager logs in, reviews the new staff member's complete details, and uses the special OTP to change the user's status from 'Pending' to 'Active'.
+
+    6. Role/Permission Assignment: Once approved, the Admin immediately assigns the correct Role (e.g., "Standard Staff," "Manager," etc.) and Permissions to control what the staff member can see and do in the system.
+
+🛡️ Security Measures
+
+The feature includes security measures to protect both the system and the sensitive user data:
+
+    Data Protection: All submitted data is immediately stored securely in your database, and passwords are hashed (made irreversible).
+
+    Controlled Access: The primary security measure is that no new user can access the system until a trusted Admin manually grants them permission and a specific role. This prevents unauthorized staff from gaining access simply by signing up.
+
+In short, it's a secure, gated application process that ensures only verified staff members are onboarded, with all necessary data collected and approved by management.

@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres:16-alpine
+    container_name: adminhub-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+    volumes:
+      # Persistent data storage for database
+      - postgres_data:/var/lib/postgresql/data
+      # Run SQL files on container startup (optional)
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      # Database is NOT exposed to outside (internal only)
+      - "127.0.0.1:5432:5432"
+    networks:
+      - adminhub-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Node.js Application Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: adminhub-app
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: ${DATABASE_URL}
+      SESSION_SECRET: ${SESSION_SECRET:-your-secure-session-secret-change-this}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      SESSION_COOKIE_SAME_SITE: ${SESSION_COOKIE_SAME_SITE:-lax}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-adminhub.sid}
+      CORS_ORIGIN: ${CORS_ORIGIN:-}
+      NODE_OPTIONS: --max-old-space-size=1024
+    ports:
+      # Map external port (CHANGE_ME) to internal container port 5000
+      - "${EXTERNAL_PORT:-9100}:5000"
+    volumes:
+      # Optional: logs volume for persistence
+      - app_logs:/app/logs
+    networks:
+      - adminhub-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Volumes for persistent data
+volumes:
+  postgres_data:
+    driver: local
+  app_logs:
+    driver: local
+
+# Network for internal communication
+networks:
+  adminhub-network:
+    driver: bridge

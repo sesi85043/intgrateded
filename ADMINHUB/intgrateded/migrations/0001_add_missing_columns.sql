@@ -1,0 +1,16 @@
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" varchar(255);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" varchar(255);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "state" varchar(100);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "postal_code" varchar(20);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(100);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_name" varchar(100);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_relationship" varchar(50);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_phone" varchar(20);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_email" varchar;
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_address" text;
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_name" varchar(100);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_relationship" varchar(50);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_phone" varchar(20);
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_email" varchar;
+ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_address" text;
