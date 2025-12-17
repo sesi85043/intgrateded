@@ -3,6 +3,7 @@
 // Use dynamic import with top-level await so this module works under ESM
 async function loadAuthModule() {
   try {
+    // STANDALONE_ID / ISSUER_URL = use OIDC standalone auth
     if (process.env.STANDALONE_ID || process.env.ISSUER_URL) {
       const mod = await import("./standaloneAuth");
       return (mod as any).default || mod;
@@ -15,8 +16,17 @@ async function loadAuthModule() {
       return (mod as any).default || mod;
     }
 
+    // If running on Replit, use Replit OIDC auth
     if (process.env.REPL_ID || process.env.REPLIT_DEV_DOMAIN) {
       const mod = await import("./replitAuth");
+      return (mod as any).default || mod;
+    }
+
+    // VPS / self-hosted production: Use devAuth for password-based login
+    // This runs when NODE_ENV=production but we're not on Replit and no OIDC provider is configured
+    if (process.env.NODE_ENV === "production") {
+      console.log('[auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)');
+      const mod = await import("./devAuth");
       return (mod as any).default || mod;
     }
 

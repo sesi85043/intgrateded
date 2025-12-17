@@ -34,10 +34,21 @@ export function getSession() {
     ttl: sessionTtl,
     tableName: "sessions",
   });
-  const secureFlag = process.env.SESSION_COOKIE_SECURE ? process.env.SESSION_COOKIE_SECURE === 'true' : (process.env.NODE_ENV === 'production');
-  const sameSiteVal = process.env.SESSION_COOKIE_SAME_SITE as any || (secureFlag ? 'none' : 'lax');
+  
+  // SESSION_COOKIE_SECURE env var takes precedence
+  // If not set, default to false for HTTP deployments (VPS without SSL)
+  // Set SESSION_COOKIE_SECURE=true explicitly when using HTTPS
+  const secureFlag = process.env.SESSION_COOKIE_SECURE === 'true';
+  
+  // For sameSite: use 'lax' for HTTP, 'none' only works with secure cookies (HTTPS)
+  let sameSiteVal: 'lax' | 'strict' | 'none' = 'lax';
+  if (process.env.SESSION_COOKIE_SAME_SITE) {
+    sameSiteVal = process.env.SESSION_COOKIE_SAME_SITE as any;
+  } else if (secureFlag) {
+    sameSiteVal = 'none';
+  }
 
-  console.log(`[auth] Standalone session cookie secure=${secureFlag} sameSite=${sameSiteVal}`);
+  console.log(`[auth] Standalone session cookie config: secure=${secureFlag} sameSite=${sameSiteVal} (NODE_ENV=${process.env.NODE_ENV})`);
 
   return session({
     name: process.env.SESSION_COOKIE_NAME || 'adminhub.sid',

@@ -18,7 +18,7 @@ export function log(message: string, source = "express") {
     hour12: true,
   });
 
-  console.log(\\ [\] \\);
+  console.log(`${formattedTime} [${source}] ${message}`);
 }
 
 export const app = express();
@@ -38,25 +38,44 @@ app.use(express.json({
 }));
 app.use(express.urlencoded({ extended: false }));
 
-// CORS configuration - allows all origins in dev mode for Replit proxy
+// CORS configuration
+// CORS_ORIGIN env var: comma-separated list of allowed origins, or '*' for all
+// In development or Replit environments, all origins are allowed by default
 const isDev = process.env.NODE_ENV === 'development';
+const isReplit = !!(process.env.REPL_ID || process.env.REPLIT_DEV_DOMAIN);
 const corsOrigin = process.env.CORS_ORIGIN?.trim();
-const defaultOrigins = [
-  'http://158.220.107.106:8080',
-  'http://158.220.107.106:5000',
-  'http://localhost:5000',
-  'http://localhost:8080',
-];
-const origins = corsOrigin ? corsOrigin.split(',').map(s => s.trim()) : defaultOrigins;
-console.log('[auth] CORS allowed origins:', isDev ? 'ALL (development mode)' : origins);
+
+// Allow all origins if: development mode, Replit, or CORS_ORIGIN is set to '*'
+const allowAllOrigins = isDev || isReplit || corsOrigin === '*';
+
+// Parse CORS_ORIGIN as comma-separated list if provided
+const allowedOrigins = corsOrigin && corsOrigin !== '*' 
+  ? corsOrigin.split(',').map(s => s.trim()).filter(Boolean)
+  : [];
+
+console.log('[CORS] Config:', {
+  allowAllOrigins,
+  allowedOrigins: allowAllOrigins ? 'ALL' : allowedOrigins,
+  NODE_ENV: process.env.NODE_ENV,
+  CORS_ORIGIN: corsOrigin || '(not set)',
+});
+
 app.use(cors({
   origin: function (origin, callback) {
-    // In development or Replit environment, allow all origins
-    if (process.env.NODE_ENV === 'development' || process.env.REPL_ID) {
+    // Allow all origins in dev/Replit mode or when CORS_ORIGIN=*
+    if (allowAllOrigins) {
       return callback(null, true);
     }
-    // allow requests with no origin (like curl / Postman) as well
-    if (!origin || origins.indexOf(origin) !== -1) return callback(null, true);
+    // Allow requests with no origin (curl, Postman, same-origin)
+    if (!origin) {
+      return callback(null, true);
+    }
+    // Check against allowed origins list
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    // Reject unknown origins
+    console.warn(`[CORS] Rejected origin: ${origin}`);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
@@ -76,13 +95,13 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = \\ \ \ in \ms\;
+      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
-        logLine += \ :: \\;
+        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "";
+        logLine = logLine.slice(0, 79) + "…";
       }
 
       log(logLine);
@@ -99,7 +118,7 @@ app.use((req, res, next) => {
     const originalSend = res.send;
     res.send = function (body: any) {
       const cookie = res.getHeader('set-cookie');
-      console.log(\[auth] set-cookie header for \:\, cookie);
+      console.log(`[auth] set-cookie header for ${req.path}:`, cookie);
       return originalSend.call(this, body);
     } as any;
   }
@@ -152,7 +171,7 @@ export default async function runApp(
       host: "0.0.0.0",
     },
     () => {
-      log(\serving on port \\);
+      log(`serving on port ${port}`);
     }
   );
 }
