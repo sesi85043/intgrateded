@@ -1,0 +1,64 @@
+ker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER> docker compose -f "ADMINHUB/intgrateded/docker-compose.yml" up -d --force-recreate app
+[+] Running 2/2
+ ✔ Container adminhub-postgres  Healthy                                                        4.5s 
+ ✔ Container adminhub-app       Started                                                        7.1s 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER> docker compose -f "ADMINHUB/intgrateded/docker-compose.yml" logs -f app --tail 50
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...
+adminhub-app  |   ✓ Done
+adminhub-app  | 
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-18T14:46:40: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-18T14:46:40: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-18T14:46:40: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] CORS allowed origins: [ 'http://127.0.0.1:9100', 'http://localhost:9100' ]   
+adminhub-app  | [auth] Replit session cookie secure=false sameSite=lax
+adminhub-app  | [auth] Replit auth: missing REPL_ID or ISSUER_URL, skipping OIDC setup
+adminhub-app  | [auth] OIDC config not available for Replit, skipping Replit OpenID Connect setup   
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 2:46:42 PM [express] serving on port 5000
+adminhub-app  | 2:46:48 PM [express] GET /api/auth/user 401 in 35ms :: {"message":"Unauthorized"}   
+adminhub-app  | 2:47:11 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:47:27 PM [express] GET /api/auth/user 401 in 14ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:47:28 PM [express] POST /api/auth/login 200 in 33ms
+adminhub-app  | 2:47:28 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:47:33 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:47:58 PM [express] POST /api/auth/login 200 in 13ms
+adminhub-app  | 2:47:59 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:48:05 PM [express] GE
