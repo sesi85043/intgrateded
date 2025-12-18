@@ -6,8 +6,9 @@ WORKDIR /app
 # Copy all source files
 COPY . .
 
-# Install all dependencies (including dev) - use `npm install` to avoid lockfile mismatches across npm versions
-RUN npm install
+# Install all dependencies (including dev). Some build tools (vite/esbuild) live in devDependencies,
+# ensure dev deps are installed regardless of any NODE_ENV or npm config in the builder environment.
+RUN npm install --include=dev
 
 # Build the application
 RUN npm run build

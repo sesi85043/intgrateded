@@ -155,12 +155,31 @@ export async function setupAuth(app: Express) {
       req.session.user = user;
       req.session.teamMemberId = member.id;
 
-      const memberWithPerms = await getTeamMemberWithPermissions(member.id);
-      
-      res.json({ 
-        user,
-        teamMember: memberWithPerms,
+      console.log('[auth] Session data set:', {
+        sessionID: req.sessionID,
+        user: user.email,
+        teamMemberId: member.id,
       });
+
+      // CRITICAL: Save session to ensure Set-Cookie header is sent. Await the save
+      // so the route does not finish and the catch-all static handler doesn't
+      // prematurely respond with index.html before we send JSON.
+      try {
+        await new Promise<void>((resolve, reject) => {
+          req.session.save((err: any) => {
+            if (err) return reject(err);
+            console.log('[auth] Session saved successfully');
+            console.log('[auth] Set-Cookie header:', res.getHeader('set-cookie'));
+            resolve();
+          });
+        });
+
+        const memberWithPerms = await getTeamMemberWithPermissions(member.id);
+        return res.json({ user, teamMember: memberWithPerms });
+      } catch (err) {
+        console.error('[auth] Session save error:', err);
+        return res.status(500).json({ message: 'Session save failed' });
+      }
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "Login failed" });
