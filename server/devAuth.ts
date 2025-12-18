@@ -155,11 +155,31 @@ export async function setupAuth(app: Express) {
       req.session.user = user;
       req.session.teamMemberId = member.id;
 
-      const memberWithPerms = await getTeamMemberWithPermissions(member.id);
-      
-      res.json({ 
-        user,
-        teamMember: memberWithPerms,
+      console.log('[auth] Session data set:', {
+        sessionID: req.sessionID,
+        user: user.email,
+        teamMemberId: member.id,
+      });
+
+      // CRITICAL: Save session to ensure Set-Cookie header is sent
+      req.session.save((err) => {
+        if (err) {
+          console.error('[auth] Session save error:', err);
+          return res.status(500).json({ message: "Session save failed" });
+        }
+
+        console.log('[auth] Session saved successfully');
+        console.log('[auth] Set-Cookie header:', res.getHeader('set-cookie'));
+
+        getTeamMemberWithPermissions(member.id).then(memberWithPerms => {
+          res.json({ 
+            user,
+            teamMember: memberWithPerms,
+          });
+        }).catch(permErr => {
+          console.error('[auth] Failed to get team member permissions:', permErr);
+          res.status(500).json({ message: "Failed to load team member data" });
+        });
       });
     } catch (error) {
       console.error("Login error:", error);
