@@ -5,6 +5,8 @@ This file shows simple commands to deploy AdminHub on a VPS and local dev machin
 Checklist before deploying:
 - Ensure `git` and `node >= 18` are installed on the VPS
 - PostgreSQL is reachable (container or service) and `DATABASE_URL` points to it
+
+Note: If you have a `DATABASE_URL` environment variable set on your host (for example, in Windows or CI), it can be picked up by `docker compose` and override values from the project `.env`. To avoid accidental overrides when running locally, prefer using `env_file: .env` in your service definition or unset the host `DATABASE_URL` before running `docker compose`.
 - You have the `SESSION_SECRET` and `CORS_ORIGIN` values set
 - If you use Docker-compose for deployment, confirm docker and docker-compose are present
 
