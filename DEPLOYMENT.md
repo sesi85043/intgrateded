@@ -56,9 +56,9 @@ This will:
 - Run database migrations automatically
 - Seed the database with roles, permissions, and admin account
 
-#### 4. Configure CORS for Your VPS
-The application needs to know which domains to accept requests from. Update `CORS_ORIGIN` in your `.env`:
+#### 4. Configure CORS and Sessions for Your VPS
 
+**CORS Configuration:**
 ```bash
 # For local testing on the VPS:
 CORS_ORIGIN=http://127.0.0.1:9100
@@ -69,6 +69,20 @@ CORS_ORIGIN=https://yourdomain.com
 # For both local testing AND production domain:
 CORS_ORIGIN=http://127.0.0.1:9100,https://yourdomain.com
 ```
+
+**CRITICAL: Session Cookie Security Settings**
+
+Your `.env` must have `SESSION_COOKIE_SECURE` set correctly for your protocol:
+
+```bash
+# For local testing with HTTP (http://127.0.0.1:9100):
+SESSION_COOKIE_SECURE=false
+
+# For production with HTTPS (https://yourdomain.com):
+SESSION_COOKIE_SECURE=true
+```
+
+**⚠️ If they don't match, login will fail!** (Secure cookies won't be set over HTTP)
 
 Then restart the app:
 ```bash

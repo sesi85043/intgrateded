@@ -1,0 +1,137 @@
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | 2:12:16 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:12:54 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:13:33 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:14:10 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:14:48 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:15:26 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:16:04 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:16:43 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:17:20 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:17:58 PM [express] GET /api/auth/user 401 in 8ms :: {"message":"Unauthorized"}
+
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER> docker compose -f "ADMINHUB/intgrateded/docker-compose.yml" up -d --force-recreate app
+[+] Building 651.4s (25/25) FINISHED
+ => [internal] load local bake definitions                                                     0.0s
+ => => reading from stdin 588B                                                                 0.0s
+ => [internal] load build definition from Dockerfile                                           0.3s
+ => => transferring dockerfile: 1.92kB                                                         0.2s
+ => [internal] load metadata for docker.io/library/node:20-alpine                              6.0s
+ => [auth] library/node:pull token for registry-1.docker.io                                    0.0s
+ => [internal] load .dockerignore                                                              1.2s
+ => => transferring context: 162B                                                              0.1s
+ => [internal] load build context                                                              6.0s
+ => => transferring context: 7.22MB                                                            5.9s
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c  0.2s
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704  0.2s
+ => CACHED [builder 2/5] WORKDIR /app                                                          0.0s
+ => [builder 3/5] COPY . .                                                                     5.4s
+ => CACHED [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client  0.0s
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                     1.3s
+ => [stage-1  5/14] COPY tsconfig.json ./                                                      0.4s
+ => [stage-1  6/14] RUN npm install --omit=dev                                               401.5s
+ => [builder 4/5] RUN npm install                                                            416.5s
+ => [builder 5/5] RUN npm run build                                                           78.4s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                       1.6s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                           0.4s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                   0.2s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                   0.2s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                            0.2s
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-en  1.0s
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                             0.6s
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                              0.8s
+ => exporting to image                                                                       116.0s
+ => => exporting layers                                                                       71.4s 
+ => => exporting manifest sha256:3196599cf368c4fcf532087759a08ae6bad1d51395de2f5b830a347ca8e0  0.7s
+ => => exporting config sha256:fac6e117985ecca2092bd0cc9ec5c686723e7515c45a333fd3b7831a3ec3cf  0.2s 
+ => => exporting attestation manifest sha256:dc7538ba11fc9872d99080e96966bae96f932ca057b6ee86  0.3s 
+ => => exporting manifest list sha256:70d99a9aba9d8a905622b42374d1eabb66de84de5fd942e484f61d0  0.1s
+ => => naming to docker.io/library/intgrateded-app:latest                                      0.0s
+ => => unpacking to docker.io/library/intgrateded-app:latest                                  41.8s 
+ => resolving provenance for metadata file                                                     1.1s 
+[+] Running 3/3
+ ✔ intgrateded-app              Built                                                          0.0s 
+ ✔ Volume intgrateded_app_logs  Created                                                        0.1s 
+ ✘ Container adminhub-postgres  Error response from daemon: C...                               1.0s 
+Error response from daemon: Conflict. The container name "/adminhub-postgres" is already in use by container "6ac8f5eb264d8c7cbf738b7980405ec79a9400d15b63947690c51d616452aece". You have to remove (or rename) that container to be able to reuse that name.
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER> docker rm -f adminhub-postgres adminhub-app
+adminhub-postgres
+adminhub-app
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER> docker compose -f "ADMINHUB/intgrateded/docker-compose.yml" up -d --force-recreate
+[+] Running 2/2
+ ✔ Container adminhub-postgres  Healthy                                                       14.9s 
+ ✔ Container adminhub-app       Started                                                       16.0s 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER> docker compose -f "ADMINHUB/intgrateded/docker-compose.yml" logs -f app --tail 50
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...  
+adminhub-app  |   ✓ Done
+adminhub-app  | 
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-18T14:38:50: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-18T14:38:50: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-18T14:38:50: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] CORS allowed origins: [ 'http://127.0.0.1:9100', 'http://localhost:9100' ]
+adminhub-app  | [auth] Replit session cookie secure=false sameSite=lax
+adminhub-app  | [auth] Replit auth: missing REPL_ID or ISSUER_URL, skipping OIDC setup
+adminhub-app  | [auth] OIDC config not available for Replit, skipping Replit OpenID Connect setup
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 2:38:53 PM [express] serving on port 5000
+adminhub-app  | 2:38:58 PM [express] GET /api/auth/user 401 in 15ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:39:37 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:39:44 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:40:03 PM [express] POST /api/auth/login 200 in 9ms
+adminhub-app  | 2:40:03 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:40:15 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:40:53 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:41:30 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
