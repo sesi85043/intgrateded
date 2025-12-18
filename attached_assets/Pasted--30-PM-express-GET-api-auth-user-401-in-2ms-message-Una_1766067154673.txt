@@ -1,0 +1,196 @@
+:30 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:41:08 PM [express] GET /api/auth/user 401 in 22ms :: {"message":"Unauthorized"}   
+adminhub-app  | 1:41:46 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:42:24 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:43:02 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:43:41 PM [express] GET /api/auth/user 401 in 12ms :: {"message":"Unauthorized"}   
+adminhub-app  | 1:44:19 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:44:57 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:45:35 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:46:12 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 1:46:50 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:47:28 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:48:06 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:48:44 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:49:22 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:50:00 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:50:39 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:51:17 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:51:55 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:52:33 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:53:11 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:53:51 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 1:54:28 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 1:55:06 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:55:43 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:56:21 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:57:00 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:57:38 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:58:16 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 1:58:54 PM [express] GET /api/auth/user 401 in 15ms :: {"message":"Unauthorized"}   
+adminhub-app  | 1:59:33 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:00:11 PM [express] GET /api/auth/user 401 in 25ms :: {"message":"Unauthorized"}   
+adminhub-app  | 2:00:49 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:01:26 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:02:07 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:02:44 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:03:22 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:04:00 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:04:38 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:05:17 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:05:55 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:06:32 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:07:10 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:07:49 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:08:27 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:09:06 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:09:43 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:10:02 PM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | 2:10:21 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | 2:10:42 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:11:00 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | 2:11:38 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: http://127.0.0.1:9100
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)

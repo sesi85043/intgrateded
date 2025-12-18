@@ -56,7 +56,26 @@ This will:
 - Run database migrations automatically
 - Seed the database with roles, permissions, and admin account
 
-#### 4. Verify Deployment
+#### 4. Configure CORS for Your VPS
+The application needs to know which domains to accept requests from. Update `CORS_ORIGIN` in your `.env`:
+
+```bash
+# For local testing on the VPS:
+CORS_ORIGIN=http://127.0.0.1:9100
+
+# For production (replace with your actual domain):
+CORS_ORIGIN=https://yourdomain.com
+
+# For both local testing AND production domain:
+CORS_ORIGIN=http://127.0.0.1:9100,https://yourdomain.com
+```
+
+Then restart the app:
+```bash
+docker compose restart app
+```
+
+#### 5. Verify Deployment
 ```bash
 # Check container status
 docker compose ps
@@ -64,14 +83,14 @@ docker compose ps
 # View logs
 docker compose logs -f app
 
-# Check database migrations
-docker compose logs postgres
+# Check for CORS errors
+docker compose logs app | grep CORS
 
 # Test the application
-curl http://localhost:9100/api/health
+curl http://localhost:9100/api/auth/user
 ```
 
-#### 5. First Login
+#### 6. First Login
 - **Email**: `admin@company.com`
 - **Password**: The value you set in `ADMIN_PASSWORD` env variable
 
