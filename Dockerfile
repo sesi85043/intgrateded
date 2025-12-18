@@ -38,7 +38,8 @@ COPY --from=builder /app/shared ./shared
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /app/
-RUN chmod +x /app/docker-entrypoint.sh
+# FIX: Ensure file has Unix line endings and executable permission (strip CRLF introduced on Windows)
+RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
 
 # Create non-root user for security (but run as root for init)
 RUN addgroup -g 1001 -S nodejs
