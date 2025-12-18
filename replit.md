@@ -26,6 +26,34 @@ Admin Hub is a unified platform management application that provides centralized
 - `npm run start` - Run production server
 - `npm run db:push` - Push schema to database
 
+## Deployment
+
+### Replit Development
+- Run `npm run dev` to start the development server
+- Database: Auto-provisioned Replit PostgreSQL
+
+### Docker Deployment (VPS/Production)
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete Docker setup instructions.
+
+**Quick Start:**
+```bash
+cp .env.example .env
+# Edit .env with your VPS credentials
+docker compose up -d
+```
+
+This will automatically:
+- Build the application image
+- Start PostgreSQL database
+- Run database migrations
+- Seed the database with initial roles, permissions, and admin account
+
 ## Environment Variables
+
+### Development (Replit)
 - `DATABASE_URL` - PostgreSQL connection string (auto-provided by Replit)
 - `NODE_ENV` - development or production
+
+### Docker Deployment
+- See `.env.example` for all required variables
+- Key variables: `DATABASE_URL`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `SESSION_SECRET`, `ADMIN_PASSWORD`
