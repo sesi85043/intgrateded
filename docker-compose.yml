@@ -17,8 +17,9 @@ services:
       # Run SQL files on container startup (optional)
       - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
-      # Database is NOT exposed to outside (internal only)
-      - "127.0.0.1:5432:5432"
+      # Database is NOT exposed to outside (internal only).
+      # Changed host port to 5433 to avoid conflicts with a local PostgreSQL instance.
+      - "127.0.0.1:5433:5432"
     networks:
       - adminhub-network
     healthcheck:
