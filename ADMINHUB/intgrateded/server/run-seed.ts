@@ -1,4 +1,5 @@
 import { Client } from 'pg';
+import bcrypt from 'bcryptjs';
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:0109115188087@Kdn@postgres:5432/postgres';
 
@@ -47,9 +48,8 @@ async function seed() {
     const deptId = deptResult.rows[0].id;
     console.log('  ✓ Department ready (ID: ' + deptId + ')');
 
-    // Hash password: admin123 → bcrypt hash
-    // Using a pre-computed hash: $2a$10$...
-    const passwordHash = '$2a$10$eImiTXuWVxfaHNYY0NyGCeTZ.d4DB3jVgaYvMRLqK8FPz1vQaIJhC';
+    // Hash password for the super admin at runtime to avoid stale/pre-computed hashes
+    const passwordHash = await bcrypt.hash('admin123', 10);
 
     // Create super admin
     console.log('Creating super admin user...');
