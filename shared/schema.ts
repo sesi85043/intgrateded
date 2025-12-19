@@ -820,3 +820,118 @@ export const CONVERSATION_STATUS = {
 } as const;
 
 export type ConversationStatus = typeof CONVERSATION_STATUS[keyof typeof CONVERSATION_STATUS];
+
+// ============================================
+// CONVERSATION & MESSAGE TABLES (Phase 1)
+// ============================================
+
+// Conversations - Synced from Chatwoot (Email + WhatsApp)
+export const conversations = pgTable("conversations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  chatwootConversationId: integer("chatwoot_conversation_id").notNull().unique(),
+  inboxId: integer("inbox_id").notNull(),
+  contactId: integer("contact_id").notNull(),
+  channel: varchar("channel", { length: 30 }).notNull(), // email, whatsapp, web_chat
+  status: varchar("status", { length: 20 }).default('open').notNull(),
+  subject: varchar("subject", { length: 255 }),
+  unreadCount: integer("unread_count").default(0),
+  lastMessageAt: timestamp("last_message_at"),
+  assignedAgentId: integer("assigned_agent_id"), // Chatwoot agent ID
+  departmentId: varchar("department_id").references(() => departments.id),
+  metadata: jsonb("metadata"), // Custom fields from Chatwoot
+  chatwootData: jsonb("chatwoot_data"), // Raw Chatwoot conversation data
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  syncedAt: timestamp("synced_at").defaultNow(),
+}, (table) => [
+  index("IDX_conversation_chatwoot_id").on(table.chatwootConversationId),
+  index("IDX_conversation_status").on(table.status),
+  index("IDX_conversation_channel").on(table.channel),
+  index("IDX_conversation_synced").on(table.syncedAt),
+]);
+
+export const insertConversationSchema = createInsertSchema(conversations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  syncedAt: true,
+});
+
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+export type Conversation = typeof conversations.$inferSelect;
+
+// Messages - Synced from Chatwoot
+export const messages = pgTable("messages", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  chatwootMessageId: integer("chatwoot_message_id").notNull().unique(),
+  conversationId: varchar("conversation_id").notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  senderId: integer("sender_id").notNull(), // Chatwoot sender ID
+  senderType: varchar("sender_type", { length: 30 }).notNull(), // agent, contact
+  senderName: varchar("sender_name", { length: 100 }),
+  content: text("content").notNull(),
+  contentType: varchar("content_type", { length: 30 }).default('text'), // text, image, file, etc.
+  attachments: jsonb("attachments"), // File URLs and metadata
+  isPrivate: boolean("is_private").default(false),
+  status: varchar("status", { length: 20 }).default('sent'), // sent, delivered, read
+  chatwootData: jsonb("chatwoot_data"), // Raw Chatwoot message data
+  createdAt: timestamp("created_at").defaultNow(),
+  syncedAt: timestamp("synced_at").defaultNow(),
+}, (table) => [
+  index("IDX_message_conversation").on(table.conversationId),
+  index("IDX_message_chatwoot_id").on(table.chatwootMessageId),
+  index("IDX_message_created").on(table.createdAt),
+]);
+
+export const insertMessageSchema = createInsertSchema(messages).omit({
+  id: true,
+  createdAt: true,
+  syncedAt: true,
+});
+
+export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type Message = typeof messages.$inferSelect;
+
+// Contacts - Synced from Chatwoot (Customers/Clients)
+export const contacts = pgTable("contacts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  chatwootContactId: integer("chatwoot_contact_id").notNull().unique(),
+  name: varchar("name", { length: 100 }),
+  email: varchar("email", { length: 100 }),
+  phone: varchar("phone", { length: 20 }),
+  avatar: text("avatar"),
+  timezone: varchar("timezone", { length: 100 }),
+  lastSeenAt: timestamp("last_seen_at"),
+  metadata: jsonb("metadata"), // Custom fields from Chatwoot
+  chatwootData: jsonb("chatwoot_data"), // Raw Chatwoot contact data
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  syncedAt: timestamp("synced_at").defaultNow(),
+}, (table) => [
+  index("IDX_contact_chatwoot_id").on(table.chatwootContactId),
+  index("IDX_contact_email").on(table.email),
+  index("IDX_contact_phone").on(table.phone),
+]);
+
+export const insertContactSchema = createInsertSchema(contacts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  syncedAt: true,
+});
+
+export type InsertContact = z.infer<typeof insertContactSchema>;
+export type Contact = typeof contacts.$inferSelect;
+
+// Agent Assignments - Track which agent is assigned to conversations
+export const agentAssignments = pgTable("agent_assignments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  conversationId: varchar("conversation_id").notNull().references(() => conversations.id, { onDelete: 'cascade' }),
+  teamMemberId: varchar("team_member_id").notNull().references(() => teamMembers.id),
+  chatwootAgentId: integer("chatwoot_agent_id"),
+  assignedAt: timestamp("assigned_at").defaultNow(),
+  unassignedAt: timestamp("unassigned_at"),
+  notes: text("notes"),
+}, (table) => [
+  index("IDX_assignment_conversation").on(table.conversationId),
+  index("IDX_assignment_team_member").on(table.teamMemberId),
+]);

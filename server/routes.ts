@@ -45,6 +45,7 @@ import bcrypt from "bcryptjs";
 import registerTeamManagedRoutes from './routes-team-managed';
 import registerIntegrationRoutes from './routes-integrations';
 import registerTeamRoutes from './routes-teams';
+import registerChatwootRoutes from './routes-chatwoot';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
