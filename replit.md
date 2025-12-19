@@ -26,6 +26,29 @@ Admin Hub is a unified platform management application that provides centralized
 - `npm run start` - Run production server
 - `npm run db:push` - Push schema to database
 
+## Phase Status
+
+### ✅ Phase 1: Foundation & Chatwoot Integration (COMPLETE)
+**Completed:** December 19, 2025
+
+**What's implemented:**
+- ✅ Database schema for conversations, messages, contacts, agent assignments
+- ✅ Chatwoot API client service (`server/chatwoot-client.ts`)
+- ✅ Backend routes for syncing conversations (`server/routes-chatwoot.ts`)
+- ✅ API endpoints:
+  - `GET /api/chatwoot/conversations` - List all conversations
+  - `POST /api/chatwoot/sync` - Manual sync from Chatwoot
+  - `GET /api/chatwoot/conversations/:id` - Get conversation with messages
+  - `POST /api/chatwoot/conversations/:id/messages` - Send message through Chatwoot
+
+**Testing Phase 1:**
+1. Configure Chatwoot in database: `chatwoot_config` table
+2. Call `POST /api/chatwoot/sync` to pull conversations from your Chatwoot instance
+3. Verify conversations appear in database via `GET /api/chatwoot/conversations`
+
+### 🔜 Phase 2: Unified Inbox UI (NEXT)
+See `PHASES.md` for complete roadmap.
+
 ## Deployment
 
 ### Replit Development
@@ -53,6 +76,7 @@ This will automatically:
 ### Development (Replit)
 - `DATABASE_URL` - PostgreSQL connection string (auto-provided by Replit)
 - `NODE_ENV` - development or production
+- Chatwoot config is stored in `chatwoot_config` table in the database
 
 ### Docker Deployment
 - See `.env.example` for all required variables

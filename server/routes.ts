@@ -248,6 +248,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register communication integration routes (Chatwoot, Evolution API, Typebot, Mailcow)
   registerIntegrationRoutes(app);
 
+  // Register Chatwoot inbox routes (Phase 1: Sync conversations and messages)
+  await registerChatwootRoutes(app);
+
   app.get('/api/team-members', isAuthenticated, async (req: any, res) => {
     try {
       const { departmentId } = req.query;
