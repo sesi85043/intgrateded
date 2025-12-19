@@ -152,6 +152,19 @@ export async function setupAuth(app: Express) {
         profileImageUrl: null,
       };
 
+      // Ensure a minimal `users` row exists for this session user so
+      // endpoints that fetch `storage.getUser(id)` will return a value.
+      try {
+        await storage.upsertUser({
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        });
+      } catch (e) {
+        console.error('[auth] Failed upserting user row for session user:', e && (e.stack || e));
+      }
+
       req.session.user = user;
       req.session.teamMemberId = member.id;
 
