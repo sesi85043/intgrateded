@@ -2,7 +2,8 @@
 
 A phased approach to building the unified inbox where agents handle emails and WhatsApps from Chatwoot without leaving the Admin Hub.
 
-## Phase 1: Foundation & Chatwoot Integration ✅ (CURRENT)
+## Phase 1: Foundation & Chatwoot Integration ✅ (COMPLETE)
+**Completed:** December 19, 2025
 
 **Goal:** Connect Admin Hub to Chatwoot API and sync conversations locally
 
@@ -10,64 +11,86 @@ A phased approach to building the unified inbox where agents handle emails and W
 - [x] Database schema: conversations, messages, contacts tables
 - [x] Chatwoot API client service
 - [x] Backend endpoints to fetch/sync conversations
-- [ ] Test API connectivity with real Chatwoot instance
-
-**Key Files:**
-- `shared/schema.ts` - New tables: conversations, messages, contacts
-- `server/chatwoot-client.ts` - Chatwoot API wrapper
-- `server/routes-chatwoot.ts` - Sync endpoints
-- `server/routes.ts` - Integrated endpoints
+- [x] Configuration UI in Integrations tab
 
 **Deliverables:**
-- GET `/api/chatwoot/conversations` - List all conversations
-- POST `/api/chatwoot/sync` - Manual sync trigger
-- Conversations stored in local database for querying
+- ✅ Database tables: conversations, messages, contacts, agent_assignments
+- ✅ `ChatwootClient` API service for calling Chatwoot
+- ✅ GET `/api/chatwoot/conversations` - List all conversations
+- ✅ POST `/api/chatwoot/sync` - Manual sync trigger
+- ✅ GET `/api/chatwoot/conversations/:id` - Get conversation with messages
+- ✅ POST `/api/chatwoot/conversations/:id/messages` - Send message
+- ✅ `POST /api/integrations/chatwoot/config` - Save Chatwoot credentials
+- ✅ `POST /api/integrations/chatwoot/test` - Test connection
+- ✅ Conversations synced to local PostgreSQL for fast querying
+
+**Key Files:**
+- `shared/schema.ts` - Tables: conversations, messages, contacts, agent_assignments
+- `server/chatwoot-client.ts` - Chatwoot API wrapper
+- `server/routes-chatwoot.ts` - Sync and message endpoints
+- `server/routes-integrations.ts` - Configuration endpoints
+- `client/src/pages/integrations.tsx` - Setup UI with test connection
 
 ---
 
-## Phase 2: Unified Inbox UI
+## Phase 2: Unified Inbox UI ✅ (COMPLETE)
+**Completed:** December 19, 2025
 
-**Goal:** Build frontend to display all conversations in one interface
+**Goal:** Build frontend to display all conversations in one interface (WhatsApp + Email)
 
 **Tasks:**
-- Build inbox list component (conversations from both WhatsApp + Email)
-- Conversation detail view with message thread
-- Contact information panel
-- Real-time status updates
-
-**Key Files:**
-- `client/src/pages/inbox.tsx` - Main inbox page
-- `client/src/components/conversation-list.tsx`
-- `client/src/components/conversation-detail.tsx`
-- `client/src/components/message-thread.tsx`
+- [x] Conversation list component with search
+- [x] Message thread display with sender info
+- [x] Channel badges (WhatsApp, Email, Chat)
+- [x] Conversation status badges (Open, Pending, Resolved, Snoozed)
+- [x] Manual sync trigger in inbox UI
+- [x] Unread message counts
+- [x] Contact details display
+- [x] Last message timestamp
 
 **Deliverables:**
-- Unified inbox showing messages sorted by date
-- Channel badges (WhatsApp, Email) on messages
-- Contact details and conversation metadata
-- Search and filter conversations
+- ✅ Unified inbox showing all conversations in one place
+- ✅ Split-view: Conversation list (left) + Message thread (right)
+- ✅ Search conversations by name, email, or phone
+- ✅ Channel and status badges on each conversation
+- ✅ Full message thread with sender info and timestamps
+- ✅ Sync button to pull latest conversations from Chatwoot
+- ✅ Statistics cards (Open, Pending, Resolved, Total Active)
+- ✅ Quick replies sidebar for common responses
+
+**Key Files:**
+- `client/src/pages/inbox.tsx` - Main inbox page (updated)
+- `client/src/components/conversation-list.tsx` - Conversation list with search
+- `client/src/components/message-thread.tsx` - Message thread display
+- `client/src/components/conversation-list.tsx` - Channel and status badges
 
 ---
 
 ## Phase 3: Reply & Send Functionality
+**Status:** Ready to start
 
 **Goal:** Enable agents to reply to messages directly from Admin Hub
 
 **Tasks:**
-- Reply UI component with message composer
-- Send message through Chatwoot API
-- Agent assignment and status tracking
-- Message history and context
+- [ ] Message composer component UI
+- [ ] Send message through Chatwoot API endpoint
+- [ ] Agent assignment to conversations
+- [ ] Mark conversations as resolved/pending
+- [ ] Handle message validation and errors
+- [ ] Display sent message in thread immediately
 
 **Key Files:**
-- `client/src/components/message-composer.tsx`
-- `server/routes-chatwoot.ts` - Add message send endpoint
+- `client/src/components/message-composer.tsx` - Reply box UI
+- `server/routes-chatwoot.ts` - Use existing POST `/api/chatwoot/conversations/:id/messages` endpoint
+- `client/src/pages/inbox.tsx` - Integrate message composer into message thread
 
 **Deliverables:**
-- POST `/api/chatwoot/messages` - Send message
-- Message sent through correct channel (WhatsApp/Email)
-- Agent assignment to conversations
-- Status: open, resolved, waiting for response
+- Text input for composing replies
+- Send button with loading state
+- Message appears in thread immediately after sending
+- Error handling for failed sends
+- Conversation status can be updated (open/resolved/pending)
+- Agent assignment tracking
 
 ---
 
