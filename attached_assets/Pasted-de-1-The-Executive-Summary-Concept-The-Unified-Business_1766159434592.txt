@@ -1,0 +1,46 @@
+de 1: The Executive Summary
+
+Concept: The "Unified Business Operating System" This system is an all-in-one CRM and ERP platform that consolidates over 100 business tools into a single interface. It replaces the need for multiple disjointed subscriptions by combining advanced communication tools (WhatsApp automation), operational management (HR, Accounting), and customer support into one dashboard.
+Slide 2: The Core Problem & Solution
+
+    The Problem: Businesses struggle to scale WhatsApp communication because the standard app limits you to 4 devices. Agents cross wires, and data is lost in individual phones.
+
+    The Solution: A centralized inbox (Chatwoot) powered by an integration layer (Evolution API).
+
+        Benefit: Connect a single WhatsApp number and allow unlimited support agents to manage conversations simultaneously.
+
+        Control: Assign specific chats to specific agents, monitor performance, and ensure no customer message goes unanswered.
+
+Slide 3: Key Feature – Advanced WhatsApp Automation
+
+    Multi-Agent Support: Unlike standard WhatsApp, this system allows an entire team (Sales, Support, HR) to work off one business number without getting blocked.
+
+    Smart Chatbots (Typebot Integration):
+
+        Deploy "Transactional Bots" that guide customers through complex flows (e.g., "What is your name?", "Select your issue").
+
+        The bot captures data variables (Names, Issue Types) and automatically passes them to agents or triggers workflows.
+
+        Example: A Real Estate bot that qualifies a lead, asks for their budget, and then routes them to a human agent.
+
+    Campaign Management: Send bulk messages (broadcasts) to lead lists and track delivery reports.
+
+Slide 4: Operational Modules (Beyond Chat)
+
+The system is not just for communication; it manages the entire business lifecycle:
+
+    Sales & CRM: Lead tracking, pipelines, and direct Facebook Lead capture integration.
+
+    Finance: Invoicing, GST accounting, and expense tracking.
+
+    HR & Team: Employee attendance, time sheets, payroll, and internal team chat.
+
+    Project Management: Kanban boards, tasks, and file sharing.
+
+Speaker Notes (Script to go with the slides)
+
+"Essentially, what we are looking at is a platform that bridges the gap between external communication and internal operations. Use cases include:
+
+        For Support Teams: We use the Chatwoot module to turn WhatsApp into a ticketing system. If a customer messages us, we can assign that chat to 'Agent A'. If 'Agent A' is busy, we reassign it to 'Agent B', all while keeping the history visible.*
+
+        For Automation: We don't just reply manually. We use Typebot to build visual flows—like a menu system—that run inside WhatsApp to collect client details automatically before a human ever touches the keyboard.*
