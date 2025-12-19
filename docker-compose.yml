@@ -18,8 +18,8 @@ services:
       - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       # Database is NOT exposed to outside (internal only).
-      # Changed host port to 5433 to avoid conflicts with a local PostgreSQL instance.
-      - "127.0.0.1:5433:5432"
+      # Changed host port to 5434 to avoid conflicts with a local PostgreSQL instance.
+      - "127.0.0.1:5434:5432"
     networks:
       - adminhub-network
     healthcheck:
@@ -46,7 +46,10 @@ services:
       SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
       SESSION_COOKIE_SAME_SITE: ${SESSION_COOKIE_SAME_SITE:-lax}
       SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-adminhub.sid}
-      CORS_ORIGIN: ${CORS_ORIGIN:-}
+      # Allowlist of origins (comma-separated). Set explicitly to the production frontend URLs.
+      CORS_ORIGIN: "http://158.220.107.106:9100,https://hub.allelectronics.one"
+      # Admin password used for initial provisioning or CLI-style admin creation
+      ADMIN_PASSWORD: admin123
       NODE_OPTIONS: --max-old-space-size=1024
     ports:
       # Map external port (CHANGE_ME) to internal container port 5000
