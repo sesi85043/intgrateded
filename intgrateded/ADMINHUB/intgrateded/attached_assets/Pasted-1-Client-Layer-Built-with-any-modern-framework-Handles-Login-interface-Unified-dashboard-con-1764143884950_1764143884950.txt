@@ -1,0 +1,195 @@
+1. Client Layer 
+
+Built with any modern framework 
+Handles:
+
+Login interface
+
+Unified dashboard (content changes based on role)
+
+Navigation menus dynamically rendered by permissions
+
+Pages:
+
+Technician Dashboard
+
+Department Dashboard
+
+Global Dashboard
+
+User Management (visible only to Management)
+
+
+2. API Layer (Backend Services)
+
+Core logic runs here. Primary responsibilities:
+
+Authentication Service
+
+User login
+
+Password hashing + verification
+
+Token generation (JWT or Session-based)
+
+Logout handling
+
+Authorization Service (RBAC Engine)
+
+Checks user role → Technician / Dept Admin / Management
+
+Checks user department → HA / HHP / DTV
+
+Evaluates permissions before granting access
+
+Protects routes using middleware
+
+User Management Service
+
+Management-only access:
+
+Add technicians
+
+Edit technicians
+
+Deactivate/delete users
+
+Assign roles
+
+Assign departments
+
+Create department admins
+
+Department Service
+
+Fetch department data (only own dept for technicians and dept admins)
+
+Fetch all departments (management only)
+
+Task/Workflow Service
+
+Job creation
+
+Technician task assignment
+
+Task status updates
+
+Resource access
+
+Worklog submission
+
+3. Database Layer
+
+A relational database (MySQL, PostgreSQL) with structured RBAC tables:
+
+Users Table
+
+id
+
+name
+
+email
+
+password_hash
+
+role_id
+
+department_id
+
+status
+
+Roles Table
+
+Technician
+
+Department Admin
+
+Management
+
+Departments Table
+
+HA
+
+HHP
+
+DTV
+
+Permissions Table
+
+Each action the system gates:
+
+view_tasks
+
+update_task
+
+view_department_dashboard
+
+manage_global_users
+
+etc.
+
+Role-Permissions Table
+
+Many-to-many linking roles to permissions.
+
+Task/Jobs Tables
+
+(If your system manages technician jobs)
+
+tasks
+
+task_history
+
+task_assignments
+
+4. Access Control Model
+
+A combined Role + Department check:
+
+Request Flow:
+
+User logs in → gets token
+
+For every API call:
+
+Authentication middleware validates token
+
+Authorization middleware checks:
+
+Role
+
+Department
+
+Permissions
+
+API either returns data or rejects with “Access Denied”
+
+This ensures department admins stay limited and only management can fully manage users.
+
+5. Logging & Audit
+
+Every user management action (add/edit/deactivate) logged
+
+Task updates logged
+
+Department-level reports pulled from audit tables
+
+Management has access to all logs
+
+Dept admins see logs only for their dept
+
+6. Security Layer
+
+Role-based access
+
+Department-based segregation
+
+Encrypted passwords (bcrypt or Argon2)
+
+HTTPS enforced
+
+Token invalidation on deactivation
+
+✔️ Summary (One Sentence)
+
+A single unified system where the backend enforces role + department–based access, the frontend dynamically renders features, and only Management has global user control, while technicians and department admins have tightly restricted access aligned with company structure (HA, HHP, DTV).

@@ -1,0 +1,2 @@
+ALTER TABLE managed_users ADD COLUMN IF NOT EXISTS team_member_id varchar;
+ALTER TABLE managed_users ADD CONSTRAINT IF NOT EXISTS managed_users_team_member_id_fk FOREIGN KEY (team_member_id) REFERENCES team_members(id) ON DELETE SET NULL;

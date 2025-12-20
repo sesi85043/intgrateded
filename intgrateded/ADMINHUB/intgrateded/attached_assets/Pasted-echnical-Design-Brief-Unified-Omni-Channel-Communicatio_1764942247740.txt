@@ -1,0 +1,196 @@
+echnical Design Brief: Unified Omni-Channel Communication System
+
+Version: 1.0 Date: December 2025 System Owner: Admin Hub (MM All Electronics)
+1. Executive Summary
+
+The objective is to deploy a centralized communication ecosystem where the Admin Hub acts as the Single Source of Truth (SSOT) for user identity and access.
+
+We will integrate Mailcow (Email), Evolution API (WhatsApp), and Typebot (Logic) into Chatwoot (The Engine). Staff will access all communications via a unified interface embedded in the Admin Hub, eliminating the need for multiple logins.
+2. System Architecture
+The "Hub & Spoke" Model
+
+    The Brain (Admin Hub): Handles User creation, Authentication (SSO), and Access Control.
+
+    The Engine (Chatwoot): Stores all conversation history (WhatsApp & Email), manages tickets, and handles routing.
+
+    The Gateways:
+
+        Mailcow: Receives/Sends emails via IMAP/SMTP.
+
+        Evolution API: Receives/Sends WhatsApp messages.
+
+        Typebot: Initial automated triage (The "Receptionist").
+
+3. Implementation Plan: Step-by-Step
+Part A: Identity & Provisioning (The "Source of Truth")
+
+Goal: When you click "Add Employee" in Admin Hub, the system automatically creates their Email and Chatwoot Agent account.
+1. Username Generation Logic
+
+Enforce a standard naming convention in your Admin Hub backend (Node.js/Next.js).
+
+    Format: firstname.lastname (lowercase).
+
+    Collision: If kay.ntulo exists, append increment: kay.ntulo1.
+
+2. Mailcow Provisioning (API)
+
+    Trigger: Admin Hub Backend.
+
+    Action: Create mailbox.
+
+    Endpoint: POST /api/v1/add/mailbox
+
+    Payload:
+    Bash
+
+    curl -X POST "https://mail.allelectronics.one/api/v1/add/mailbox" \
+      -H "X-API-KEY: YOUR_MAILCOW_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "active": "1",
+        "local_part": "kayntulo.dtv",
+        "domain": "mmallelectronics.co.za",
+        "name": "Kayntulo DTV",
+        "password": "GENERATE_RANDOM_STRONG_PASSWORD",
+        "quota": "3072"
+      }'
+
+3. Chatwoot Provisioning (API)
+
+    Trigger: Immediately after Mailcow success.
+
+    Action: Create Agent and Assign to Team (e.g., DTV).
+
+    Endpoint: POST /api/v1/accounts/{account_id}/agents
+
+    Payload:
+    Bash
+
+    curl -X POST "https://chat.allelectronics.one/api/v1/accounts/1/agents" \
+      -H "api_access_token: YOUR_CHATWOOT_ADMIN_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Kayntulo",
+        "email": "kayntulo.dtv@mmallelectronics.co.za",
+        "role": "agent",
+        "auto_offline": false
+      }'
+
+4. The Password Handoff (Security)
+
+    Do Not email the generated password.
+
+    Strategy: Admin Hub sends a "Welcome" email to the user's personal address (or SMS) with a One-Time Link to the Admin Hub.
+
+    User Action: User clicks link -> Sets their Admin Hub Password.
+
+    Note: The user rarely needs the Mailcow/Chatwoot password because we use SSO/Embedding.
+
+Part B: The WhatsApp Engine (Tracking & Routing)
+
+Goal: Complete history tracking and intelligent routing via Typebot.
+1. Ingestion (Evolution API)
+
+    Configure Evolution to send a Webhook to Typebot on Message Upsert.
+
+    State: The conversation is "Bot Handled".
+
+2. Triage (Typebot)
+
+    Visual Flow:
+
+        User says "Hi".
+
+        Bot: "Welcome! Choose Department: [DTV] [Sales]".
+
+        User clicks "DTV".
+
+    Logic:
+
+        Set Variable department = "DTV".
+
+        Crucial Step: Use the Chatwoot Integration Block.
+
+        Config:
+
+            Inbox ID: 2 (The DTV WhatsApp Inbox).
+
+            User Name: {{Name from WhatsApp}}
+
+            User Phone: {{Phone Number}}
+
+3. Handoff (Chatwoot)
+
+    The conversation now appears in the DTV Inbox.
+
+    Tracking: Chatwoot automatically tags the source as whatsapp.
+
+    History: The previous messages (Hi, Menu Selection) are preserved in the chat window so the agent has context.
+
+Part C: The Email Engine (Unified Handling)
+1. Mailcow -> Chatwoot
+
+    In Chatwoot, configure the DTV Email Inbox.
+
+    IMAP Settings:
+
+        Host: mail.allelectronics.one
+
+        User: support.dtv@mmallelectronics.co.za
+
+        Pass: (The password generated in Part A).
+
+    SMTP Settings: (Same as above).
+
+2. Auto-Replies
+
+    Do not use Mailcow Auto-responders.
+
+    Use Chatwoot Automations:
+
+        Rule: If Conversation Created AND Inbox is DTV -> Send Message: "Thank you for emailing DTV. Reference Ticket #{{id}}."
+
+        Why: This keeps the auto-reply visible in the chat history for the agent to see.
+
+Part D: Single Sign-On (SSO) Strategy
+
+Goal: Staff logs into Admin Hub, then clicks "Inbox" and is already logged into Chatwoot.
+Option 1: The "Token Exchange" (Fastest for Custom Apps)
+
+If Admin Hub is a custom React/Node app:
+
+    User logs into Admin Hub.
+
+    Admin Hub backend generates a Chatwoot SSO Token using the user's email and your Chatwoot HMAC key.
+
+        Formula: HMAC_SHA256(user_email, chatwoot_sso_key)
+
+    Frontend loads the Iframe:
+
+        URL: https://chat.allelectronics.one/sso/login?email=user@email.com&sso_auth_token=GENERATED_TOKEN
+
+Option 2: The Keycloak Method (Enterprise)
+
+If using Keycloak as an Identity Provider:
+
+    Configure Chatwoot to use SAML.
+
+    Point Chatwoot to the Keycloak Metadata URL.
+
+    User clicks "Login with SSO" on Chatwoot.
+
+4. Verification Checklist (The "Definition of Done")
+Component	Test Case	Success Criteria
+Provisioning	Create user "John" in Admin Hub.	"John" appears in Mailcow list AND Chatwoot Agent list.
+WhatsApp	Send "Hi" from personal phone.	Typebot replies -> Select DTV -> Appears in DTV Inbox.
+Email	Email support.dtv.	Appears in DTV Inbox. Auto-reply received.
+Unified View	Login as Agent "John".	Can see both the WhatsApp msg and Email in one dashboard.
+Security	Try to access Chatwoot without login.	Access Denied / Redirect to Login.
+5. Security & Security Notes
+
+    API Keys: Store Mailcow and Chatwoot API keys in your .env file on the server. Never commit them to GitHub.
+
+    Firewall: Mailcow Admin UI (Port 8080) should strictly be proxied via Nginx. Do not expose port 8080 to the public internet directly.
+
+    Password Policy: Force users to change their Admin Hub password upon first login

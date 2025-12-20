@@ -1,0 +1,699 @@
+-hard origin/main
+HEAD is now at b5cad13 Add initial project setup and database seeding
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> # Clean everything
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> docker-compose down -v
+time="2025-12-18T18:27:08+02:00" level=warning msg="C:\\Users\\MM_SD\\Downloads\\DEPLOYMENT FOLDER\\ADMINHUB\\intgrateded\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 5/5
+ ✔ Container adminhub-app                Removed                                              12.0s 
+ ✔ Container adminhub-postgres           Removed                                               3.0s 
+ ✔ Volume intgrateded_postgres_data      Removed                                               5.3s 
+ ✔ Volume intgrateded_app_logs           Removed                                               5.5s 
+ ✔ Network intgrateded_adminhub-network  Removed                                               1.7s 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> docker system prune -af
+Deleted Networks:
+letsdo-_default
+deploymentfolder_adminhub-network
+
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> # Rebuild and start
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> docker-compose build --no-cache
+time="2025-12-18T18:28:15+02:00" level=warning msg="C:\\Users\\MM_SD\\Downloads\\DEPLOYMENT FOLDER\\ADMINHUB\\intgrateded\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Building 29.4s (8/23)
+ => [internal] load local bake definitions                                                     0.1s
+ => => reading from stdin 612B                                                                 0.1s
+ => [internal] load build definition from Dockerfile                                           0.2s
+ => => transferring dockerfile: 1.92kB                                                         0.1s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                             14.4s
+ => [auth] library/node:pull token for registry-1.docker.io                                    0.0s
+ => [internal] load .dockerignore                                                              0.5s
+ => => transferring context: 162B                                                              0.3s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c  0.3s
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704  0.3s
+ => [internal] load build context                                                              0.6s 
+ => => transferring context: 28.27kB                                                           0.5s
+ => CACHED [builder 2/5] WORKDIR /app                                                          0.0s 
+ => [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client         8.1s
+ => [builder 3/5] COPY . .                                                                     7.5s
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> docker-compose up -d
+time="2025-12-18T18:28:48+02:00" level=warning msg="C:\\Users\\MM_SD\\Downloads\\DEPLOYMENT FOLDER\\ADMINHUB\\intgrateded\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 2/2
+ ✔ Network intgrateded_adminhub-network  Created                                               0.3s 
+ ✘ Volume intgrateded_postgres_data      Error                                                 0.1s 
+
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> # Watch it come alive
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> docker-compose logs -f app^C
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> git status --porcelain; git rev-parse --abbrev-ref HEAD; git remote -v
+fix/seed-admin-password
+origin  https://github.com/sesi85043/intgrateded (fetch)
+origin  https://github.com/sesi85043/intgrateded (push)
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> git log --oneline -n 8; git diff --name-only origin/main...HEAD || true
+At line:1 char:65
++ ... t log --oneline -n 8; git diff --name-only origin/main...HEAD || true
++                                                                   ~~
+The token '||' is not a valid statement separator in this version.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : InvalidEndOfLine
+
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> git log --oneline -n 8; git fetch origin; git diff --name-only origin/main...HEAD
+b5cad13 (HEAD -> fix/seed-admin-password, origin/main, origin/HEAD) Add initial project setup and database seeding
+f47c6cc Add test data and configure database for application functionality
+7bf872e Apply database setup commands to the user's VPS
+aada607 Add test data and correct configuration for application login
+6d8b5f0 Add and update core web development packages for project functionality
+6e3c7ec (main) chore: add missing 'cors' dependency to root package.json (fix runtime import)
+45e699f chore: point local DATABASE_URL to postgres service host instead of localhost to use Docker network
+c72df11 fix(docker): strip CRLF from docker-entrypoint during build and chmod +x to avoid shebang issues
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> 
+PS C:\Users\MM_SD\Downloads\DEPLOYMENT FOLDER\ADMINHUB\intgrateded\ADMINHUB\intgrateded> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Thu Dec 18 17:30:46 CET 2025
+
+  System load:           0.39
+  Usage of /:            50.0% of 192.69GB
+  Memory usage:          58%
+  Swap usage:            0%
+  Processes:             338
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Thu Dec 18 16:22:09 2025 from 41.193.198.198
+root@vmi2905850:~# cd /root/adminhub
+
+# Get the new code
+git fetch origin
+git reset --hard origin/main
+
+# Stop everything first
+docker compose down
+
+# Rebuild with no cache (Forces the 'npm install --include=dev' to run)
+docker compose up -d --build --force-recreate
+remote: Enumerating objects: 61, done.
+remote: Counting objects: 100% (61/61), done.
+remote: Compressing objects: 100% (21/21), done.
+remote: Total 61 (delta 24), reused 61 (delta 24), pack-reused 0 (from 0)
+Unpacking objects: 100% (61/61), 347.92 KiB | 5.12 MiB/s, done.
+From https://github.com/sesi85043/intgrateded
+   6e3c7ec..b5cad13  main                    -> origin/main
+   f085252..e0addd4  fix/seed-admin-password -> origin/fix/seed-admin-password
+HEAD is now at b5cad13 Add initial project setup and database seeding
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion                                               0.1s 
+[+] Building 58.9s (24/24) FINISHED
+ => [internal] load local bake definitions                                                     0.0s
+ => => reading from stdin 470B                                                                 0.0s
+ => [internal] load build definition from Dockerfile                                           0.0s
+ => => transferring dockerfile: 1.86kB                                                         0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                              1.4s 
+ => [internal] load .dockerignore                                                              0.0s
+ => => transferring context: 150B                                                              0.0s 
+ => [internal] load build context                                                              0.1s 
+ => => transferring context: 352.28kB                                                          0.1s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c  0.0s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704  0.0s 
+ => CACHED [builder 2/5] WORKDIR /app                                                          0.0s
+ => CACHED [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client  0.0s 
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                     0.0s 
+ => [builder 3/5] COPY . .                                                                     0.7s 
+ => [stage-1  5/14] COPY tsconfig.json ./                                                      0.0s 
+ => [stage-1  6/14] RUN npm install --omit=dev                                                17.0s 
+ => [builder 4/5] RUN npm install                                                             21.1s
+ => [builder 5/5] RUN npm run build                                                           14.5s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                       0.3s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                           0.0s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                   0.0s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                   0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                            0.0s 
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-en  0.2s 
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                             0.2s 
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                              0.3s 
+ => exporting to image                                                                        18.7s 
+ => => exporting layers                                                                       12.3s 
+ => => exporting manifest sha256:56e5f8719e54a66e178c3a61753b1aa4afe9b52132b4af4c673862244d16  0.0s 
+ => => exporting config sha256:d60cfff6add2d531e4177325c32e964dbef414e4440db03fc15e589f94cbf0  0.0s 
+ => => exporting attestation manifest sha256:22772751c24c2a81de616880cff98bf6698d5dd5e8ce3a2f  0.0s 
+ => => exporting manifest list sha256:7c2dc0ae4f4a6e47af37a0c172df65c8b8be3b5bb2dc278e8ab27a9  0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                         0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                      6.3s 
+ => resolving provenance for metadata file                                                     0.0s 
+[+] up 4/4
+ ✔ Image adminhub-app                Built                                                    59.1s 
+ ✔ Network adminhub_adminhub-network Created                                                   0.1s 
+ ✔ Container adminhub-postgres       Created                                                   0.7s 
+ ✔ Container adminhub-app            Created                                                   0.1s 
+Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint adminhub-postgres (52a92f9230e300d705ee4e2b299c3ccecab9705c4abfdc1b29467f72e2e99b57): Bind for 0.0.0.0:5433 failed: port is already allocated
+root@vmi2905850:~/adminhub# docker ps --filter "publish=5433"
+CONTAINER ID   IMAGE         COMMAND                  CREATED       STATUS       PORTS                                         NAMES
+273bea4e891c   postgres:15   "docker-entrypoint.s…"   8 hours ago   Up 8 hours   0.0.0.0:5433->5432/tcp, [::]:5433->5432/tcp   odoo-custom-db-1
+root@vmi2905850:~/adminhub#  connectivity on endpoint adminhub-postgres (52a92f9230e300d705ee4e2b299c3ccecab9705c4abfdc1b29467f72e2e99b57): Bind for 0.0.0.0:5433 failed: port is already allocated     
+root@vmi2905850:~/adminhub# docker ps --filter "publish=5433"
+CONTAINER ID   IMAGE         COMMAND                  CREATED       STATUS       PORTS              
+
+                           NAMES
+273bea4e891c   postgres:15   "docker-entrypoint.s…"   8 hours ago   Up 8 hours   0.0.0.0:5433->5432/tcp, [::]:5433->5432^C
+root@vmi2905850:~/adminhub# nano docker-compose.yml
+root@vmi2905850:~/adminhub# docker compose up -d
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 2/2
+ ✔ Container adminhub-postgres Healthy                                                        11.4s 
+ ✔ Container adminhub-app      Recreated                                                       0.2s 
+root@vmi2905850:~/adminhub# docker compose logs --tail 50 app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | 4:42:16 PM [express] GET /api/auth/user 401 in 8ms :: {"message":"Unauthorized"}
+adminhub-app  | 4:42:52 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 4:42:56 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:43:18 PM [express] POST /api/auth/login 401 in 169ms :: {"message":"Invalid credentials"}
+adminhub-app  | 4:43:29 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 4:43:48 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | [CORS] Rejected origin: https://hub.allelectronics.one
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | [CORS] Rejected origin: https://hub.allelectronics.one
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905: 1)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | 4:44:05 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:44:21 PM [express] POST /api/auth/login 401 in 115ms :: {"message":"Invalid credentials"}
+adminhub-app  | 4:44:41 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | 4:45:17 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 4:45:53 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}    
+adminhub-app  | [CORS] Rejected origin: https://hub.allelectronics.one
+adminhub-app  | [express] Uncaught error in request handler: Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4905:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+
+
+root@vmi2905850:~/adminhub# docker compose up -d
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 2/2
+ ✔ Container adminhub-postgres Healthy                                                         1.4s 
+root@vmi2905850:~/adminhub# ^C Recreated                                                       0.9s 
+root@vmi2905850:~/adminhub# docker compose up -d
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 1/2
+ ⠼ Container adminhub-postgres Waiting                                                         0.5s 
+ ✔ Container adminhub-app      Running                                                         0.0s 
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d adminhub_db
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "adminhub_db" does not exist
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "\l"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+                                                       List of databases
+   Name    |  Owner   | Encoding | Locale Provider |   Collate   |    Ctype    | ICU Locale | ICU Rules |   Access privileges
+-----------+----------+----------+-----------------+-------------+-------------+------------+-----------+-----------------------
+ postgres  | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           |
+ template0 | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+(3 rows)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "\dt"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+                 List of relations
+ Schema |         Name          | Type  |  Owner
+--------+-----------------------+-------+----------
+ public | activity_logs         | table | postgres
+ public | admin_notifications   | table | postgres
+ public | analytics_metrics     | table | postgres
+ public | approval_otps         | table | postgres
+ public | departments           | table | postgres
+ public | managed_users         | table | postgres
+ public | pending_registrations | table | postgres
+ public | permissions           | table | postgres
+ public | role_permissions      | table | postgres
+ public | roles                 | table | postgres
+ public | service_configs       | table | postgres
+ public | sessions              | table | postgres
+ public | task_assignments      | table | postgres
+ public | task_history          | table | postgres
+ public | tasks                 | table | postgres
+ public | team_members          | table | postgres
+ public | users                 | table | postgres
+ public | worklogs              | table | postgres
+(18 rows)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "DELETE FROM users WHERE email = 'admin@company.com';"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ERROR:  update or delete on table "users" violates foreign key constraint "team_members_user_id_users_id_fk" on table "team_members"
+DETAIL:  Key (id)=(9e2f62e9-e01f-40d0-b94f-3c2862258853) is still referenced from table "team_members".
+root@vmi2905850:~/adminhub# docker compose exec app node dist/run-seed.cjs
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+✓ Connected to database
+✓ Super admin already exists, skipping seed
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT email, role, is_active FROM users;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ERROR:  column "role" does not exist
+LINE 1: SELECT email, role, is_active FROM users;
+                      ^
+root@vmi2905850:~/adminhub# docker compose down -v
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 5/5
+ ✔ Container adminhub-app            Removed                                                   0.6s 
+ ✔ Container adminhub-postgres       Removed                                                   0.3s 
+ ✔ Volume adminhub_postgres_data     Removed                                                   0.1s 
+ ✔ Volume adminhub_app_logs          Removed                                                   0.0s 
+ ✔ Network adminhub_adminhub-network Removed                                                   0.1s 
+root@vmi2905850:~/adminhub# docker compose up -d
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 5/5
+ ✔ Network adminhub_adminhub-network Created                                                   0.1s 
+ ✔ Volume adminhub_app_logs          Created                                                   0.0s 
+ ✔ Volume adminhub_postgres_data     Created                                                   0.0s 
+ ✔ Container adminhub-postgres       Healthy                                                  11.0s 
+root@vmi2905850:~/adminhub# ^C       Created                                                   0.1s 
+root@vmi2905850:~/adminhub# docker compose up -d
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+root@vmi2905850:~/adminhub# ^C
+root@vmi2905850:~/adminhub# ^C Waiting                                                         0.5s 
+root@vmi2905850:~/adminhub# ^C Running                                                         0.0s 
+root@vmi2905850:~/adminhub# docker compose logs -f app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 220
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 18 16:31 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 18 16:54 ..
+adminhub-app  | -rw-r--r--    1 root     root        203346 Dec 18 16:31 index.js
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 18 16:31 public
+adminhub-app  | -rw-r--r--    1 root     root          2320 Dec 18 16:31 run-migration.cjs
+adminhub-app  | -rw-r--r--    1 root     root          2931 Dec 18 16:31 run-seed.cjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 18 16:31 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 18 16:31 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 18 16:31 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 18 16:31 devpulse.favicon.png       
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 18 16:31 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists   
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists   
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists     
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists   
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists    
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists       
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists   
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists   
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists       
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" v...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" v...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "state" varchar(10...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "postal_code" varc...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...  
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...  
+adminhub-app  |   ✓ Done
+adminhub-app  |
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | Creating/checking Management role...
+adminhub-app  |   ✓ Management role ready (ID: fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a)
+adminhub-app  | Creating/checking Home Appliances department...
+adminhub-app  |   ✓ Department ready (ID: d00be6f5-73f7-4732-a16e-c2f25f78b273)
+adminhub-app  | Creating super admin user...
+adminhub-app  | ✅ Super admin created successfully!
+adminhub-app  |    Email: admin@company.com
+adminhub-app  |    Password: admin123
+adminhub-app  |    Status: Verified (ready to login)
+adminhub-app  |
+adminhub-app  | ✅ Seed completed successfully!
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-18T16:54:40: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-18T16:54:40: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-18T16:54:40: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)       
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 4:54:41 PM [express] serving on port 5000
+adminhub-app  | 4:54:44 PM [express] GET /api/auth/user 401 in 7ms :: {"message":"Unauthorized"}    
+adminhub-app  | 4:55:20 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:55:52 PM [express] POST /api/auth/login 401 in 161ms :: {"message":"Invalid credentials"}
+adminhub-app  | 4:55:56 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 4:55:56 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:56:05 PM [express] POST /api/auth/login 401 in 111ms :: {"message":"Invalid credentials"}
+adminhub-app  | 4:56:33 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:56:51 PM [express] POST /api/auth/login 401 in 106ms :: {"message":"Invalid credentials"}
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:56:53 PM [express] POST /api/auth/login 401 in 87ms :: {"message":"Invalid credentials"}
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:56:53 PM [express] POST /api/auth/login 401 in 97ms :: {"message":"Invalid credentials"}
+adminhub-app  | 4:57:05 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 4:57:09 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 4:57:09 PM [express] POST /api/auth/login 401 in 112ms :: {"message":"Invalid credentials"}
+adminhub-app  | 4:57:45 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 4:58:21 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT email, password_hash FROM users WHERE email = 'admin@company.com';"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ERROR:  column "password_hash" does not exist
+LINE 1: SELECT email, password_hash FROM users WHERE email = 'admin@...
+                      ^
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT email, password FROM users WHERE email='admin@company.com';"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ERROR:  column "password" does not exist
+LINE 1: SELECT email, password FROM users WHERE email='admin@company...
+                      ^
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "\d users"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+                                    Table "public.users"
+      Column       |            Type             | Collation | Nullable |      Default
+-------------------+-----------------------------+-----------+----------+-------------------        
+ id                | character varying           |           | not null | gen_random_uuid()
+ email             | character varying           |           |          |
+ first_name        | character varying           |           |          |
+ last_name         | character varying           |           |          |
+ profile_image_url | character varying           |           |          |
+ created_at        | timestamp without time zone |           |          | now()
+ updated_at        | timestamp without time zone |           |          | now()
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_email_unique" UNIQUE CONSTRAINT, btree (email)
+Referenced by:
+    TABLE "team_members" CONSTRAINT "team_members_user_id_users_id_fk" FOREIGN KEY (user_id) REFERENCES users(id)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "ALTER TABLE users ADD COLUMN password VARCHAR(255);"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ALTER TABLE
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "DELETE FROM users WHERE email = 'admin@company.com';"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+DELETE 0
+root@vmi2905850:~/adminhub# docker compose exec app node dist/run-seed.cjsdocker compose exec app node dist/run-seed.cjs
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+node:internal/modules/cjs/loader:1210
+  throw err;
+  ^
+
+Error: Cannot find module '/app/dist/run-seed.cjsdocker'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+    at node:internal/main/run_main_module:28:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v20.19.6
+root@vmi2905850:~/adminhub# docker compose exec app node dist/run-seed.cjs
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+✓ Connected to database
+✓ Super admin already exists, skipping seed
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT email, password FROM users WHERE email='admin@company.com';"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ email | password
+-------+----------
+(0 rows)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT id, email, password FROM users;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ id | email | password 
+----+-------+----------
+(0 rows)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE team_members CASCADE;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+NOTICE:  truncate cascades to table "activity_logs"
+NOTICE:  truncate cascades to table "admin_notifications"
+NOTICE:  truncate cascades to table "approval_otps"
+NOTICE:  truncate cascades to table "managed_users"
+NOTICE:  truncate cascades to table "pending_registrations"
+NOTICE:  truncate cascades to table "task_assignments"
+NOTICE:  truncate cascades to table "task_history"
+NOTICE:  truncate cascades to table "tasks"
+NOTICE:  truncate cascades to table "worklogs"
+TRUNCATE TABLE
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+NOTICE:  truncate cascades to table "team_members"
+NOTICE:  truncate cascades to table "activity_logs"
+NOTICE:  truncate cascades to table "admin_notifications"
+NOTICE:  truncate cascades to table "approval_otps"
+NOTICE:  truncate cascades to table "managed_users"
+NOTICE:  truncate cascades to table "pending_registrations"
+NOTICE:  truncate cascades to table "task_assignments"
+NOTICE:  truncate cascades to table "task_history"
+NOTICE:  truncate cascades to table "tasks"
+NOTICE:  truncate cascades to table "worklogs"
+TRUNCATE TABLE
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+psql: warning: extra command-line argument "compose" ignored
+psql: warning: extra command-line argument "exec" ignored
+psql: warning: extra command-line argument "postgres" ignored
+psql: warning: extra command-line argument "psql" ignored
+psql: warning: extra command-line argument "compose" ignored
+psql: warning: extra command-line argument "exec" ignored
+psql: warning: extra command-line argument "postgres" ignored
+psql: warning: extra command-line argument "psql" ignored
+ERROR:  syntax error at or near "docker"
+LINE 1: TRUNCATE users CASCADE;docker
+                               ^
+ERROR:  syntax error at or near "docker"
+LINE 1: TRUNCATE users CASCADE;docker
+                               ^
+NOTICE:  truncate cascades to table "team_members"
+NOTICE:  truncate cascades to table "activity_logs"
+NOTICE:  truncate cascades to table "admin_notifications"
+NOTICE:  truncate cascades to table "approval_otps"
+NOTICE:  truncate cascades to table "managed_users"
+NOTICE:  truncate cascades to table "pending_registrations"
+NOTICE:  truncate cascades to table "task_assignments"
+NOTICE:  truncate cascades to table "task_history"
+NOTICE:  truncate cascades to table "tasks"
+NOTICE:  truncate cascades to table "worklogs"
+TRUNCATE TABLE
+root@vmi2905850:~/adminhub# docker compose exec app node dist/run-seed.cjs
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+✓ Connected to database
+Creating/checking Management role...
+  ✓ Management role ready (ID: fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a)
+Creating/checking Home Appliances department...
+  ✓ Department ready (ID: d00be6f5-73f7-4732-a16e-c2f25f78b273)
+Creating super admin user...
+✅ Super admin created successfully!
+   Email: admin@company.com
+   Password: admin123
+   Status: Verified (ready to login)
+
+✅ Seed completed successfully!
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT email, password FROM users;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ email | password 
+-------+----------
+(0 rows)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(50) DEFAULT 'user', ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ALTER TABLE
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(50) DEFAULT 'user', ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;"docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+NOTICE:  truncate cascades to table "team_members"
+NOTICE:  truncate cascades to table "activity_logs"
+NOTICE:  truncate cascades to table "admin_notifications"
+NOTICE:  truncate cascades to table "approval_otps"
+NOTICE:  truncate cascades to table "managed_users"
+NOTICE:  truncate cascades to table "pending_registrations"
+NOTICE:  truncate cascades to table "task_assignments"
+NOTICE:  truncate cascades to table "task_history"
+NOTICE:  truncate cascades to table "tasks"
+NOTICE:  truncate cascades to table "worklogs"
+TRUNCATE TABLE
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "TRUNCATE users CASCADE;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+NOTICE:  truncate cascades to table "team_members"
+NOTICE:  truncate cascades to table "activity_logs"
+NOTICE:  truncate cascades to table "admin_notifications"
+NOTICE:  truncate cascades to table "approval_otps"
+NOTICE:  truncate cascades to table "managed_users"
+NOTICE:  truncate cascades to table "pending_registrations"
+NOTICE:  truncate cascades to table "task_assignments"
+NOTICE:  truncate cascades to table "task_history"
+NOTICE:  truncate cascades to table "tasks"
+NOTICE:  truncate cascades to table "worklogs"
+TRUNCATE TABLE
+root@vmi2905850:~/adminhub# docker compose exec app node dist/run-seed.cjs
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+✓ Connected to database
+Creating/checking Management role...
+  ✓ Management role ready (ID: fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a)
+Creating/checking Home Appliances department...
+  ✓ Department ready (ID: d00be6f5-73f7-4732-a16e-c2f25f78b273)
+Creating super admin user...
+✅ Super admin created successfully!
+   Email: admin@company.com
+   Password: admin123
+   Status: Verified (ready to login)
+
+✅ Seed completed successfully!
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT email, password, role, is_active FROM users;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ email | password | role | is_active 
+-------+----------+------+-----------
+(0 rows)
+
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "SELECT id, name FROM departments; SELECT id, name FROM roles;"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+                  id                  |      name       
+--------------------------------------+-----------------
+ d00be6f5-73f7-4732-a16e-c2f25f78b273 | Home Appliances
+(1 row)
+
+                  id                  |    name
+--------------------------------------+------------
+ fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a | Management
+(1 row)
+
+root@vmi2905850:~/adminhub#

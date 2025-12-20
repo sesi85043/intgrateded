@@ -1,0 +1,69 @@
+nhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-18T14:49:46: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-18T14:49:46: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-18T14:49:46: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] CORS allowed origins: [ 'http://158.220.107.106:8080' ]
+adminhub-app  | [auth] Replit session cookie secure=false sameSite=lax
+adminhub-app  | [auth] Replit auth: missing REPL_ID or ISSUER_URL, skipping OIDC setup
+adminhub-app  | [auth] OIDC config not available for Replit, skipping Replit OpenID Connect setup
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 2:49:50 PM [express] serving on port 5000
+adminhub-app  | 2:49:52 PM [express] GET /api/auth/user 401 in 23ms :: {"message":"Unauthorized"}   
+adminhub-app  | 2:50:29 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:51:09 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}    
+adminhub-app  | 2:51:47 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 2:51:48 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4876:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4876:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4876:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)
+adminhub-app  | Error: Not allowed by CORS
+adminhub-app  |     at origin (file:///app/dist/index.js:4876:21)
+adminhub-app  |     at /app/node_modules/cors/lib/index.js:219:13
+adminhub-app  |     at optionsCallback (/app/node_modules/cors/lib/index.js:199:9)
+adminhub-app  |     at corsMiddleware (/app/node_modules/cors/lib/index.js:204:7)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:286:9
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/index.js:280:10)
+adminhub-app  |     at urlencodedParser (/app/node_modules/body-parser/lib/types/urlencoded.js:85:7)

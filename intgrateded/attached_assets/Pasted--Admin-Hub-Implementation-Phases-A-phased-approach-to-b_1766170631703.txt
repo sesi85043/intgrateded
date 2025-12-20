@@ -1,0 +1,240 @@
+# Admin Hub - Implementation Phases
+
+A phased approach to building the unified inbox where agents handle emails and WhatsApps from Chatwoot without leaving the Admin Hub.
+
+## Phase 1: Foundation & Chatwoot Integration ✅ (COMPLETE)
+**Completed:** December 19, 2025
+
+**Goal:** Connect Admin Hub to Chatwoot API and sync conversations locally
+
+**Tasks:**
+- [x] Database schema: conversations, messages, contacts tables
+- [x] Chatwoot API client service
+- [x] Backend endpoints to fetch/sync conversations
+- [x] Configuration UI in Integrations tab
+
+**Deliverables:**
+- ✅ Database tables: conversations, messages, contacts, agent_assignments
+- ✅ `ChatwootClient` API service for calling Chatwoot
+- ✅ GET `/api/chatwoot/conversations` - List all conversations
+- ✅ POST `/api/chatwoot/sync` - Manual sync trigger
+- ✅ GET `/api/chatwoot/conversations/:id` - Get conversation with messages
+- ✅ POST `/api/chatwoot/conversations/:id/messages` - Send message
+- ✅ `POST /api/integrations/chatwoot/config` - Save Chatwoot credentials
+- ✅ `POST /api/integrations/chatwoot/test` - Test connection
+- ✅ Conversations synced to local PostgreSQL for fast querying
+
+**Key Files:**
+- `shared/schema.ts` - Tables: conversations, messages, contacts, agent_assignments
+- `server/chatwoot-client.ts` - Chatwoot API wrapper
+- `server/routes-chatwoot.ts` - Sync and message endpoints
+- `server/routes-integrations.ts` - Configuration endpoints
+- `client/src/pages/integrations.tsx` - Setup UI with test connection
+
+---
+
+## Phase 2: Unified Inbox UI ✅ (COMPLETE)
+**Completed:** December 19, 2025
+
+**Goal:** Build frontend to display all conversations in one interface (WhatsApp + Email)
+
+**Tasks:**
+- [x] Conversation list component with search
+- [x] Message thread display with sender info
+- [x] Channel badges (WhatsApp, Email, Chat)
+- [x] Conversation status badges (Open, Pending, Resolved, Snoozed)
+- [x] Manual sync trigger in inbox UI
+- [x] Unread message counts
+- [x] Contact details display
+- [x] Last message timestamp
+
+**Deliverables:**
+- ✅ Unified inbox showing all conversations in one place
+- ✅ Split-view: Conversation list (left) + Message thread (right)
+- ✅ Search conversations by name, email, or phone
+- ✅ Channel and status badges on each conversation
+- ✅ Full message thread with sender info and timestamps
+- ✅ Sync button to pull latest conversations from Chatwoot
+- ✅ Statistics cards (Open, Pending, Resolved, Total Active)
+- ✅ Quick replies sidebar for common responses
+
+**Key Files:**
+- `client/src/pages/inbox.tsx` - Main inbox page (updated)
+- `client/src/components/conversation-list.tsx` - Conversation list with search
+- `client/src/components/message-thread.tsx` - Message thread display
+- `client/src/components/conversation-list.tsx` - Channel and status badges
+
+---
+
+## Phase 3: Reply & Send Functionality
+**Status:** Ready to start
+
+**Goal:** Enable agents to reply to messages directly from Admin Hub
+
+**Tasks:**
+- [ ] Message composer component UI
+- [ ] Send message through Chatwoot API endpoint
+- [ ] Agent assignment to conversations
+- [ ] Mark conversations as resolved/pending
+- [ ] Handle message validation and errors
+- [ ] Display sent message in thread immediately
+
+**Key Files:**
+- `client/src/components/message-composer.tsx` - Reply box UI
+- `server/routes-chatwoot.ts` - Use existing POST `/api/chatwoot/conversations/:id/messages` endpoint
+- `client/src/pages/inbox.tsx` - Integrate message composer into message thread
+
+**Deliverables:**
+- Text input for composing replies
+- Send button with loading state
+- Message appears in thread immediately after sending
+- Error handling for failed sends
+- Conversation status can be updated (open/resolved/pending)
+- Agent assignment tracking
+
+---
+
+## Phase 4: Real-time Updates & Polish
+
+**Goal:** Live message updates and refined UX
+
+**Tasks:**
+- WebSocket integration for real-time messages
+- Agent presence and status updates
+- Notification system for new messages
+- Performance optimization
+- Complete testing and bug fixes
+
+**Key Files:**
+- `server/app.ts` - WebSocket setup
+- `client/src/hooks/useConversations.ts` - Real-time listener
+
+**Deliverables:**
+- Real-time message updates
+- Agent online/offline status
+- Desktop notifications
+- Typing indicators
+- Message read receipts
+
+---
+
+## Architecture Overview
+
+```
+┌─────────────────────────────────────────────────┐
+│           Admin Hub Frontend (React)            │
+│  ┌──────────────────────────────────────────┐   │
+│  │      Unified Inbox Component             │   │
+│  │  - Conversation List                     │   │
+│  │  - Message Thread View                   │   │
+│  │  - Message Composer & Reply              │   │
+│  └──────────────────────────────────────────┘   │
+└────────────────┬────────────────────────────────┘
+                 │ API + WebSocket
+                 ▼
+┌─────────────────────────────────────────────────┐
+│      Admin Hub Backend (Express + WS)           │
+│  ┌──────────────────────────────────────────┐   │
+│  │    Chatwoot API Client Service           │   │
+│  │  - Fetch Conversations                   │   │
+│  │  - Send Messages                         │   │
+│  │  - Sync WhatsApp + Email                 │   │
+│  └──────────────────────────────────────────┘   │
+└────────────────┬────────────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────────────────┐
+│     PostgreSQL Database (Local Cache)           │
+│  - conversations (synced from Chatwoot)         │
+│  - messages (synced from Chatwoot)              │
+│  - contacts (synced from Chatwoot)              │
+│  - agent_assignments (local tracking)           │
+└─────────────────────────────────────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────────────────────┐
+│   Chatwoot Cloud (Source of Truth)              │
+│  - Actual conversations                         │
+│  - Message routing                              │
+│  - Agent management                             │
+│  - WhatsApp + Email channels                    │
+└─────────────────────────────────────────────────┘
+```
+
+## Configuration
+
+Your Admin Hub will need:
+- **Chatwoot Instance URL** - e.g., `https://chatwoot.yourdomain.com`
+- **Chatwoot API Token** - From Chatwoot account settings
+- **Chatwoot Account ID** - Your account ID in Chatwoot
+- **Webhook Secret** (optional) - For real-time updates
+
+Store these in environment variables via Replit Secrets or `chatwoot_config` table.
+
+## Getting Started
+
+1. **Phase 1** - Run migrations and test Chatwoot connection
+2. **Phase 2** - Build the inbox UI once API is working
+3. **Phase 3** - Add reply functionality
+4. **Phase 4** - Real-time updates and polish
+
+Each phase builds on the previous one. Don't skip phases!
+Phase 1: Foundation & Chatwoot Integration ✅
+
+Database Layer:
+
+    ✅ All 5 tables exist and ready: conversations, messages, contacts, agent_assignments, chatwoot_config
+
+Backend API:
+
+    ✅ All 6 endpoints registered and protected with authentication:
+        GET /api/chatwoot/conversations
+        POST /api/chatwoot/sync
+        GET /api/chatwoot/conversations/:id
+        POST /api/chatwoot/conversations/:id/messages
+        POST /api/integrations/chatwoot/config
+        POST /api/integrations/chatwoot/test
+
+Build Status:
+
+    ✅ Production build succeeds with zero TypeScript errors
+    ✅ Chatwoot client service fully implemented
+
+Phase 2: Unified Inbox UI ✅
+
+Components Built:
+
+    ✅ ConversationList - Search, filtering, badges
+    ✅ MessageThread - Full message display with timestamps
+    ✅ Updated Inbox page - Split-view layout with stats
+
+Features Working:
+
+    ✅ Search conversations by name/email/phone
+    ✅ Channel badges (WhatsApp, Email, Chat)
+    ✅ Status badges (Open, Pending, Resolved, Snoozed)
+    ✅ Unread counts, quick replies, sync button
+    ✅ Statistics dashboard
+
+Build Status:
+
+    ✅ Vite build passes
+    ✅ TypeScript compilation clean
+    ✅ All components properly imported and functional
+
+Current Flow (Both Phases Working Together)
+
+    Admin configures Chatwoot in Integrations tab
+    System pulls conversations via Sync button → stores in PostgreSQL
+    Agents view unified inbox in Inbox tab
+    Click conversation → see full message thread
+    Search, filter, and organize conversations
+
+Status Summary
+Phase	Backend	Frontend	Database	Build
+1	✅	✅ Config UI	✅ 5 tables	✅
+2	Uses P1 API	✅ Full UI	Uses P1 DB	✅
+
+Server: Running on port 5000 | No errors | Ready for Phase 3
+
+Both phases are production-ready. Phase 3 (reply functionality) is next whenever you want to continue!

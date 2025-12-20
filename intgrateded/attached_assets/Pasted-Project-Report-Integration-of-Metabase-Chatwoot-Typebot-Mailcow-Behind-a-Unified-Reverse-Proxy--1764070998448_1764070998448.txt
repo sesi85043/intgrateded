@@ -1,0 +1,124 @@
+Project Report: Integration of Metabase, Chatwoot, Typebot & Mailcow Behind a Unified Reverse Proxy
+1. Introduction
+
+This project aimed to deploy and integrate four self-hosted platforms—Metabase, Chatwoot, Typebot, and Mailcow—into a unified, secure, and efficient infrastructure using Docker and a reverse proxy (Caddy). The goal was to centralize management, improve security with automated HTTPS, and enable seamless application-level integrations.
+
+2. Objectives
+
+Deploy all applications using Docker containers
+
+Place all services on a shared private Docker network
+
+Use a single reverse proxy for domain routing and SSL
+
+Provide stable subdomains for each application
+
+Integrate the applications for analytics, automations, and communication workflows
+
+Establish an admin-side user management workflow (create/edit/deactivate user accounts)
+
+3. Infrastructure Setup
+3.1 Server Preparation
+
+A fresh Linux VPS was initialized.
+Docker and Docker Compose were installed to enable containerized deployments.
+A dedicated Docker network, web-proxy, was created to allow easy internal communication.
+
+3.2 Reverse Proxy Configuration
+
+Caddy was selected for its simplicity and automatic HTTPS management.
+A Caddyfile was created to map each subdomain to its internal container:
+
+metabase.domain.com → Metabase
+
+chatwoot.domain.com → Chatwoot
+
+typebot.domain.com → Typebot
+
+mail.domain.com → Mailcow (via mailcow’s internal nginx-mailcow service)
+
+Caddy handled TLS certificates automatically using Let’s Encrypt.
+
+4. Application Deployment
+4.1 Docker Compose Structure
+
+Each platform was configured in a unified docker-compose.yml using the shared web-proxy network.
+
+Metabase: Analytics + dashboards
+
+Chatwoot: Messaging, support inboxes, automations
+
+Typebot: Conversational forms / chatbot flows
+
+Mailcow: Full-featured mail server (SMTP/IMAP/Webmail)
+
+Mailcow’s internal Nginx + LetsEncrypt were disabled to avoid conflicts with Caddy.
+
+5. Application Integrations
+5.1 Typebot → Chatwoot
+
+Typebot webhooks were configured to push form/flow data into Chatwoot inboxes.
+Chatwoot’s API allowed:
+
+Creating contacts
+
+Creating conversations
+
+Triggering workflows based on user input
+
+5.2 Metabase Analytics
+
+Metabase was connected to:
+
+Chatwoot’s database (conversation metrics)
+
+Typebot database (flow submissions)
+
+Mailcow database (email activity, logs)
+
+This enabled dashboards covering support performance, user journey metrics, and email system analytics.
+
+6. DNS Configuration
+
+DNS A records were created for each subdomain, all pointing to the server’s public IP.
+This allowed Caddy to request valid SSL certificates and route traffic properly.
+
+7. Admin User Management Implementation
+
+A unified admin workflow was designed to allow secure user lifecycle management across all platforms.
+
+Key actions available:
+
+Create new user accounts
+Admins can generate unique logins for Metabase, Chatwoot, Typebot, and Mailcow.
+
+Deactivate or delete old accounts
+Ensures security hygiene by removing unused accounts.
+
+Modify roles/permissions
+Each platform supports granular access control.
+
+Audit existing users
+Admin panels allow listing active and inactive users, with activity logs where available.
+
+This ensures streamlined user governance across all systems.
+
+8. Results & Outcome
+
+The final deployment provided:
+
+A fully containerized, isolated, and reproducible environment
+
+Automatic SSL certificates and secure entry points
+
+Consistent subdomain routing for all services
+
+Centralized user and workflow management
+
+Integrated analytics and communication automation between applications
+
+Scalable architecture suitable for future expansion
+
+9. Conclusion
+
+This project successfully consolidated multiple self-hosted platforms into a cohesive, secure, and maintainable infrastructure. With reliable reverse proxy routing, automated certificate management, inter-application integration, and an admin-level user management system, the environment is now production-ready and capable of supporting both operational needs and advanced analytics.

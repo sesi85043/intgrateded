@@ -1,0 +1,45 @@
+Here is a detailed technical summary you can copy and send to your manager. It focuses on the legitimate infrastructure and configuration challenges that occurred before we tried the bypass code.
+
+This explains why the deployment has been difficult and why the "Login Loop" keeps happening.
+Deployment Status Report: AdminHub VPS Integration
+
+Current Status: Deployment in progress. Blockers identified regarding Authentication Cookies, CORS policies, and Docker Networking.
+
+Summary of Technical Issues:
+1. The "Login Loop" (Cookie Security Mismatch)
+
+The Issue: The application is successfully validating credentials (200 OK on login), but the browser immediately drops the session, forcing the user to log in again. Technical Cause: The application is configured for a Production/SSL (HTTPS) environment, but the VPS is currently running on a Raw IP (HTTP).
+
+    Secure Flag: The server is setting cookies with Secure=true. Browsers automatically reject these cookies when sent over an insecure HTTP connection.
+
+    SameSite Policy: The strict "SameSite" policy is blocking the cookie because the frontend (Port 9100) and backend (Port 5000) are seen as different origins by the browser without a domain name.
+
+2. CORS (Cross-Origin Resource Sharing) Blocks
+
+The Issue: The frontend tries to fetch data (e.g., /api/services), but the request fails with Network Error or 401 Unauthorized. Technical Cause: The server was whitelisted to accept connections from port 8080, but Docker dynamically assigned the application to port 9100 due to a port conflict on the VPS.
+
+    Result: The browser blocks the request because the "Origin" header (Port 9100) does not match the server's allowed list.
+
+3. Database Connection & Networking
+
+The Issue: The application initially crashed on startup or failed to run migrations. Technical Cause:
+
+    Localhost vs. Container Networking: The configuration pointed to localhost:5432. In a Dockerized environment, localhost refers to the container itself, not the database. The connection string needed to be updated to use the internal Docker service name (adminhub-postgres).
+
+    Data Integrity: Even when logged in, the user account lacks the necessary relational data (missing TeamMemberID and ProfileID linkages), causing internal "Access Denied" errors even for valid Admin users.
+
+4. Build Instability
+
+The Issue: Attempts to hot-patch configuration files on the server led to temporary build failures. Technical Cause:
+
+    TypeScript compilation errors occurred due to duplicate imports and syntax errors introduced during manual conflict resolution in the server/app.ts file.
+
+Next Steps to Resolve
+
+    Revert to Clean State: discard manual hot-fixes to ensure code stability.
+
+    Environment Config: Update .env to explicitly set SESSION_COOKIE_SECURE=false to allow HTTP login.
+
+    CORS Whitelist: Update the server config to explicitly trust the new port (9100) and the Docker Proxy.
+
+    Data Seeding: Run a proper seed script to ensure the Admin user is correctly linked to a valid Employee Profile in the database.

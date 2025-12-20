@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Department & Team Member System</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button.danger {
+            background: #dc3545;
+        }
+        button.danger:hover {
+            background: #a02834;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #cce5ff;
+            border-color: #b8daff;
+            color: #004085;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-admin {
+            background: #28a745;
+            color: white;
+        }
+        .badge-technician {
+            background: #17a2b8;
+            color: white;
+        }
+        .button-group {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Department & Team Member Test Page</h1>
+        
+        <div class="info">
+            <strong>Note:</strong> Make sure you're logged in first! Visit <code>/api/dev-login</code> if you haven't already.
+        </div>
+
+        <h2>🏗️ Step 1: Create Departments</h2>
+        <div class="button-group">
+            <button onclick="createDepartments()">Create All Departments (HA, DTV, HHP)</button>
+            <button onclick="getDepartments()">View All Departments</button>
+        </div>
+        <div id="dept-result" class="result"></div>
+
+        <h2>👥 Step 2: Add Team Members</h2>
+        <div class="button-group">
+            <button onclick="createSampleTeam()">Create Sample Team Members</button>
+            <button onclick="getTeamMembers()">View All Team Members</button>
+        </div>
+        <div id="team-result" class="result"></div>
+
+        <h2>📊 Step 3: View Data Tables</h2>
+        <div class="button-group">
+            <button onclick="showDepartmentTable()">Show Departments Table</button>
+            <button onclick="showTeamTable()">Show Team Members Table</button>
+        </div>
+        <div id="table-result"></div>
+
+        <h2>🧹 Cleanup</h2>
+        <div class="button-group">
+            <button class="danger" onclick="clearAll()">Clear All Data</button>
+        </div>
+        <div id="cleanup-result" class="result"></div>
+    </div>
+
+    <script>
+        let departments = [];
+        let teamMembers = [];
+
+        async function createDepartments() {
+            const result = document.getElementById('dept-result');
+            result.className = 'result';
+            result.textContent = 'Creating departments...';
+
+            try {
+                const depts = [
+                    {
+                        name: "Home Appliances",
+                        code: "HA",
+                        description: "Home appliances division - refrigerators, washing machines, etc.",
+                        status: "active"
+                    },
+                    {
+                        name: "Digital TV",
+                        code: "DTV",
+                        description: "Digital TV and entertainment systems division",
+                        status: "active"
+                    },
+                    {
+                        name: "Handheld Products",
+                        code: "HHP",
+                        description: "Mobile devices and handheld products division",
+                        status: "active"
+                    }
+                ];
+
+                departments = [];
+                for (const dept of depts) {
+                    const response = await fetch('/api/departments', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify(dept)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to create ${dept.name}: ${response.statusText}`);
+                    }
+
+                    const created = await response.json();
+                    departments.push(created);
+                }
+
+                result.className = 'result success';
+                result.textContent = `✅ Successfully created ${departments.length} departments:\n\n` +
+                    JSON.stringify(departments, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function getDepartments() {
+            const result = document.getElementById('dept-result');
+            result.className = 'result';
+            result.textContent = 'Fetching departments...';
+
+            try {
+                const response = await fetch('/api/departments', {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.statusText}`);
+                }
+
+                departments = await response.json();
+                result.className = 'result success';
+                result.textContent = `✅ Found ${departments.length} departments:\n\n` +
+                    JSON.stringify(departments, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function createSampleTeam() {
+            const result = document.getElementById('team-result');
+            result.className = 'result';
+            
+            if (departments.length === 0) {
+                result.className = 'result error';
+                result.textContent = '❌ Please create departments first!';
+                return;
+            }
+
+            result.textContent = 'Creating team members...';
+
+            try {
+                teamMembers = [];
+
+                // Create team members for each department
+                for (const dept of departments) {
+                    // Add 1 admin and 2 technicians per department
+                    const members = [
+                        {
+                            departmentId: dept.id,
+                            employeeId: `${dept.code}-ADM-001`,
+                            email: `${dept.code.toLowerCase()}.admin@company.com`,
+                            firstName: `${dept.code}`,
+                            lastName: "Admin",
+                            role: "admin",
+                            phone: "+1-555-0101",
+                            status: "active"
+                        },
+                        {
+                            departmentId: dept.id,
+                            employeeId: `${dept.code}-TEC-001`,
+                            email: `${dept.code.toLowerCase()}.tech1@company.com`,
+                            firstName: `${dept.code}`,
+                            lastName: "Technician One",
+                            role: "technician",
+                            phone: "+1-555-0102",
+                            status: "active"
+                        },
+                        {
+                            departmentId: dept.id,
+                            employeeId: `${dept.code}-TEC-002`,
+                            email: `${dept.code.toLowerCase()}.tech2@company.com`,
+                            firstName: `${dept.code}`,
+                            lastName: "Technician Two",
+                            role: "technician",
+                            phone: "+1-555-0103",
+                            status: "active"
+                        }
+                    ];
+
+                    for (const member of members) {
+                        const response = await fetch('/api/team-members', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify(member)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Failed to create ${member.employeeId}: ${response.statusText}`);
+                        }
+
+                        const created = await response.json();
+                        teamMembers.push(created);
+                    }
+                }
+
+                result.className = 'result success';
+                result.textContent = `✅ Successfully created ${teamMembers.length} team members:\n\n` +
+                    JSON.stringify(teamMembers, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function getTeamMembers() {
+            const result = document.getElementById('team-result');
+            result.className = 'result';
+            result.textContent = 'Fetching team members...';
+
+            try {
+                const response = await fetch('/api/team-members', {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.statusText}`);
+                }
+
+                teamMembers = await response.json();
+                result.className = 'result success';
+                result.textContent = `✅ Found ${teamMembers.length} team members:\n\n` +
+                    JSON.stringify(teamMembers, null, 2);
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function showDepartmentTable() {
+            const container = document.getElementById('table-result');
+            
+            if (departments.length === 0) {
+                await getDepartments();
+            }
+
+            if (departments.length === 0) {
+                container.innerHTML = '<div class="result error">No departments found. Create some first!</div>';
+                return;
+            }
+
+            const html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${departments.map(dept => `
+                            <tr>
+                                <td><strong>${dept.code}</strong></td>
+                                <td>${dept.name}</td>
+                                <td>${dept.description || 'N/A'}</td>
+                                <td><span class="badge">${dept.status}</span></td>
+                                <td>${new Date(dept.createdAt).toLocaleDateString()}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = html;
+        }
+
+        async function showTeamTable() {
+            const container = document.getElementById('table-result');
+            
+            if (teamMembers.length === 0) {
+                await getTeamMembers();
+            }
+
+            if (teamMembers.length === 0) {
+                container.innerHTML = '<div class="result error">No team members found. Create some first!</div>';
+                return;
+            }
+
+            const html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${teamMembers.map(member => `
+                            <tr>
+                                <td><strong>${member.employeeId}</strong></td>
+                                <td>${member.firstName} ${member.lastName}</td>
+                                <td>${member.email}</td>
+                                <td><span class="badge badge-${member.role}">${member.role}</span></td>
+                                <td>${member.phone || 'N/A'}</td>
+                                <td><span class="badge">${member.status}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = html;
+        }
+
+        async function clearAll() {
+            const result = document.getElementById('cleanup-result');
+            
+            if (!confirm('Are you sure you want to delete all departments and team members?')) {
+                return;
+            }
+
+            result.className = 'result';
+            result.textContent = 'Deleting all data...';
+
+            try {
+                // Delete all team members first
+                for (const member of teamMembers) {
+                    await fetch(`/api/team-members/${member.id}`, {
+                        method: 'DELETE',
+                        credentials: 'include'
+                    });
+                }
+
+                // Then delete all departments
+                for (const dept of departments) {
+                    await fetch(`/api/departments/${dept.id}`, {
+                        method: 'DELETE',
+                        credentials: 'include'
+                    });
+                }
+
+                departments = [];
+                teamMembers = [];
+
+                result.className = 'result success';
+                result.textContent = '✅ All data cleared successfully!';
+
+                document.getElementById('dept-result').textContent = '';
+                document.getElementById('team-result').textContent = '';
+                document.getElementById('table-result').innerHTML = '';
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
