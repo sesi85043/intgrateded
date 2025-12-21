@@ -9,7 +9,8 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, and Ma
 **Current Status:** 
 - ✅ Phase 1: Foundation & Chatwoot Integration (Complete)
 - ✅ Phase 2: Unified Inbox UI (Complete)
-- 📋 Phase 3: Reply & Send Functionality (Ready to start)
+- ✅ Phase 3: Reply & Send Functionality (Complete)
+- ✅ Phase 4: Real-time Updates & Polish (Complete)
 
 ## Technology Stack
 
@@ -81,12 +82,21 @@ npm run start       # Start production server
   - Statistics dashboard
   - Message thread view
 
-### Phase 3: Reply & Send Functionality (Next)
-- Message composer component
-- Send messages through Chatwoot API
-- Agent assignment to conversations
-- Mark conversations as resolved/pending
-- Message validation and error handling
+### Phase 3: Reply & Send Functionality ✅
+- ✅ Message composer component with Ctrl+Enter
+- ✅ Send messages through Chatwoot API
+- ✅ Agent assignment endpoints (assign/unassign/get)
+- ✅ Mark conversations as resolved/pending/open
+- ✅ Message validation and error handling with toast notifications
+
+### Phase 4: Real-time Updates & Polish ✅
+- ✅ WebSocket server with actual broadcast implementations
+- ✅ Agent online/offline status tracking
+- ✅ Message read receipts system
+- ✅ Typing indicators with real-time sync
+- ✅ Agent presence endpoints (GET /api/agents/status)
+- ✅ Conversation connections tracking
+- ✅ Performance optimized WebSocket messaging
 
 ### Other Features
 - User & Team Management
@@ -156,11 +166,11 @@ Configured for Replit hosting:
 
 ## Known Issues & TODOs
 
-- [ ] Phase 3: Implement reply/send functionality
-- [ ] Phase 4: Real-time WebSocket updates (framework ready)
-- [ ] Fix TypeScript errors in some client pages
+- [ ] Phase 5: Multi-platform integration (Metabase, Typebot, Mailcow)
+- [ ] Fix remaining TypeScript errors in activity.tsx and pending-approvals.tsx
 - [ ] Optimize database queries for large conversation volumes
-- [ ] Add comprehensive testing
+- [ ] Add comprehensive testing suite
+- [ ] Implement automated deployments
 
 ## User Preferences
 
@@ -174,7 +184,27 @@ Configured for Replit hosting:
 
 For issues or questions, refer to the implementation phases document in `attached_assets/`.
 
+### Phase 4 Implementation Details
+
+**WebSocket Enhancements:**
+- Fixed broadcast functions to actually send to connected WebSocket clients
+- Real-time message delivery to all conversation participants
+- Agent presence broadcast on connect/disconnect
+- Typing indicator broadcast with agent names
+- Connection state tracking with proper cleanup
+
+**New Endpoints:**
+- `GET /api/agents/status` - Get all active agents and their online status
+- `GET /api/conversations/:id/connections` - Get active connections in conversation
+- WebSocket `/ws` - Bidirectional real-time communication
+
+**Architecture:**
+- Client-side WebSocket connection established on message thread load
+- Server tracks active connections with user/conversation/agent info
+- Broadcast functions use readyState checking for connection health
+- Proper error handling and reconnection logic
+
 ---
 
 **Last Updated:** December 21, 2025
-**Version:** 1.0.0 (MVP)
+**Version:** 1.0.1 (Phase 4 Complete - Real-time Ready)
