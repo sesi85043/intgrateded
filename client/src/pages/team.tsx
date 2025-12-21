@@ -148,9 +148,10 @@ export default function Team() {
 
   const createEmailMutation = useMutation({
     mutationFn: async (data: any) => {
-      return await apiRequest("/api/integrations/cpanel/email/create", "POST", data);
+      const response = await apiRequest("/api/integrations/cpanel/email/create", "POST", data);
+      return response;
     },
-    onSuccess: (result) => {
+    onSuccess: (result: any) => {
       toast({ title: "Email created", description: `${result.email} created successfully!` });
       setEmailForm({ email: "", password: "" });
       if (emailMember) {
@@ -165,8 +166,8 @@ export default function Team() {
 
   const fetchEmailAccounts = async (memberId: string) => {
     try {
-      const accounts = await apiRequest(`/api/integrations/cpanel/email/${memberId}`, "GET");
-      setEmailAccounts(accounts || []);
+      const response = await apiRequest(`/api/integrations/cpanel/email/${memberId}`, "GET");
+      setEmailAccounts(Array.isArray(response) ? response : []);
     } catch (error) {
       console.error("Failed to fetch email accounts:", error);
     }

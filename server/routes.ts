@@ -9,6 +9,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { db } from "./db";
 // Use environment-based auth router (dev / replit / standalone)
 import { setupAuth, isAuthenticated, isTeamMemberAuthenticated } from "./auth";
 import {
