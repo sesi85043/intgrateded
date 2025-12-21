@@ -288,6 +288,54 @@ export const insertMailcowConfigSchema = createInsertSchema(mailcowConfig).omit(
 export type InsertMailcowConfig = z.infer<typeof insertMailcowConfigSchema>;
 export type MailcowConfig = typeof mailcowConfig.$inferSelect;
 
+// cPanel-specific configuration
+export const cpanelConfig = pgTable("cpanel_config", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  hostname: varchar("hostname").notNull(),
+  apiToken: text("api_token").notNull(),
+  cpanelUsername: varchar("cpanel_username").notNull(),
+  domain: varchar("domain").notNull(),
+  enabled: boolean("enabled").default(true).notNull(),
+  connectionStatus: varchar("connection_status"),
+  lastConnectedAt: timestamp("last_connected_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertCpanelConfigSchema = createInsertSchema(cpanelConfig).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertCpanelConfig = z.infer<typeof insertCpanelConfigSchema>;
+export type CpanelConfig = typeof cpanelConfig.$inferSelect;
+
+// Email accounts - Track all created email accounts
+export const emailAccounts = pgTable("email_accounts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  teamMemberId: varchar("team_member_id").notNull().references(() => teamMembers.id),
+  email: varchar("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(), // Hashed password with salt
+  provider: varchar("provider", { length: 20 }).notNull(), // cpanel, mailcow, etc.
+  quota: integer("quota").default(512), // In MB
+  status: varchar("status", { length: 20 }).default('active').notNull(), // active, suspended, deleted
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("IDX_email_team_member").on(table.teamMemberId),
+  index("IDX_email_provider").on(table.provider),
+]);
+
+export const insertEmailAccountSchema = createInsertSchema(emailAccounts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertEmailAccount = z.infer<typeof insertEmailAccountSchema>;
+export type EmailAccount = typeof emailAccounts.$inferSelect;
+
 // Managed users across platforms
 export const managedUsers = pgTable("managed_users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),

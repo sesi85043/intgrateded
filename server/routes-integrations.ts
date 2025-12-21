@@ -18,6 +18,8 @@ import {
   typebotFlows,
   departmentEmailSettings,
   mailcowConfig,
+  cpanelConfig,
+  emailAccounts,
   managedUsers,
   insertChatwootConfigSchema,
   insertChatwootTeamSchema,
@@ -29,11 +31,14 @@ import {
   insertTypebotFlowSchema,
   insertDepartmentEmailSettingsSchema,
   insertMailcowConfigSchema,
+  insertCpanelConfigSchema,
+  insertEmailAccountSchema,
 } from "@shared/schema";
 import { isTeamMemberAuthenticated } from "./devAuth";
 import { requirePermission, requireRoleOrHigher } from "./rbac";
 import { PERMISSION_TYPES, ROLE_TYPES } from "@shared/schema";
 import { storage } from "./storage";
+import { CpanelClient, hashPassword } from "./cpanel-client";
 // import { provisioning } from "./provisioning"; // TODO: Re-implement full provisioning class if needed
 
 export default function registerIntegrationRoutes(app: Express) {
@@ -1095,6 +1100,195 @@ export default function registerIntegrationRoutes(app: Express) {
     } catch (error) {
       console.error("Error bulk provisioning:", error);
       res.status(500).json({ message: "Failed to bulk provision team members" });
+    }
+  });
+
+  // ============================================
+  // CPANEL CONFIGURATION ROUTES
+  // ============================================
+
+  // Get cPanel configuration
+  app.get('/api/integrations/cpanel/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const [config] = await db.select().from(cpanelConfig).limit(1);
+      if (!config) {
+        return res.json(null);
+      }
+      const safeConfig = {
+        ...config,
+        apiToken: config.apiToken ? '••••••••' + config.apiToken.slice(-4) : null,
+      };
+      res.json(safeConfig);
+    } catch (error) {
+      console.error("Error fetching cPanel config:", error);
+      res.status(500).json({ message: "Failed to fetch cPanel configuration" });
+    }
+  });
+
+  // Create or update cPanel configuration
+  app.post('/api/integrations/cpanel/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { apiToken, ...otherData } = req.body;
+      
+      const [existing] = await db.select().from(cpanelConfig).limit(1);
+      
+      const updateData: any = { ...otherData, updatedAt: new Date() };
+      
+      if (apiToken && apiToken.trim() && !apiToken.startsWith('••••')) {
+        updateData.apiToken = apiToken;
+      } else if (!existing) {
+        return res.status(400).json({ message: "API Token is required for new configuration" });
+      }
+      
+      let result;
+      if (existing) {
+        [result] = await db.update(cpanelConfig)
+          .set(updateData)
+          .where(eq(cpanelConfig.id, existing.id))
+          .returning();
+      } else {
+        [result] = await db.insert(cpanelConfig).values({
+          ...updateData,
+          apiToken: apiToken,
+        }).returning();
+      }
+
+      await storage.createActivityLog(
+        req.teamMember.id,
+        existing ? "updated_cpanel_config" : "created_cpanel_config",
+        "cpanel_config",
+        result.id,
+        "cpanel"
+      );
+
+      res.json({ ...result, apiToken: '••••••••' + result.apiToken.slice(-4) });
+    } catch (error) {
+      console.error("Error saving cPanel config:", error);
+      res.status(400).json({ message: "Failed to save cPanel configuration" });
+    }
+  });
+
+  // Test cPanel connection
+  app.post('/api/integrations/cpanel/test', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { hostname, apiToken, cpanelUsername } = req.body;
+      
+      const client = new CpanelClient({ hostname, apiToken, cpanelUsername });
+      // Simple test by trying to create a test email (will fail but tests connection)
+      const testEmail = `test-${Date.now()}@invalid.local`;
+      const result = await client.createEmailAccount({
+        email: testEmail,
+        password: 'TestPassword123!',
+        firstName: 'Test',
+        lastName: 'Account',
+      });
+
+      // If it failed due to invalid domain, connection still works
+      // If it failed due to auth, connection failed
+      if (result.error && result.error.includes('auth')) {
+        return res.status(400).json({ success: false, message: "Authentication failed: Invalid API token or credentials" });
+      }
+
+      res.json({ success: true, message: "Connection successful" });
+    } catch (error) {
+      console.error("Error testing cPanel connection:", error);
+      res.status(400).json({ success: false, message: "Connection failed: Unable to reach cPanel server" });
+    }
+  });
+
+  // Create email account for a team member
+  app.post('/api/integrations/cpanel/email/create', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { teamMemberId, email, password, quota } = req.body;
+      
+      if (!teamMemberId || !email || !password) {
+        return res.status(400).json({ message: "Missing required fields: teamMemberId, email, password" });
+      }
+
+      // Get cPanel config
+      const [cpanelCfg] = await db.select().from(cpanelConfig).limit(1);
+      if (!cpanelCfg || !cpanelCfg.enabled) {
+        return res.status(400).json({ message: "cPanel is not configured or enabled" });
+      }
+
+      // Get team member
+      const member = await storage.getTeamMember(teamMemberId);
+      if (!member) {
+        return res.status(404).json({ message: "Team member not found" });
+      }
+
+      // Create email via cPanel API
+      const client = new CpanelClient({
+        hostname: cpanelCfg.hostname,
+        apiToken: cpanelCfg.apiToken,
+        cpanelUsername: cpanelCfg.cpanelUsername,
+      });
+
+      const emailResult = await client.createEmailAccount({
+        email,
+        password,
+        firstName: member.firstName,
+        lastName: member.lastName,
+        quota: quota || 512,
+      });
+
+      if (!emailResult.success) {
+        return res.status(400).json({ success: false, message: emailResult.error });
+      }
+
+      // Hash password and store in our database
+      const passwordHash = hashPassword(password);
+      const [emailAccount] = await db.insert(emailAccounts).values({
+        teamMemberId,
+        email,
+        passwordHash,
+        provider: 'cpanel',
+        quota: quota || 512,
+        status: 'active',
+      }).returning();
+
+      // Log activity
+      await storage.createActivityLog(
+        req.teamMember.id,
+        "created_email_account",
+        "email_account",
+        emailAccount.id,
+        "cpanel"
+      );
+
+      res.json({ 
+        success: true, 
+        email: emailAccount.email,
+        message: `Email account ${email} created successfully` 
+      });
+    } catch (error) {
+      console.error("Error creating email account:", error);
+      res.status(500).json({ message: "Failed to create email account" });
+    }
+  });
+
+  // Get email accounts for a team member
+  app.get('/api/integrations/cpanel/email/:teamMemberId', isTeamMemberAuthenticated, async (req: any, res) => {
+    try {
+      const { teamMemberId } = req.params;
+      
+      const accounts = await db.select().from(emailAccounts)
+        .where(eq(emailAccounts.teamMemberId, teamMemberId));
+
+      // Don't expose password hashes
+      const safeAccounts = accounts.map(acc => ({
+        id: acc.id,
+        email: acc.email,
+        provider: acc.provider,
+        quota: acc.quota,
+        status: acc.status,
+        createdAt: acc.createdAt,
+      }));
+
+      res.json(safeAccounts);
+    } catch (error) {
+      console.error("Error fetching email accounts:", error);
+      res.status(500).json({ message: "Failed to fetch email accounts" });
     }
   });
 }
