@@ -175,3 +175,17 @@ export function verifyPasswordHash(password: string, hash: string): boolean {
     return false;
   }
 }
+
+/**
+ * Generate secure random password
+ * @returns Random password with 16 characters
+ */
+export function generateSecurePassword(): string {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=';
+  const buf = crypto.randomBytes(16);
+  let password = '';
+  for (let i = 0; i < 16; i++) {
+    password += charset[buf[i] % charset.length];
+  }
+  return password;
+}

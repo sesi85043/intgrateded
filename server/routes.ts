@@ -22,6 +22,7 @@ import {
   ROLE_TYPES,
 } from "@shared/schema";
 import { createMailcowMailbox } from './provisioning';
+import { CpanelClient, hashPassword, generateSecurePassword } from './cpanel-client';
 import { z } from "zod";
 
 const updateProfileSchema = z.object({
@@ -1619,6 +1620,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await storage.addMemberToTeam(newMember.id, team.id, member.id);
       }
 
+      // Auto-create email account on approval (format: surname.department@allelectronics.one)
+      let emailCreationResult = null;
+      try {
+        const department = await storage.getDepartment(registration.departmentId);
+        if (department) {
+          const { cpanelConfig, emailAccounts } = await import('@shared/schema');
+          const [cpanelCfg] = await db.select().from(cpanelConfig).limit(1);
+          
+          if (cpanelCfg && cpanelCfg.enabled) {
+            // Generate email: surname.department@allelectronics.one
+            const deptCode = (department.code || 'staff').toLowerCase().trim();
+            const surname = registration.lastName.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+            const generatedEmail = `${surname}.${deptCode}@allelectronics.one`;
+            const generatedPassword = generateSecurePassword();
+
+            // Create email via cPanel
+            const cpanelClient = new CpanelClient({
+              hostname: cpanelCfg.hostname,
+              apiToken: cpanelCfg.apiToken,
+              cpanelUsername: cpanelCfg.cpanelUsername,
+            });
+
+            const emailResult = await cpanelClient.createEmailAccount({
+              email: generatedEmail,
+              password: generatedPassword,
+              firstName: registration.firstName,
+              lastName: registration.lastName,
+              quota: 512,
+            });
+
+            if (emailResult.success) {
+              // Hash password and store in our database
+              const passwordHash = hashPassword(generatedPassword);
+              await db.insert(emailAccounts).values({
+                teamMemberId: newMember.id,
+                email: generatedEmail,
+                passwordHash,
+                provider: 'cpanel',
+                quota: 512,
+                status: 'active',
+              });
+
+              emailCreationResult = {
+                success: true,
+                email: generatedEmail,
+                password: generatedPassword, // Return once for admin to note down
+              };
+
+              console.log(`[AUTO-EMAIL] Created email ${generatedEmail} for ${registration.firstName} ${registration.lastName}`);
+            } else {
+              console.warn(`[AUTO-EMAIL] Failed to create email for ${registration.email}: ${emailResult.error}`);
+              emailCreationResult = { success: false, error: emailResult.error };
+            }
+          }
+        }
+      } catch (emailError) {
+        console.error("[AUTO-EMAIL] Error creating email on approval:", emailError);
+        // Don't fail the entire approval, just log the error
+      }
+
       // Mark OTP as used
       await storage.markOtpAsUsed(validOtp.id, member.id);
 
@@ -1698,6 +1759,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           mailcow: provisioningResult.mailcow,
           chatwoot: provisioningResult.chatwoot,
         } : null,
+        emailAccount: emailCreationResult,
       });
     } catch (error: any) {
       console.error("Error approving registration:", error);
