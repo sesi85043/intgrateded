@@ -519,7 +519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               'managed_user',
               user.id,
               'mailcow',
-              { success: false, error: (emailErr && emailErr.message) || String(emailErr) }
+              { success: false, error: (emailErr as Error)?.message || String(emailErr) }
             );
           } catch (logErr) {
             console.warn('Failed to write provisioning failure activity log', logErr);
@@ -633,7 +633,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               'managed_user',
               id,
               'mailcow',
-              { success: false, error: (emailErr && emailErr.message) || String(emailErr) }
+              { success: false, error: (emailErr as Error)?.message || String(emailErr) }
             );
           } catch (logErr) {
             console.warn('Failed to write provisioning failure activity log (update)', logErr);

@@ -1,274 +1,180 @@
-# Admin Hub
+# Admin Hub - Unified Platform Management
 
-## Overview
-Admin Hub is a unified platform management application that provides centralized control over Metabase, Chatwoot, Typebot, and Mailcow. It allows managing users, monitoring analytics, and streamlining operations from one powerful dashboard.
+A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, and Mailcow integrations. Built with React + Express + PostgreSQL.
+
+## Project Overview
+
+**Purpose:** Centralized control over multiple communication and analytics platforms with a unified inbox for handling emails and WhatsApps from Chatwoot.
+
+**Current Status:** 
+- ✅ Phase 1: Foundation & Chatwoot Integration (Complete)
+- ✅ Phase 2: Unified Inbox UI (Complete)
+- 📋 Phase 3: Reply & Send Functionality (Ready to start)
+
+## Technology Stack
+
+- **Frontend:** React 18 + Vite + TypeScript
+- **Backend:** Express.js + Node.js
+- **Database:** PostgreSQL (Neon)
+- **UI Components:** Radix UI + Shadcn/ui + Tailwind CSS
+- **Real-time:** WebSocket support for live updates
+- **Authentication:** Replit Auth + Local session management
 
 ## Project Structure
-- `client/` - React frontend built with Vite
-- `server/` - Express.js backend API
-- `shared/` - Shared code and Drizzle ORM schema
-- `migrations/` - Database migration files
 
-## Tech Stack
-- **Frontend**: React 18, Vite, TailwindCSS, Radix UI, React Query
-- **Backend**: Express.js, TypeScript
-- **Database**: PostgreSQL with Drizzle ORM
-- **Build**: Vite for frontend, esbuild for backend
-
-## Implementation Status
-
-### ✅ Phase 1: Foundation & Chatwoot Integration
-**COMPLETE** - December 19, 2025
-
-**Database:**
-- conversations table - Synced conversations from Chatwoot
-- messages table - Message history
-- contacts table - Contact information
-- agent_assignments table - Agent assignments
-
-**Backend API Endpoints:**
-- `GET /api/chatwoot/conversations` - List all conversations
-- `POST /api/chatwoot/sync` - Manual sync trigger
-- `GET /api/chatwoot/conversations/:id` - Get conversation with messages
-- `POST /api/chatwoot/conversations/:id/messages` - Send message
-- `PATCH /api/chatwoot/conversations/:id` - Update conversation status
-
-**Implementation:**
-- ChatwootClient API service fully operational
-- Chatwoot configuration stored in database
-- All endpoints protected with authentication
-
-### ✅ Phase 2: Unified Inbox UI
-**COMPLETE** - December 19, 2025
-
-**Frontend Components:**
-- `inbox.tsx` - Main inbox page with search, sync button, and statistics
-- `conversation-list.tsx` - Conversation list with filtering and badges
-- `message-thread.tsx` - Message thread display with timestamps
-- Quick replies sidebar with customizable templates
-
-**Features:**
-- Search conversations by name/email/phone
-- Channel badges (WhatsApp, Email, Chat)
-- Status badges (Open, Pending, Resolved, Snoozed)
-- Unread message counts
-- Last message preview
-- Statistics dashboard
-
-### ✅ Phase 3: Reply & Send Functionality
-**COMPLETE** - December 19, 2025
-
-**New Components:**
-- `message-composer.tsx` - Message composition with send functionality
-
-**Features Implemented:**
-- ✅ Compose and send messages directly from inbox
-- ✅ Private/Public message toggle (visible to agents only or customers)
-- ✅ Real-time message validation and error handling
-- ✅ Conversation status management (Open, Pending, Resolved)
-- ✅ Status action buttons for quick workflow
-- ✅ Keyboard shortcut: Ctrl+Enter to send
-- ✅ Character counter for messages
-- ✅ Loading states and error feedback
-- ✅ Automatic message refresh after sending
-
-**Backend Enhancements:**
-- `PATCH /api/chatwoot/conversations/:id` - Update status (new endpoint)
-- Message sending with Chatwoot API integration
-- Status sync to Chatwoot when configured
-- Local database updates for offline reliability
-
-**User Experience:**
-- Messages appear in thread immediately (optimistic updates)
-- Toast notifications for success/error
-- Disabled send button for empty messages
-- Visual feedback during sending
-- Status buttons highlight current status
-
-### ✅ Phase 4: Real-time Updates & Polish
-**COMPLETE** - December 19, 2025
-
-**New Infrastructure:**
-- `websocket.ts` - WebSocket server for real-time events
-- `useWebSocket.ts` - Frontend hook for WebSocket connections
-- `useNotifications.ts` - Desktop notification support
-- `typing-indicator.tsx` - Animated typing indicator component
-
-**Real-time Features Implemented:**
-- ✅ WebSocket server with event routing (`/ws` endpoint)
-- ✅ Live message delivery to subscribed agents
-- ✅ Typing indicators with automatic debounce
-- ✅ Conversation status change broadcasts
-- ✅ Agent presence tracking (online/offline)
-- ✅ Message read receipts
-- ✅ Desktop notifications for new messages
-- ✅ Auto-reconnect with 3-second retry
-- ✅ Connection status indicator in UI
-
-**Frontend Integrations:**
-- Message thread auto-refreshes on new messages
-- Typing indicator shows who's typing
-- Desktop notifications prompt on app load
-- Connection status badge (reconnecting indicator)
-- Real-time status updates reflected in UI
-
-**WebSocket Event Types:**
-- `auth` - Client authentication and subscription
-- `typing` - Typing indicator broadcast
-- `message-sent` - New message notification
-- `status-changed` - Conversation status update
-- `agent-status` - Agent online/offline status
-- `mark-read` - Message read receipt
-
-**Performance Optimizations:**
-- Efficient connection pooling
-- Automatic cleanup on disconnect
-- Query cache invalidation on updates
-- Minimal DOM re-renders with React hooks
-
-## Development
-
-### Running the App
-```bash
-npm install
-npm run dev
 ```
-- Frontend: http://localhost:5000 (Vite dev server)
-- Backend: http://localhost:5000 (Express API)
-
-### Database
-```bash
-npm run db:push     # Push schema to database
-npm run migrate     # Run migrations
-npm run seed        # Seed initial data
+.
+├── client/                 # React frontend
+│   └── src/
+│       ├── components/    # Reusable UI components
+│       ├── pages/        # Page components (dashboard, inbox, etc.)
+│       ├── hooks/        # Custom React hooks
+│       └── lib/          # Utilities
+├── server/               # Express backend
+│   ├── routes.ts        # Main API routes
+│   ├── routes-chatwoot.ts    # Chatwoot integration
+│   ├── routes-integrations.ts # Integration config
+│   ├── auth.ts          # Authentication setup
+│   ├── db.ts            # Database connection
+│   └── websocket.ts     # WebSocket server
+├── shared/              # Shared types/schemas
+│   └── schema.ts        # Drizzle ORM schema
+├── migrations/          # Database migrations
+└── package.json         # Dependencies
 ```
 
-### Building for Production
+## Setup & Running
+
+### Prerequisites
+- Node.js installed (handled by Replit)
+- PostgreSQL database (created via Replit)
+
+### Development Server
 ```bash
-npm run build       # Build frontend and backend
+npm install          # Install dependencies
+npm run db:push      # Initialize database schema
+npm run seed        # Seed database with initial data
+npm run dev         # Start dev server on http://localhost:5000
+```
+
+### Build & Production
+```bash
+npm run build       # Build frontend + backend
 npm run start       # Start production server
 ```
 
-## Deployment
+## Key Features
 
-### Replit Development
-- Database: Auto-provisioned PostgreSQL (Neon)
-- Server runs on port 5000
-- Vite dev server with hot reload enabled
+### Phase 1 & 2: Chatwoot Integration + Unified Inbox
+- ✅ Database tables: conversations, messages, contacts, agent_assignments
+- ✅ Chatwoot API client service (`server/chatwoot-client.ts`)
+- ✅ Backend API endpoints:
+  - `GET /api/chatwoot/conversations` - List all conversations
+  - `POST /api/chatwoot/sync` - Manual sync from Chatwoot
+  - `GET /api/chatwoot/conversations/:id` - Get conversation with messages
+  - `POST /api/chatwoot/conversations/:id/messages` - Send message
+  - `POST /api/integrations/chatwoot/config` - Save/test Chatwoot credentials
+- ✅ Unified Inbox UI with:
+  - Search conversations by name/email/phone
+  - Channel badges (WhatsApp, Email, Chat)
+  - Status badges (Open, Pending, Resolved, Snoozed)
+  - Statistics dashboard
+  - Message thread view
 
-### Docker Deployment (VPS/Production)
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete Docker setup instructions.
+### Phase 3: Reply & Send Functionality (Next)
+- Message composer component
+- Send messages through Chatwoot API
+- Agent assignment to conversations
+- Mark conversations as resolved/pending
+- Message validation and error handling
+
+### Other Features
+- User & Team Management
+- Department management with tiered support
+- Role-based access control (RBAC)
+- Activity logging
+- Task management
+- Analytics dashboard
+- Staff registration & approval workflow
+
+## Database Schema
+
+Key tables:
+- `team_members` - Users with roles and permissions
+- `conversations` - Synced from Chatwoot
+- `messages` - Individual messages in conversations
+- `contacts` - Customer/contact information
+- `agent_assignments` - Which agents are assigned to conversations
+- `chatwoot_config` - Chatwoot integration credentials
 
 ## Environment Variables
 
-### Development (Replit)
-- `DATABASE_URL` - PostgreSQL connection string (auto-provided)
-- `NODE_ENV` - Set to 'development'
+Required (auto-created):
+- `DATABASE_URL` - PostgreSQL connection string
+- `SESSION_SECRET` - Session encryption key
+- `NODE_ENV` - development/production
 
-### Docker Deployment
-- See `.env.example` for all required variables
-- Key: `DATABASE_URL`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `SESSION_SECRET`, `ADMIN_PASSWORD`
+Optional:
+- `CORS_ORIGIN` - Comma-separated allowed origins (default: all in dev)
+- `DEV_AUTH_BYPASS` - Set to "true" to bypass auth in development (NEVER in production)
 
-## API Documentation
+## API Authentication
 
-### Chatwoot Inbox Endpoints
+Protected endpoints require authentication. Two auth methods available:
+1. **Replit Auth** - Production environment
+2. **Session-based** - Development environment with email/password
 
-#### List Conversations
-```
-GET /api/chatwoot/conversations
-Authentication: Required
-Response: { success: true, count: number, data: Conversation[] }
-```
+Default dev credentials (after seed):
+- Email: `admin@company.com`
+- Password: `admin123`
 
-#### Sync Conversations
-```
-POST /api/chatwoot/sync
-Authentication: Required
-Response: { success: true, synced: number, errors: number }
-```
+## Development Notes
 
-#### Get Conversation
-```
-GET /api/chatwoot/conversations/:id
-Authentication: Required
-Response: { success: true, conversation: Conversation, messages: Message[] }
-```
+### CORS Configuration
+The app allows all origins in development mode (auto-detected) for Replit iframe compatibility.
 
-#### Send Message
-```
-POST /api/chatwoot/conversations/:id/messages
-Authentication: Required
-Body: { content: string, isPrivate?: boolean }
-Response: { success: true, message: string, data: MessageResponse }
-```
+### Vite Configuration
+- Host: `0.0.0.0` (listens on all interfaces)
+- Port: `5000` (only exposed port)
+- HMR: WebSocket for hot module replacement
+- allowedHosts: `true` (accepts any host header)
 
-#### Update Status
-```
-PATCH /api/chatwoot/conversations/:id
-Authentication: Required
-Body: { status: "open" | "pending" | "resolved" }
-Response: { success: true, message: string, data: Conversation }
-```
+### WebSocket
+Real-time updates via WebSocket at `/ws`:
+- Message updates
+- Typing indicators
+- Agent presence
+- Status changes
+- Read receipts
 
-## Status by Phase
+## Deployment
 
-| Phase | Backend | Frontend | Database | Status |
-|-------|---------|----------|----------|--------|
-| 1 | ✅ Complete | ✅ Config UI | ✅ 4 tables | ✅ DONE |
-| 2 | Uses P1 API | ✅ Full UI | Uses P1 DB | ✅ DONE |
-| 3 | ✅ Send & Status | ✅ Composer | Uses P1-P2 | ✅ DONE |
-| 4 | ✅ WebSocket | ✅ Real-time UI | Uses P1-P3 | ✅ DONE |
+Configured for Replit hosting:
+- Build: `npm run build`
+- Start: `npm run start`
+- Deployment type: autoscale
 
-## Architecture Completed
+## Known Issues & TODOs
 
-```
-┌─────────────────────────────────────────────────┐
-│           Admin Hub Frontend (React)            │
-│  ┌──────────────────────────────────────────┐   │
-│  │   Message Thread with Real-time Updates  │   │
-│  │  - Live Messages & Typing Indicators     │   │
-│  │  - Desktop Notifications                 │   │
-│  │  - Status Management                     │   │
-│  │  - WebSocket Connection Status           │   │
-│  └──────────────────────────────────────────┘   │
-└────────────────┬────────────────────────────────┘
-                 │ WebSocket + REST API
-                 ▼
-┌─────────────────────────────────────────────────┐
-│  Admin Hub Backend (Express + WebSocket)        │
-│  ┌──────────────────────────────────────────┐   │
-│  │  WebSocket Server (/ws)                  │   │
-│  │  - Event Routing & Broadcasting          │   │
-│  │  - Active Connection Management          │   │
-│  │  - Presence Tracking                     │   │
-│  └──────────────────────────────────────────┘   │
-│  ┌──────────────────────────────────────────┐   │
-│  │  REST API + Authentication Middleware    │   │
-│  └──────────────────────────────────────────┘   │
-└────────────────┬────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────┐
-│     PostgreSQL Database (Local Cache)           │
-│  - conversations, messages, contacts, etc.      │
-└─────────────────────────────────────────────────┘
-```
+- [ ] Phase 3: Implement reply/send functionality
+- [ ] Phase 4: Real-time WebSocket updates (framework ready)
+- [ ] Fix TypeScript errors in some client pages
+- [ ] Optimize database queries for large conversation volumes
+- [ ] Add comprehensive testing
 
-## Project Complete ✨
+## User Preferences
 
-All 4 phases delivered:
-- **Phase 1**: Chatwoot Integration Foundation
-- **Phase 2**: Unified Inbox UI
-- **Phase 3**: Reply & Send Functionality  
-- **Phase 4**: Real-time Updates & Polish
+- Follows existing project conventions (React hooks, Express middleware pattern)
+- TypeScript strict mode
+- Component-based architecture
+- Database-first approach with Drizzle ORM
+- Activity logging for audit trails
 
-The Admin Hub is now a fully functional unified inbox with real-time messaging, live status updates, and agent notifications.
+## Support
 
-## Technical Notes
+For issues or questions, refer to the implementation phases document in `attached_assets/`.
 
-- All endpoints are protected with `isTeamMemberAuthenticated` middleware
-- Message sending is async with proper error handling
-- Conversation status updates sync to both local DB and Chatwoot
-- Frontend uses React Query for state management
-- TailwindCSS + Radix UI for consistent component styling
-- TypeScript for type safety across frontend and backend
+---
+
+**Last Updated:** December 21, 2025
+**Version:** 1.0.0 (MVP)

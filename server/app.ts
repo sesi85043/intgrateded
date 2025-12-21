@@ -116,7 +116,7 @@ app.use((req, res, next) => {
   // only attach to auth login and callback paths
   if (req.path === '/api/auth/login' || req.path === '/api/callback') {
     const originalSend = res.send;
-    res.send = function (body: any) {
+    res.send = function (this: Response, body: any) {
       const cookie = res.getHeader('set-cookie');
       console.log(`[auth] set-cookie header for ${req.path}:`, cookie);
       return originalSend.call(this, body);
