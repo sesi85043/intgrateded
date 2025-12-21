@@ -1,10 +1,18 @@
 import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, MessageCircle, CheckCircle2, Clock, XCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { AlertCircle, MessageCircle, CheckCircle2, Clock, XCircle, UserPlus, X } from "lucide-react";
 import { format } from "date-fns";
 import MessageComposer from "./message-composer";
 import TypingIndicator from "./typing-indicator";
@@ -77,6 +85,7 @@ export default function MessageThread({
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const { user } = useAuth();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const { sendNotification, requestPermission } = useNotifications();
 
@@ -85,6 +94,49 @@ export default function MessageThread({
     messages: Message[];
   }>({
     queryKey: [`/api/chatwoot/conversations/${conversationId}`],
+  });
+
+  const { data: assignmentData, refetch: refetchAssignment } = useQuery<any>({
+    queryKey: [`/api/chatwoot/conversations/${conversationId}/assigned`],
+  });
+
+  const { data: teamMembers } = useQuery<any[]>({
+    queryKey: ["/api/team-members"],
+  });
+
+  const assignMutation = useMutation({
+    mutationFn: async (teamMemberId: string) => {
+      return apiRequest("POST", `/api/chatwoot/conversations/${conversationId}/assign`, {
+        teamMemberId,
+      });
+    },
+    onSuccess: () => {
+      refetchAssignment();
+      toast({
+        title: "Success",
+        description: "Agent assigned successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to assign agent",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const unassignMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest("DELETE", `/api/chatwoot/conversations/${conversationId}/assign`, {});
+    },
+    onSuccess: () => {
+      refetchAssignment();
+      toast({
+        title: "Success",
+        description: "Agent unassigned successfully",
+      });
+    },
   });
 
   // Setup WebSocket for real-time updates
@@ -229,7 +281,7 @@ export default function MessageThread({
           </div>
 
           {/* Status Action Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               size="sm"
               variant={conv.status === "open" ? "default" : "outline"}
@@ -260,6 +312,40 @@ export default function MessageThread({
               <CheckCircle2 className="h-3 w-3" />
               Resolved
             </Button>
+          </div>
+
+          {/* Agent Assignment */}
+          <div className="flex items-center gap-2">
+            {assignmentData?.data ? (
+              <>
+                <Badge variant="outline" className="gap-1.5">
+                  <UserPlus className="h-3 w-3" />
+                  {assignmentData.data.teamMember?.firstName || "Assigned"}
+                </Badge>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => unassignMutation.mutate()}
+                  disabled={unassignMutation.isPending}
+                  className="h-6 w-6 p-0"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </>
+            ) : (
+              <Select onValueChange={(memberId) => assignMutation.mutate(memberId)}>
+                <SelectTrigger className="w-[140px] h-8 text-xs">
+                  <SelectValue placeholder="Assign agent..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {teamMembers?.map((member: any) => (
+                    <SelectItem key={member.id} value={member.id}>
+                      {member.firstName} {member.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
       </CardHeader>

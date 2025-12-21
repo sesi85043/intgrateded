@@ -10,13 +10,15 @@ import {
   conversations,
   messages,
   contacts,
+  agentAssignments,
+  teamMembers,
   insertConversationSchema,
   insertMessageSchema,
   insertContactSchema,
 } from "@shared/schema";
 import { ChatwootClient } from "./chatwoot-client";
 import { isTeamMemberAuthenticated } from "./auth";
-import { eq } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import { log } from "./app";
 
 export default async function registerChatwootRoutes(app: Express) {
@@ -404,6 +406,139 @@ export default async function registerChatwootRoutes(app: Express) {
         res.status(500).json({
           message: "Failed to update conversation status",
         });
+      }
+    }
+  );
+
+  /**
+   * POST /api/chatwoot/conversations/:id/assign
+   * Assign an agent to a conversation
+   */
+  app.post(
+    "/api/chatwoot/conversations/:id/assign",
+    isTeamMemberAuthenticated,
+    async (req: any, res: Response) => {
+      try {
+        const { id } = req.params;
+        const { teamMemberId } = req.body;
+
+        if (!teamMemberId) {
+          return res.status(400).json({ message: "teamMemberId is required" });
+        }
+
+        // Verify conversation exists
+        const conversation = await db.query.conversations.findFirst({
+          where: (c) => eq(c.id, id),
+        });
+
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        // Verify team member exists
+        const member = await db.query.teamMembers.findFirst({
+          where: (m) => eq(m.id, teamMemberId),
+        });
+
+        if (!member) {
+          return res.status(404).json({ message: "Team member not found" });
+        }
+
+        // Unassign previous assignment
+        await db
+          .update(agentAssignments)
+          .set({ unassignedAt: new Date() })
+          .where(
+            and(
+              eq(agentAssignments.conversationId, id),
+              isNull(agentAssignments.unassignedAt)
+            )
+          );
+
+        // Create new assignment
+        const assignment = await db
+          .insert(agentAssignments)
+          .values({
+            conversationId: id,
+            teamMemberId,
+            assignedAt: new Date(),
+          })
+          .returning();
+
+        res.json({
+          success: true,
+          message: "Agent assigned successfully",
+          data: assignment[0],
+        });
+      } catch (error) {
+        console.error("[chatwoot] Error assigning agent:", error);
+        res.status(500).json({ message: "Failed to assign agent" });
+      }
+    }
+  );
+
+  /**
+   * DELETE /api/chatwoot/conversations/:id/assign
+   * Unassign an agent from a conversation
+   */
+  app.delete(
+    "/api/chatwoot/conversations/:id/assign",
+    isTeamMemberAuthenticated,
+    async (req: any, res: Response) => {
+      try {
+        const { id } = req.params;
+
+        // Unassign all active assignments
+        await db
+          .update(agentAssignments)
+          .set({ unassignedAt: new Date() })
+          .where(
+            and(
+              eq(agentAssignments.conversationId, id),
+              isNull(agentAssignments.unassignedAt)
+            )
+          );
+
+        res.json({
+          success: true,
+          message: "Agent unassigned successfully",
+        });
+      } catch (error) {
+        console.error("[chatwoot] Error unassigning agent:", error);
+        res.status(500).json({ message: "Failed to unassign agent" });
+      }
+    }
+  );
+
+  /**
+   * GET /api/chatwoot/conversations/:id/assigned
+   * Get assigned agent for a conversation
+   */
+  app.get(
+    "/api/chatwoot/conversations/:id/assigned",
+    isTeamMemberAuthenticated,
+    async (req: any, res: Response) => {
+      try {
+        const { id } = req.params;
+
+        const assignment = await db.query.agentAssignments.findFirst({
+          where: (a) =>
+            and(
+              eq(a.conversationId, id),
+              isNull(a.unassignedAt)
+            ),
+          with: {
+            teamMember: true,
+          },
+        });
+
+        res.json({
+          success: true,
+          data: assignment || null,
+        });
+      } catch (error) {
+        console.error("[chatwoot] Error fetching assignment:", error);
+        res.status(500).json({ message: "Failed to fetch assignment" });
       }
     }
   );
