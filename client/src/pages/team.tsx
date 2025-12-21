@@ -15,10 +15,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import { Plus, Pencil, Trash2, UserPlus } from "lucide-react";
+import { Plus, Pencil, Trash2, UserPlus, Mail, Copy, Check } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import PlatformBadge from "@/components/platform-badge";
 import type { TeamMember, Department, Role } from "@shared/schema";
@@ -114,6 +115,13 @@ export default function Team() {
     },
   });
 
+  // Email accounts management
+  const [isEmailOpen, setIsEmailOpen] = useState(false);
+  const [emailMember, setEmailMember] = useState<TeamMember | null>(null);
+  const [emailForm, setEmailForm] = useState({ email: "", password: "" });
+  const [copiedPassword, setCopiedPassword] = useState(false);
+  const [emailAccounts, setEmailAccounts] = useState<any[]>([]);
+
   // Assign platforms to existing team member
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const [assigningMember, setAssigningMember] = useState<TeamMember | null>(null);
@@ -137,6 +145,54 @@ export default function Team() {
       toast({ title: "Error", description: msg, variant: "destructive" });
     }
   });
+
+  const createEmailMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await apiRequest("/api/integrations/cpanel/email/create", "POST", data);
+    },
+    onSuccess: (result) => {
+      toast({ title: "Email created", description: `${result.email} created successfully!` });
+      setEmailForm({ email: "", password: "" });
+      if (emailMember) {
+        fetchEmailAccounts(emailMember.id);
+      }
+    },
+    onError: (err: any) => {
+      const msg = err?.response?.data?.message || "Failed to create email";
+      toast({ title: "Error", description: msg, variant: "destructive" });
+    }
+  });
+
+  const fetchEmailAccounts = async (memberId: string) => {
+    try {
+      const accounts = await apiRequest(`/api/integrations/cpanel/email/${memberId}`, "GET");
+      setEmailAccounts(accounts || []);
+    } catch (error) {
+      console.error("Failed to fetch email accounts:", error);
+    }
+  };
+
+  const openEmailDialog = async (member: TeamMember) => {
+    setEmailMember(member);
+    setEmailForm({ email: "", password: "" });
+    setCopiedPassword(false);
+    await fetchEmailAccounts(member.id);
+    setIsEmailOpen(true);
+  };
+
+  const handleCreateEmail = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailMember || !emailForm.email || !emailForm.password) {
+      toast({ title: "Error", description: "Email and password are required", variant: "destructive" });
+      return;
+    }
+    createEmailMutation.mutate({
+      teamMemberId: emailMember.id,
+      email: emailForm.email,
+      password: emailForm.password,
+      quota: 512
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -419,6 +475,14 @@ export default function Team() {
                           <Button
                             variant="ghost"
                             size="icon"
+                            onClick={() => openEmailDialog(member)}
+                            title="Manage Email Accounts"
+                          >
+                            <Mail className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => openAssignDialog(member)}
                             data-testid={`button-assign-platforms-${member.employeeId}`}
                           >
@@ -486,6 +550,94 @@ export default function Team() {
               Save
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Email Accounts Dialog */}
+      <Dialog open={isEmailOpen} onOpenChange={setIsEmailOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Email Accounts</DialogTitle>
+            <DialogDescription>
+              Manage email accounts for {emailMember?.firstName} {emailMember?.lastName}
+            </DialogDescription>
+          </DialogHeader>
+
+          {emailAccounts.length > 0 && (
+            <div className="space-y-3 mb-6">
+              <h3 className="font-semibold text-sm">Existing Accounts</h3>
+              <div className="space-y-2">
+                {emailAccounts.map((acc) => (
+                  <div key={acc.id} className="flex items-center justify-between p-3 border rounded bg-muted/50">
+                    <div>
+                      <p className="font-mono text-sm">{acc.email}</p>
+                      <p className="text-xs text-muted-foreground">Created: {new Date(acc.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    <Badge variant="outline">{acc.status}</Badge>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t pt-4" />
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <h3 className="font-semibold text-sm">Create New Account (Backup)</h3>
+            <form onSubmit={handleCreateEmail} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="e.g., smith.sa@allelectronics.one"
+                  value={emailForm.email}
+                  onChange={(e) => setEmailForm({ ...emailForm, email: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="password"
+                    type="text"
+                    placeholder="Enter secure password"
+                    value={emailForm.password}
+                    onChange={(e) => setEmailForm({ ...emailForm, password: e.target.value })}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const pass = `Pass${Math.random().toString(36).substring(2, 11)}!`;
+                      setEmailForm({ ...emailForm, password: pass });
+                    }}
+                  >
+                    Generate
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">Password will be hashed and securely stored</p>
+              </div>
+
+              <Alert>
+                <AlertDescription className="text-sm">
+                  ℹ️ Use this for manual backup only. Most users get emails automatically on approval.
+                </AlertDescription>
+              </Alert>
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsEmailOpen(false)}>
+                  Close
+                </Button>
+                <Button type="submit" disabled={createEmailMutation.isPending}>
+                  {createEmailMutation.isPending ? "Creating..." : "Create Email"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
