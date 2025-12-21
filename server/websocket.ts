@@ -14,11 +14,11 @@ interface ClientConnection {
   agentId?: string;
 }
 
-// Map to track active connections
-const activeConnections = new Map<string, ClientConnection>();
+// Map to track active connections with their WebSocket instances
+const activeConnections = new Map<string, ClientConnection & { ws: any }>();
 
 export function setupWebSocket(httpServer: HTTPServer) {
-  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+  const wss = new WebSocketServer({ server: httpServer, path: "/ws", noServer: false });
 
   wss.on("connection", (ws) => {
     log("WebSocket client connected", "websocket");
@@ -38,11 +38,15 @@ export function setupWebSocket(httpServer: HTTPServer) {
               conversationId: payload.conversationId,
               isTyping: false,
               agentId: payload.agentId,
+              ws,
             });
             log(
               `User ${payload.userId} subscribed to conversation ${payload.conversationId}`,
               "websocket"
             );
+            
+            // Confirm auth
+            ws.send(JSON.stringify({ type: "auth-ok" }));
             break;
 
           case "typing":
@@ -169,8 +173,16 @@ function broadcastToConversation(conversationId: string, message: any) {
     "websocket"
   );
 
-  // Send to all clients (in a real implementation, you'd access the ws instances)
-  // For now, this is a placeholder that would be integrated with the actual ws connections
+  const messageStr = JSON.stringify(message);
+  clients.forEach(([_, conn]) => {
+    try {
+      if (conn.ws.readyState === 1) { // WebSocket.OPEN
+        conn.ws.send(messageStr);
+      }
+    } catch (error) {
+      log(`Error sending to client: ${error}`, "websocket");
+    }
+  });
 }
 
 /**
@@ -181,7 +193,17 @@ function broadcastToAll(message: any) {
     `Broadcasting to all ${activeConnections.size} connected clients`,
     "websocket"
   );
-  // In a real implementation, this would send to all ws instances
+  
+  const messageStr = JSON.stringify(message);
+  activeConnections.forEach(([_, conn]) => {
+    try {
+      if (conn.ws.readyState === 1) { // WebSocket.OPEN
+        conn.ws.send(messageStr);
+      }
+    } catch (error) {
+      log(`Error broadcasting: ${error}`, "websocket");
+    }
+  });
 }
 
 /**

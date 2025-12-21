@@ -46,7 +46,7 @@ import registerTeamManagedRoutes from './routes-team-managed';
 import registerIntegrationRoutes from './routes-integrations';
 import registerTeamRoutes from './routes-teams';
 import registerChatwootRoutes from './routes-chatwoot';
-import { setupWebSocket } from './websocket';
+import { setupWebSocket, getActiveAgents, getConversationConnections } from './websocket';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
@@ -72,7 +72,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
     // --- DEV AUTH BYPASS END ---
   } else {
-    app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    // Get active agents and their online status
+  app.get('/api/agents/status', isTeamMemberAuthenticated, (req: any, res) => {
+    try {
+      const activeAgents = getActiveAgents();
+      const agentsArray = Array.from(activeAgents.entries()).map(([id, data]) => ({
+        agentId: id,
+        status: data.status,
+      }));
+      res.json({ success: true, data: agentsArray });
+    } catch (error) {
+      console.error("Error fetching agent status:", error);
+      res.status(500).json({ message: "Failed to fetch agent status" });
+    }
+  });
+
+  // Get conversation connections
+  app.get('/api/conversations/:id/connections', isTeamMemberAuthenticated, (req: any, res) => {
+    try {
+      const { id } = req.params;
+      const connections = getConversationConnections(id);
+      res.json({ success: true, data: connections });
+    } catch (error) {
+      console.error("Error fetching connections:", error);
+      res.status(500).json({ message: "Failed to fetch connections" });
+    }
+  });
+
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
       try {
         const userId = req.user.claims.sub;
         const user = await storage.getUser(userId);

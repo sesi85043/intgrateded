@@ -32,11 +32,13 @@ export function useWebSocket(
 
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${protocol}//${window.location.host}/ws`;
+      const host = window.location.host || "localhost:5000";
+      const wsUrl = `${protocol}//${host}/ws`;
+      console.log("[WebSocket] Connecting to:", wsUrl);
       const ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {
-        console.log("[WebSocket] Connected");
+        console.log("[WebSocket] Connected to server");
         isConnectingRef.current = false;
 
         // Authenticate with conversation
@@ -46,7 +48,7 @@ export function useWebSocket(
             payload: {
               userId,
               conversationId,
-              agentId: userId, // In production, this would be the actual agent ID
+              agentId: userId,
             },
           })
         );
@@ -95,6 +97,7 @@ export function useWebSocket(
       ws.onerror = (error) => {
         console.error("[WebSocket] Error:", error);
         isConnectingRef.current = false;
+        ws.close();
       };
 
       wsRef.current = ws;
