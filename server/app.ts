@@ -60,6 +60,25 @@ console.log('[CORS] Config:', {
   CORS_ORIGIN: corsOrigin || '(not set)',
 });
 
+// Security headers
+app.use((req, res, next) => {
+  // Prevent clickjacking attacks
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  // Prevent MIME sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Enable XSS protection
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  // Referrer policy for privacy
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Content Security Policy (permissive for dev, strict in production)
+  if (isDev) {
+    res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' ws: wss:");
+  } else {
+    res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss:");
+  }
+  next();
+});
+
 app.use(cors({
   origin: function (origin, callback) {
     // Allow all origins in dev/Replit mode or when CORS_ORIGIN=*
@@ -143,9 +162,25 @@ app.use((req, res, next) => {
     }
   });
 
+// Environment validation
+function validateEnvironment() {
+  const required = ['DATABASE_URL'];
+  const missing = required.filter(env => !process.env[env]);
+  
+  if (missing.length > 0) {
+    console.error('[STARTUP] ❌ Missing required environment variables:', missing);
+    process.exit(1);
+  }
+  
+  console.log('[STARTUP] ✅ All required environment variables present');
+}
+
 export default async function runApp(
   setup: (app: Express, server: Server) => Promise<void>,
 ) {
+  // Validate environment before starting
+  validateEnvironment();
+  
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

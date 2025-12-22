@@ -54,6 +54,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Replit Auth middleware
   await setupAuth(app);
 
+  // Health check endpoint - for deployment monitoring and uptime checks
+  app.get('/api/health', (req, res) => {
+    const uptime = process.uptime();
+    const now = new Date();
+    res.status(200).json({
+      status: 'healthy',
+      timestamp: now.toISOString(),
+      uptime: uptime,
+      environment: process.env.NODE_ENV || 'production',
+      version: process.env.npm_package_version || '1.0.0',
+    });
+  });
+
+  // Readiness check - tells deployment tools when app is ready
+  app.get('/api/ready', async (req, res) => {
+    try {
+      // Quick database connection test
+      await db.query.sessions.findFirst();
+      res.status(200).json({ ready: true });
+    } catch (error) {
+      res.status(503).json({ ready: false, error: 'Database connection failed' });
+    }
+  });
+
   // Auth routes
   // NOTE: We support a development-only auth bypass. This SHOULD NEVER be enabled in
   // production. To enable locally set `DEV_AUTH_BYPASS=true` and ensure NODE_ENV !== "production".
