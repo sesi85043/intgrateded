@@ -4,6 +4,7 @@ import { cpanelConfig, chatwootConfig, chatwootTeams, chatwootAgents, teamMember
 import { eq } from 'drizzle-orm';
 import type { TeamMember, Department } from '@shared/schema';
 import { CpanelClient, hashPassword, generateSecurePassword as generateCpanelPassword } from './cpanel-client';
+import { ChatwootClient } from './chatwoot-client';
 
 export function generateSecurePassword(length = 16): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=';

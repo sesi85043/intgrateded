@@ -628,37 +628,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
 
-          generatedEmail = await createCpanelEmailAccount(firstName, lastName, deptTag, user.id);
-
-          // Activity log: provisioning success
-          try {
-            await storage.createActivityLog(
-              req.user.claims.sub,
-              'provision_mailbox',
-              'managed_user',
-              user.id,
-              'cpanel',
-              { success: true, email: generatedEmail?.email }
-            );
-          } catch (logErr) {
-            console.warn('Failed to write provisioning activity log', logErr);
+            // Activity log: provisioning success
+            try {
+              await storage.createActivityLog(
+                req.user.claims.sub,
+                'provision_mailbox',
+                'managed_user',
+                user.id,
+                'cpanel',
+                { success: true, email: generatedEmail?.email }
+              );
+            } catch (logErr) {
+              console.warn('Failed to write provisioning activity log', logErr);
+            }
+          } catch (emailErr) {
+            console.error('Failed to provision cPanel email:', emailErr);
+            // Activity log: provisioning failure
+            try {
+              await storage.createActivityLog(
+                req.user.claims.sub,
+                'provision_mailbox',
+                'managed_user',
+                user.id,
+                'cpanel',
+                { success: false, error: (emailErr as Error)?.message || String(emailErr) }
+              );
+            } catch (logErr) {
+              console.warn('Failed to write provisioning failure activity log', logErr);
+            }
           }
-        } catch (emailErr) {
-          console.error('Failed to provision cPanel email:', emailErr);
-          // Activity log: provisioning failure
-          try {
-            await storage.createActivityLog(
-              req.user.claims.sub,
-              'provision_mailbox',
-              'managed_user',
-              user.id,
-              'cpanel',
-              { success: false, error: (emailErr as Error)?.message || String(emailErr) }
-            );
-          } catch (logErr) {
-            console.warn('Failed to write provisioning failure activity log', logErr);
-          }
-        }
       } else {
         // Admin chose to skip mailbox provisioning — log that choice
         try {
