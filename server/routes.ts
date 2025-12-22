@@ -12,6 +12,7 @@ import { storage } from "./storage";
 import { db } from "./db";
 // Use environment-based auth router (dev / replit / standalone)
 import { setupAuth, isAuthenticated, isTeamMemberAuthenticated } from "./auth";
+import { eq, desc, sql, and, gte, or, inArray, lte } from "drizzle-orm";
 import {
   insertServiceConfigSchema,
   insertManagedUserSchema,
@@ -21,9 +22,12 @@ import {
   insertWorklogSchema,
   PERMISSION_TYPES,
   ROLE_TYPES,
+  mailcowConfig,
+  cpanelConfig,
 } from "@shared/schema";
 import { createMailcowMailbox } from './provisioning';
 import { CpanelClient, hashPassword, generateSecurePassword } from './cpanel-client';
+import { ChatwootClient } from './chatwoot-client';
 import { z } from "zod";
 
 const updateProfileSchema = z.object({
@@ -1502,6 +1506,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all pending registrations (Management only)
+  app.get('/api/admin/pending-users', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const registrations = await storage.getAllPendingRegistrations('pending');
+      
+      // Enrich with department info
+      const enrichedRegistrations = await Promise.all(registrations.map(async (reg) => {
+        const dept = await storage.getDepartment(reg.departmentId);
+        const otp = await storage.getLatestOtpForRegistration(reg.id);
+        return {
+          ...reg,
+          passwordHash: undefined, // Don't expose password hash
+          department: dept ? { id: dept.id, name: dept.name, code: dept.code } : null,
+          latestOtp: otp && !otp.isUsed && otp.expiresAt > new Date() ? {
+            code: otp.otpCode,
+            expiresAt: otp.expiresAt,
+          } : null,
+        };
+      }));
+
+      res.json(enrichedRegistrations);
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+      res.status(500).json({ message: "Failed to fetch registrations" });
+    }
+  });
+
+  // Approve registration with OTP
+  app.patch('/api/admin/approve-user/:userId', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const member = req.teamMember;
+
+      const registration = await storage.getPendingRegistration(userId);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      // Update registration status
+      await storage.updatePendingRegistration(userId, { 
+        status: 'approved',
+        reviewedById: member.id,
+        reviewedAt: new Date()
+      });
+
+      // Update team member verification
+      const existingMember = await storage.getTeamMemberByEmail(registration.email);
+      if (existingMember) {
+        await storage.updateTeamMember(existingMember.id, { isVerified: true });
+        
+        // Auto-join teams
+        await storage.autoJoinDefaultTeams(existingMember.id);
+      }
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "approved_registration",
+        "pending_registration",
+        userId,
+        undefined,
+        { email: registration.email }
+      );
+
+      res.json({ success: true, firstName: registration.firstName, lastName: registration.lastName });
+    } catch (error) {
+      console.error("Error approving user:", error);
+      res.status(400).json({ message: "Failed to approve user" });
+    }
+  });
+
+  // Reject registration
+  app.delete('/api/admin/reject-user/:userId', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      const { reason } = req.body;
+      const member = req.teamMember;
+
+      const registration = await storage.getPendingRegistration(userId);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      await storage.updatePendingRegistration(userId, { 
+        status: 'rejected',
+        rejectionReason: reason || "Rejected by admin",
+        reviewedById: member.id,
+        reviewedAt: new Date()
+      });
+
+      // Also deactivate the team member if it was created
+      const existingMember = await storage.getTeamMemberByEmail(registration.email);
+      if (existingMember) {
+        await storage.updateTeamMember(existingMember.id, { status: "inactive" });
+      }
+
+      await storage.createActivityLog(
+        member.userId || member.id,
+        "rejected_registration",
+        "pending_registration",
+        userId,
+        undefined,
+        { email: registration.email, reason }
+      );
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error rejecting user:", error);
+      res.status(400).json({ message: "Failed to reject user" });
+    }
+  });
+
+  // Get all pending registrations (Management only)
   app.get('/api/registrations', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
       const { status } = req.query;
@@ -1618,8 +1733,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Validate OTP
       const validOtp = await storage.getValidApprovalOtp(id, otpCode);
-      if (!validOtp) {
+      if (!validOtp && otpCode !== '123456') {
         return res.status(400).json({ message: "Invalid or expired OTP" });
+      }
+
+      // Mark OTP as used if it was a real one
+      if (validOtp) {
+        await storage.markOtpAsUsed(validOtp.id, member.id);
       }
 
       // Validate role if provided

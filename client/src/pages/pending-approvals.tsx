@@ -48,12 +48,22 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { TeamMember } from "@shared/schema";
 import { formatDistanceToNow } from "date-fns";
 
+interface Department {
+  id: string;
+  name: string;
+  code: string;
+}
+
+interface PendingUser extends TeamMember {
+  department?: Department;
+}
+
 export default function PendingApprovals() {
   const { toast } = useToast();
   const [viewingUser, setViewingUser] = useState<TeamMember | null>(null);
   const [rejectingUser, setRejectingUser] = useState<TeamMember | null>(null);
 
-  const { data: pendingUsers, isLoading, refetch } = useQuery<TeamMember[]>({
+  const { data: pendingUsers, isLoading, refetch } = useQuery<PendingUser[]>({
     queryKey: ["/api/admin/pending-users"],
     retry: false,
   });
@@ -134,11 +144,18 @@ export default function PendingApprovals() {
       }
 
       // Refetch the pending users list
-      queryClient.invalidateQueries({ queryKey: ["pending-users"] });
-      toast.success("User approved successfully");
+      refetch();
+      toast({
+        title: "Success",
+        description: "User approved successfully"
+      });
     } catch (error) {
       console.error("Error approving user:", error);
-      toast.error("Failed to approve user");
+      toast({
+        title: "Error",
+        description: "Failed to approve user",
+        variant: "destructive"
+      });
     }
   };
 
@@ -156,11 +173,18 @@ export default function PendingApprovals() {
       }
 
       // Refetch the pending users list
-      queryClient.invalidateQueries({ queryKey: ["pending-users"] });
-      toast.success("User rejected successfully");
+      refetch();
+      toast({
+        title: "Success",
+        description: "User rejected successfully"
+      });
     } catch (error) {
       console.error("Error rejecting user:", error);
-      toast.error("Failed to reject user");
+      toast({
+        title: "Error",
+        description: "Failed to reject user",
+        variant: "destructive"
+      });
     }
   };
 
@@ -230,7 +254,7 @@ export default function PendingApprovals() {
                         {user.firstName} {user.lastName}
                       </TableCell>
                       <TableCell className="text-sm">{user.email}</TableCell>
-                      <TableCell>{user.departmentId}</TableCell>
+                      <TableCell>{user.department?.name || user.departmentId}</TableCell>
                       <TableCell className="text-sm">
                         {formatDistanceToNow(new Date(user.createdAt), {
                           addSuffix: true,

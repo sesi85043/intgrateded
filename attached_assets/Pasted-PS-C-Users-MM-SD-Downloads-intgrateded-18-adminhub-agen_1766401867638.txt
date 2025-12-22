@@ -1,0 +1,808 @@
+PS C:\Users\MM_SD\Downloads\intgrateded (18)\adminhub agent asign> git show --name-only
+commit 55b15cf2a77d9cebe11d82f0d31f72ba2fdb01d1 (HEAD -> main, gitsafe-backup/main)
+Author: mamqithi <51700837-mamqithi@users.noreply.replit.com>
+Date:   Mon Dec 22 10:25:39 2025 +0000
+
+    Add automatic Chatwoot agent creation when users are created
+    
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+(END)
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+(END)
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+(END)
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+    
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+(END)
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+(END)
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+(END)
+    Implement a new feature that automatically creates a Chatwoot agent when a new user is added to the system, including database mapping and activity logging.
+
+    Replit-Commit-Author: Agent
+    Replit-Commit-Session-Id: e9a8be18-5f5f-4612-b359-0fe1d15ad896
+    Replit-Commit-Checkpoint-Type: full_checkpoint
+    Replit-Commit-Event-Id: e2190d84-1453-471e-82ec-ba6795b9f914
+    Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/51c224aa-d015-4c96-927a-d938e1c2a601/e9a8be18-5f5f-4612-b359-0fe1d15ad896/nsvJFHJ
+    Replit-Helium-Checkpoint-Created: true
+
+replit.md
+server/chatwoot-client.ts
+server/routes.ts
+server/storage.ts
+PS C:\Users\MM_SD\Downloads\intgrateded (18)\adminhub agent asign> git diff --name-only origin/main..HEAD
+attached_assets/Pasted--Container-adminhub-app-Restarting-0-8s--1766398655169_1766398655172.txt
+client/src/pages/users.tsx
+replit.md
+server/app.ts
+server/chatwoot-client.ts
+server/routes-integrations.ts
+server/routes.ts
+server/storage.ts
+PS C:\Users\MM_SD\Downloads\intgrateded (18)\adminhub agent asign> git push
+Enumerating objects: 38, done.
+Counting objects: 100% (38/38), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (25/25), done.
+Writing objects: 100% (25/25), 10.07 KiB | 101.00 KiB/s, done.
+Total 25 (delta 23), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (23/23), completed with 13 local objects.
+To https://github.com/sesi85043/intgrateded
+   1cb95ce..55b15cf  main -> main
+PS C:\Users\MM_SD\Downloads\intgrateded (18)\adminhub agent asign> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Mon Dec 22 11:36:40 CET 2025
+
+  System load:           5.22
+  Usage of /:            54.7% of 192.69GB
+  Memory usage:          79%
+  Swap usage:            0%
+  Processes:             389
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There is 1 zombie process.
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+1 update can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Mon Dec 22 11:01:15 2025 from 41.193.198.198
+root@vmi2905850:~# cd /root/adminhub
+root@vmi2905850:~/adminhub# git pull
+remote: Enumerating objects: 38, done.
+remote: Counting objects: 100% (38/38), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 25 (delta 23), reused 25 (delta 23), pack-reused 0 (from 0)
+Unpacking objects: 100% (25/25), 10.05 KiB | 197.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+   1cb95ce..55b15cf  main       -> origin/main
+Updating 1cb95ce..55b15cf
+Fast-forward
+ ...inhub-app-Restarting-0-8s--1766398655169_1766398655172.txt | 398 +++++++++++++++++++++++++++
+ client/src/pages/users.tsx                                    |   3 +-
+ replit.md                                                     |  54 ++++
+ server/app.ts                                                 |   4 +-
+ server/chatwoot-client.ts                                     |  15 +
+ server/routes-integrations.ts                                 |  28 +-
+ server/routes.ts                                              |  50 ++++
+ server/storage.ts                                             |  15 +
+ 8 files changed, 559 insertions(+), 8 deletions(-)
+ create mode 100644 attached_assets/Pasted--Container-adminhub-app-Restarting-0-8s--1766398655169_1766398655172.txt
+root@vmi2905850:~/adminhub# docker compose up -d --build
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 44.0s (24/24) FINISHED
+ => [internal] load local bake definitions                                                  0.0s 
+ => => reading from stdin 470B                                                              0.0s
+ => [internal] load build definition from Dockerfile                                        0.0s
+ => => transferring dockerfile: 1.86kB                                                      0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                           1.4s 
+ => [internal] load .dockerignore                                                           0.0s
+ => => transferring context: 150B                                                           0.0s 
+ => [internal] load build context                                                           0.1s 
+ => => transferring context: 278.71kB                                                       0.1s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb  0.1s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d  0.0s 
+ => CACHED [builder 2/5] WORKDIR /app                                                       0.0s
+ => [builder 3/5] COPY . .                                                                  0.5s 
+ => [builder 4/5] RUN npm install                                                          21.2s 
+ => [builder 5/5] RUN npm run build                                                        16.5s
+ => CACHED [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-cli  0.0s 
+ => CACHED [stage-1  4/14] COPY package.json package-lock.json ./                           0.0s 
+ => CACHED [stage-1  5/14] COPY tsconfig.json ./                                            0.0s 
+ => CACHED [stage-1  6/14] RUN npm install --omit=dev                                       0.0s 
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                    0.1s 
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                        0.0s 
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                0.0s 
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                0.1s 
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                         0.0s 
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker  0.4s 
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                          0.4s 
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                           0.4s 
+ => exporting to image                                                                      0.9s 
+ => => exporting layers                                                                     0.4s 
+ => => exporting manifest sha256:f6de32f477d42c1730df0644521ae80cfdc1d7799964cdc448f495ccc  0.0s 
+ => => exporting config sha256:c24da42134827cb904a0c6403322cfdaae3756396bd4f4f758820521f27  0.0s 
+ => => exporting attestation manifest sha256:210eb31d5a92c0c92e8dcf5822cc0c26c33192786746e  0.0s 
+ => => exporting manifest list sha256:f8af0d515552e9aa69d93fc3a1bec5580a217eb6c20c2a453873  0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                      0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                   0.3s 
+ => resolving provenance for metadata file                                                  0.0s 
+[+] up 3/3
+root@vmi2905850:~/adminhub# ^C Built                                                       44.1s 
+root@vmi2905850:~/adminhub# ^C Healthy                                                      1.6s 
+root@vmi2905850:~/adminhub# c^CRecreated                                                    1.0s 
+root@vmi2905850:~/adminhub# docker compose restart app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠇ Container adminhub-app Restarting                                                        0.9s root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | 2025-12-22T10:38:17: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'      
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)    
+adminhub-app  | 10:38:18 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 10:38:18 AM [express] serving on port 5000
+adminhub-app  | 10:38:21 AM [express] GET /api/auth/user 401 in 10ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:38:57 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:39:11 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:39:16 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: 'czjdbBbuuvWWWq4jJvrRDCkEzHETJzVq',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 10:39:21 AM [express] POST /api/auth/login 200 in 211ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 10:39:21 AM [express] GET /api/auth/user 200 in 17ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 10:39:21 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 10:39:21 AM [express] GET /api/activity/recent 200 in 13ms :: [{"id":"6ea539e6-6ca8-4cf0-9d2f-17a0d9b…
+adminhub-app  | 10:39:22 AM [express] GET /api/services 304 in 13ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:39:22 AM [express] GET /api/stats 200 in 11ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 10:39:22 AM [express] GET /api/registrations/stats 200 in 37ms :: {"pending":2,"approved":0,"rejected…
+adminhub-app  | 10:39:22 AM [express] GET /api/team-members 200 in 104ms :: [{"id":"04ae989f-0074-4371-bd3b-000a1ffe1…
+adminhub-app  | 10:39:22 AM [express] GET /api/departments 304 in 121ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0…
+adminhub-app  | 10:39:22 AM [express] GET /api/tasks 304 in 106ms :: []
+adminhub-app  | 10:39:22 AM [express] GET /api/hr/email-credentials/stats 304 in 9ms :: {"total":0,"active":0,"inacti…
+adminhub-app  | 10:39:22 AM [express] GET /api/integrations/status 304 in 24ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 10:39:27 AM [express] GET /api/registrations 200 in 46ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:39:27 AM [express] GET /api/roles 304 in 33ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:39:33 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 10:39:40 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 76m…
+adminhub-app  | 10:39:44 AM [express] GET /api/admin/pending-users 304 in 56ms :: []
+adminhub-app  | 10:39:48 AM [express] GET /api/auth/user 304 in 16ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 10:39:49 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 10:39:49 AM [express] GET /api/services 304 in 13ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:39:49 AM [express] GET /api/roles 304 in 59ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:39:49 AM [express] GET /api/registrations 304 in 75ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:40:09 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:40:17 AM [express] GET /api/auth/user 304 in 45ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 10:40:18 AM [express] GET /api/registrations 304 in 64ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:40:18 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 10:40:18 AM [express] GET /api/services 304 in 12ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:40:18 AM [express] GET /api/roles 304 in 15ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:40:28 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/generate-otp 200 i…
+adminhub-app  | 10:40:28 AM [express] GET /api/registrations 200 in 45ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:40:30 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/generate-otp 200 i…
+adminhub-app  | 10:40:30 AM [express] GET /api/registrations 200 in 14ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 10:40:42 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 68m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 10:40:44 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 48m…
+adminhub-app  | 10:40:46 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# git pull
+Already up to date.
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- 1. Create the missing Teams table
+CREATE TABLE IF NOT EXISTS teams (
+  id varchar PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  name varchar NOT NULL,
+  description text,
+  is_default boolean DEFAULT false,
+  created_at timestamp DEFAULT now(),
+  updated_at timestamp DEFAULT now()
+);
+
+-- 2. Insert the Default Team (Critical for approval logic)
+INSERT INTO teams (name, description, is_default)
+VALUES ('General Team', 'The default team for all users', true)
+ON CONFLICT DO NOTHING;
+
+"LTER TABLE chatwoot_inboxes ADD COLUMN IF NOT EXISTS inbox_type varchar;
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+CREATE TABLE
+INSERT 0 1
+ALTER TABLE
+root@vmi2905850:~/adminhub# docker compose restart app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠇ Container adminhub-app Restarting                                                        0.8s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  |   length: 104,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '22',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:43:53 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 53m…
+adminhub-app  | 10:44:12 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:44:33 AM [express] GET /api/auth/user 304 in 30ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 10:44:33 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 10:44:34 AM [express] GET /api/roles 304 in 13ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:44:34 AM [express] GET /api/services 304 in 43ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:44:34 AM [express] GET /api/registrations 304 in 64ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:44:48 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:45:01 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:45:09 AM [express] GET /api/logout 302 in 6ms
+adminhub-app  | 10:45:10 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: 'MeL_QCS2oGtZewlBJtmVyfCSpfq_ra23',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 10:45:20 AM [express] POST /api/auth/login 200 in 159ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 10:45:20 AM [express] GET /api/auth/user 200 in 7ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 10:45:21 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 200 in …
+adminhub-app  | 10:45:21 AM [express] GET /api/services 200 in 43ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:45:21 AM [express] GET /api/departments 200 in 11ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0f…
+adminhub-app  | 10:45:21 AM [express] GET /api/registrations/stats 200 in 18ms :: {"pending":2,"approved":0,"rejected…
+adminhub-app  | 10:45:21 AM [express] GET /api/activity/recent 200 in 19ms :: [{"id":"ec6a7997-cbbb-48a5-87c4-ba8ec53…
+adminhub-app  | 10:45:21 AM [express] GET /api/hr/email-credentials/stats 200 in 29ms :: {"total":0,"active":0,"inact…
+adminhub-app  | 10:45:21 AM [express] GET /api/tasks 200 in 31ms :: []
+adminhub-app  | 10:45:21 AM [express] GET /api/integrations/status 200 in 31ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 10:45:21 AM [express] GET /api/team-members 200 in 67ms :: [{"id":"04ae989f-0074-4371-bd3b-000a1ffe1a…
+adminhub-app  | 10:45:21 AM [express] GET /api/stats 200 in 88ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 10:45:23 AM [express] GET /api/admin/pending-users 200 in 12ms :: []
+adminhub-app  | 10:45:24 AM [express] GET /api/roles 200 in 20ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:45:24 AM [express] GET /api/registrations 200 in 34ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:45:25 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | Error approving registration: error: column "code" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 104,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '22',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:45:33 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 25m…
+adminhub-app  | 10:46:01 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- 1. Add the missing 'code' column
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS code varchar;
+
+-- 2. Update the General Team to have the correct code
+UPDATE teams SET code = 'general' WHERE name = 'General Team';
+"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ALTER TABLE
+UPDATE 1
+root@vmi2905850:~/adminhub# docker compose restart app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠧ Container adminhub-app Restarting                                                        0.7s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  |   length: 109,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '45',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:46:59 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 33m…
+adminhub-app  | 10:47:18 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:47:32 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/generate-otp 200 i…
+adminhub-app  | 10:47:32 AM [express] GET /api/registrations 200 in 60ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | Error approving registration: error: column "team_type" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 109,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '45',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:47:40 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 31m…
+adminhub-app  | Error approving registration: error: column "team_type" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 109,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '45',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:47:43 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 73m…
+adminhub-app  | Error approving registration: error: column "team_type" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 109,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '45',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:47:44 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 67m…
+adminhub-app  | Error approving registration: error: column "team_type" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 109,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '45',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:47:45 AM [express] POST /api/registrations/246c8006-f963-4c87-993c-de21a3a496c1/approve 500 in 71m…
+adminhub-app  | 10:47:54 AM [express] GET /api/auth/user 401 in 7ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:48:30 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:49:07 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- 1. Add the missing 'team_type' column
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS team_type varchar DEFAULT 'system';
+
+-- 2. Update the General Team to have the correct type
+UPDATE teams SET team_type = 'system' WHERE name = 'General Team';
+"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ALTER TABLE
+UPDATE 1
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- 1. Add the missing 'team_type' column
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS team_type varchar DEFAULT 'system';
+
+-- 2. Update the General Team to have the correct type
+UPDATE teams SET team_type = 'system' WHERE name = 'General Team';
+"^C
+root@vmi2905850:~/adminhub# docker compose restart app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠧ Container adminhub-app Restarting                                                        0.8s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | 10:52:55 AM [express] GET /api/registrations 304 in 42ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:52:55 AM [express] GET /api/registrations 304 in 11ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:52:58 AM [express] GET /api/admin/pending-users 200 in 11ms :: []
+adminhub-app  | 10:53:00 AM [express] GET /api/integrations/status 200 in 31ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | Error fetching email credentials: TypeError: Cannot read properties of undefined (reading 'referencedTable')
+adminhub-app  |     at normalizeRelation (file:///app/node_modules/drizzle-orm/relations.js:212:75)
+adminhub-app  |     at PgDialect.buildRelationalQueryWithoutPK (file:///app/node_modules/drizzle-orm/pg-core/dialect.js:1006:36)
+adminhub-app  |     at QueryPromise._getQuery (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:84:25)
+adminhub-app  |     at QueryPromise._toSQL (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:99:24)
+adminhub-app  |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:62:42
+adminhub-app  |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app  |     at QueryPromise._prepare (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:61:19)
+adminhub-app  |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:114:19
+adminhub-app  |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app  |     at QueryPromise.execute (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:113:19)
+adminhub-app  | 10:53:01 AM [express] GET /api/hr/email-credentials 500 in 16ms :: {"message":"Failed to fetch email …
+adminhub-app  | 10:53:01 AM [express] GET /api/activity 200 in 27ms :: [{"id":"61c164b5-9d8a-46e0-9103-61809d410a02",…
+adminhub-app  | 10:53:04 AM [express] GET /api/departments 200 in 17ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0f…
+adminhub-app  | 10:53:04 AM [express] GET /api/integrations/department-emails 200 in 17ms :: []
+adminhub-app  | 10:53:09 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:53:45 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:53:55 AM [express] GET /api/auth/user 200 in 44ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 10:53:55 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 200 in …
+adminhub-app  | 10:53:55 AM [express] GET /api/services 200 in 15ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:53:56 AM [express] GET /api/admin/pending-users 304 in 7ms :: []
+adminhub-app  | 10:54:00 AM [express] GET /api/roles 200 in 74ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:54:00 AM [express] GET /api/registrations 304 in 91ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:54:22 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:54:36 AM [express] GET /api/auth/user 304 in 33ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 10:54:37 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 10:54:37 AM [express] GET /api/services 304 in 43ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 10:54:37 AM [express] GET /api/roles 304 in 37ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 10:54:37 AM [express] GET /api/registrations 304 in 78ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 10:54:40 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/generate-otp 200 i…
+adminhub-app  | 10:54:40 AM [express] GET /api/registrations 200 in 15ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | Error approving registration: error: column "department_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22 
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16) 
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5916:7 {
+adminhub-app  |   length: 113,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '58',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:54:46 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 26m…
+adminhub-app  | 10:54:58 AM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:55:34 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:56:10 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:56:47 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- 1. Add the missing 'department_id' column
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS department_id varchar REFERENCES departments(id) ON DELETE SET NULL;
+
+-- 2. Ensure all other 'likely' missing columns exist (Safe to run even if they exist)
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS parent_team_id varchar REFERENCES teams(id);
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS color varchar DEFAULT '#3b82f6';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS icon varchar;
+"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- 1. Add the missing 'department_id' column
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS department_id varchar REFERENCES departments(id) ON DELETE SET NULL;
+
+-- 2. Ensure all other 'likely' missing columns exist (Safe to run even if they exist)
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS parent_team_id varchar REFERENCES teams(id);
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS color varchar DEFAULT '#3b82f6';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS icon varchar;
+"^C
+root@vmi2905850:~/adminhub# docker compose restart app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠦ Container adminhub-app Restarting                                                        0.6s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 10:57:39 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 46m…
+adminhub-app  | 10:57:50 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:58:27 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:59:03 AM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:59:39 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+c^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+-- Add ALL likely missing columns to the teams table at once
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS parent_team_id varchar REFERENCES teams(id);
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS slug varchar;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS metadata jsonb DEFAULT '{}';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS is_archived boolean DEFAULT false;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS color varchar DEFAULT '#3b82f6';
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS icon varchar;
+
+-- Ensure the General Team has a slug
+UPDATE teams SET slug = 'general-team' WHERE name = 'General Team';
+"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+NOTICE:  column "parent_team_id" of relation "teams" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+NOTICE:  column "color" of relation "teams" already exists, skipping
+ALTER TABLE
+NOTICE:  column "icon" of relation "teams" already exists, skipping
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+UPDATE 1
+root@vmi2905850:~/adminhub# docker compose restart app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠧ Container adminhub-app Restarting                                                        0.7s
+root@vmi2905850:~/adminhub#
