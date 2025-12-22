@@ -871,6 +871,7 @@ export default function registerIntegrationRoutes(app: Express) {
       const [evolution] = await db.select().from(evolutionApiConfig).limit(1);
       const [typebot] = await db.select().from(typebotConfig).limit(1);
       const [mailcow] = await db.select().from(mailcowConfig).limit(1);
+      const [cpanel] = await db.select().from(cpanelConfig).limit(1);
 
       res.json({
         chatwoot: {
@@ -891,6 +892,10 @@ export default function registerIntegrationRoutes(app: Express) {
           configured: !!mailcow,
           enabled: mailcow?.enabled || false,
           lastSync: mailcow?.lastSyncAt || null,
+        },
+        cpanel: {
+          configured: !!cpanel,
+          enabled: cpanel?.enabled || false,
         },
       });
     } catch (error) {

@@ -22,7 +22,8 @@ import {
   RefreshCw,
   Settings,
   Link2,
-  Shield
+  Shield,
+  Server
 } from "lucide-react";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { useAuth } from "@/hooks/useAuth";
@@ -32,6 +33,7 @@ interface IntegrationStatus {
   evolution: { configured: boolean; enabled: boolean; connectionStatus: string };
   typebot: { configured: boolean; enabled: boolean };
   mailcow: { configured: boolean; enabled: boolean; lastSync: string | null };
+  cpanel: { configured: boolean; enabled: boolean };
 }
 
 interface ChatwootConfig {
@@ -66,6 +68,17 @@ interface MailcowConfig {
   apiKey: string;
   domain: string;
   enabled: boolean;
+}
+
+interface CpanelConfig {
+  id?: string;
+  hostname: string;
+  apiToken: string;
+  cpanelUsername: string;
+  domain: string;
+  enabled: boolean;
+  connectionStatus?: string;
+  lastConnectedAt?: string;
 }
 
 interface EvolutionStatus {
@@ -781,6 +794,132 @@ function MailcowSettings() {
   );
 }
 
+function CpanelSettings() {
+  const { toast } = useToast();
+  const [testing, setTesting] = useState(false);
+
+  const { data: config, isLoading } = useQuery<CpanelConfig | null>({
+    queryKey: ["/api/integrations/cpanel/config"],
+  });
+
+  const saveMutation = useMutation({
+    mutationFn: async (data: Partial<CpanelConfig>) => {
+      return await apiRequest("/api/integrations/cpanel/config", "POST", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/integrations/cpanel/config"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/integrations/status"] });
+      toast({ title: "cPanel configuration saved", description: "Your settings have been updated successfully." });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message || "Failed to save configuration", variant: "destructive" });
+    },
+  });
+
+  const testMutation = useMutation({
+    mutationFn: async (data: { hostname: string; apiToken: string; cpanelUsername: string }) => {
+      return await apiRequest("/api/integrations/cpanel/test", "POST", data);
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Connection to cPanel successful!" });
+      setTesting(false);
+    },
+    onError: (error: any) => {
+      toast({ title: "Connection Failed", description: error.message || "Unable to connect to cPanel", variant: "destructive" });
+      setTesting(false);
+    },
+  });
+
+  if (isLoading) return <Skeleton className="h-96" />;
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); const form = e.target as HTMLFormElement; const formData = new FormData(form); saveMutation.mutate(Object.fromEntries(formData)); }} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="cpanel-hostname">cPanel Hostname</Label>
+          <Input
+            id="cpanel-hostname"
+            name="hostname"
+            placeholder="cpanel.yourdomain.com"
+            defaultValue={config?.hostname || ""}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="cpanel-username">cPanel Username</Label>
+          <Input
+            id="cpanel-username"
+            name="cpanelUsername"
+            placeholder="cpanel_username"
+            defaultValue={config?.cpanelUsername || ""}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="cpanel-domain">Email Domain</Label>
+          <Input
+            id="cpanel-domain"
+            name="domain"
+            placeholder="yourdomain.com"
+            defaultValue={config?.domain || ""}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="cpanel-token">API Token</Label>
+        <Input
+          id="cpanel-token"
+          name="apiToken"
+          type="password"
+          placeholder={config?.apiToken ? "Leave blank to keep existing token" : "Enter your cPanel API token"}
+          required={!config?.apiToken}
+        />
+        {config?.apiToken && (
+          <p className="text-xs text-muted-foreground">
+            Current: {config.apiToken} (enter new value to change)
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Switch
+          id="cpanel-enabled"
+          name="enabled"
+          defaultChecked={config?.enabled ?? true}
+        />
+        <Label htmlFor="cpanel-enabled">Enable cPanel Integration</Label>
+      </div>
+
+      <div className="flex gap-2 pt-4">
+        <Button type="submit" disabled={saveMutation.isPending}>
+          <Save className="h-4 w-4 mr-2" />
+          {saveMutation.isPending ? "Saving..." : "Save Configuration"}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={testing}
+          onClick={() => {
+            const form = document.querySelector('form') as HTMLFormElement;
+            const formData = new FormData(form);
+            setTesting(true);
+            testMutation.mutate({
+              hostname: formData.get("hostname") as string,
+              apiToken: formData.get("apiToken") as string,
+              cpanelUsername: formData.get("cpanelUsername") as string,
+            });
+          }}
+        >
+          <TestTube className="h-4 w-4 mr-2" />
+          {testing ? "Testing..." : "Test Connection"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
 export default function Integrations() {
   const { isManagement } = useAuth();
 
@@ -793,7 +932,7 @@ export default function Integrations() {
       <div>
         <h1 className="text-3xl font-semibold text-foreground">Communication Integrations</h1>
         <p className="text-muted-foreground mt-1">
-          Configure connections to Chatwoot, WhatsApp, Typebot, and email services
+          Configure connections to Chatwoot, WhatsApp, Typebot, email services, and cPanel
         </p>
       </div>
 
@@ -893,6 +1032,30 @@ export default function Integrations() {
             </div>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-md bg-red-100 dark:bg-red-900 flex items-center justify-center">
+                  <Server className="h-5 w-5 text-red-600 dark:text-red-300" />
+                </div>
+                <div>
+                  <p className="font-medium">cPanel</p>
+                  <p className="text-xs text-muted-foreground">Email Accounts</p>
+                </div>
+              </div>
+              {statusLoading ? (
+                <Skeleton className="h-5 w-16" />
+              ) : (
+                <StatusBadge 
+                  configured={status?.cpanel?.configured || false} 
+                  enabled={status?.cpanel?.enabled || false} 
+                />
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {!isManagement ? (
@@ -906,7 +1069,7 @@ export default function Integrations() {
         </Card>
       ) : (
         <Tabs defaultValue="chatwoot" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="chatwoot" className="gap-2" data-testid="tab-chatwoot">
               <MessageSquare className="h-4 w-4" />
               <span className="hidden sm:inline">Chatwoot</span>
@@ -922,6 +1085,10 @@ export default function Integrations() {
             <TabsTrigger value="mailcow" className="gap-2" data-testid="tab-mailcow">
               <Mail className="h-4 w-4" />
               <span className="hidden sm:inline">Mailcow</span>
+            </TabsTrigger>
+            <TabsTrigger value="cpanel" className="gap-2" data-testid="tab-cpanel">
+              <Server className="h-4 w-4" />
+              <span className="hidden sm:inline">cPanel</span>
             </TabsTrigger>
           </TabsList>
 
@@ -989,6 +1156,23 @@ export default function Integrations() {
               </CardHeader>
               <CardContent>
                 <MailcowSettings />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="cpanel">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Server className="h-5 w-5" />
+                  cPanel Configuration
+                </CardTitle>
+                <CardDescription>
+                  Configure cPanel for automated email account creation
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CpanelSettings />
               </CardContent>
             </Card>
           </TabsContent>
