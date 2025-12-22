@@ -158,6 +158,53 @@ Key tables:
 - `departments` - Organization structure
 - `activity_logs` - Audit trail
 
+## Role Hierarchy
+
+The system implements a 4-tier role hierarchy with escalating permissions:
+
+### 1. 🔴 **Superuser** (Level 4 - Developer)
+- **Access:** Full system access - all features, all data
+- **Responsibilities:** System maintenance, emergency access, developer oversight
+- **Note:** This is you (the developer)
+
+### 2. 🟣 **Management** (Level 3 - HR Admin)
+- **Permissions:** 
+  - View all departments and users
+  - Manage global users and team members
+  - Staff registrations & approvals
+  - Configure integrations (Chatwoot, cPanel, etc.)
+  - Email provisioning & credential management
+  - View all activity logs
+  - Manage configurations
+  - Department channels management
+- **Access:** Full HR Management section + Common navigation
+- **Sidebar:** Shows HR Management section with all admin tools
+
+### 3. 🟡 **Department Admin** (Level 2)
+- **Permissions:**
+  - View/manage users within their department only
+  - Create and manage team members in their department
+  - View department-specific logs
+  - Department channels management
+  - Basic configuration (limited)
+- **Access:** Department-specific features only
+- **Sidebar:** Limited HR Management (only department tools)
+
+### 4. 🟢 **Technician** (Level 1 - Field Staff)
+- **Permissions:**
+  - View assigned tasks
+  - Update own work
+  - Submit work logs
+  - View own department info
+- **Access:** Dashboard, Tasks, Inbox, Analytics (read-only)
+- **Sidebar:** Only common navigation items
+
+### Default Test Account
+- **Email:** `admin@company.com`
+- **Password:** `admin123`
+- **Role:** Management (Level 3)
+- **Can Access:** All HR Management features
+
 ## Environment Variables
 
 Auto-created by Replit:
@@ -170,9 +217,6 @@ Auto-created by Replit:
 
 Development defaults:
 - `NODE_ENV` - Set to "development"
-- Default dev credentials (after seed):
-  - Email: `admin@company.com`
-  - Password: `admin123`
 
 Optional:
 - `CORS_ORIGIN` - Comma-separated allowed origins (default: all in dev)
