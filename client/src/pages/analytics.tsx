@@ -24,6 +24,7 @@ export default function Analytics() {
     { name: "Chatwoot", users: metrics?.chatwoot?.users || 0, active: metrics?.chatwoot?.active || 0, icon: MessageSquare },
     { name: "Typebot", users: metrics?.typebot?.users || 0, active: metrics?.typebot?.active || 0, icon: FormInput },
     { name: "Mailcow", users: metrics?.mailcow?.users || 0, active: metrics?.mailcow?.active || 0, icon: Mail },
+    { name: "cPanel", users: metrics?.cpanel?.users || 0, active: metrics?.cpanel?.active || 0, icon: MessageSquare },
   ];
 
   const conversationData = [
@@ -59,6 +60,7 @@ export default function Analytics() {
           <TabsTrigger value="chatwoot" data-testid="tab-chatwoot">Chatwoot</TabsTrigger>
           <TabsTrigger value="typebot" data-testid="tab-typebot">Typebot</TabsTrigger>
           <TabsTrigger value="mailcow" data-testid="tab-mailcow">Mailcow</TabsTrigger>
+          <TabsTrigger value="cpanel" data-testid="tab-cpanel">cPanel</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -204,7 +206,7 @@ export default function Analytics() {
           </Card>
         </TabsContent>
 
-        {["metabase", "chatwoot", "typebot", "mailcow"].map((platform) => (
+        {["metabase", "chatwoot", "typebot", "mailcow", "cpanel"].map((platform) => (
           <TabsContent key={platform} value={platform} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card>
