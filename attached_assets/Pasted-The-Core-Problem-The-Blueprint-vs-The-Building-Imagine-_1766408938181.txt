@@ -1,0 +1,49 @@
+The Core Problem: The "Blueprint" vs. The "Building"
+
+Imagine your application is a construction project:
+
+    The Code (The Blueprint): This is what you git pulled. It contains the plans for how the data should look (e.g., "There must be a column named chatwoot_inbox_id").
+
+    The Database (The Building): This is the actual structure storing your data.
+
+The Issue: You updated the Blueprint (v2.0), but the Building was still built according to the old Blueprint (v1.0).
+
+When your new code started running, it tried to walk through a door that existed in the blueprint but didn't exist in the actual building. That is why it crashed against the wall.
+Detailed Breakdown of Your 3 Critical Errors
+
+Here is exactly what went wrong in your logs, translated from "Database Error" to English.
+1. The Missing Columns (chatwoot_inbox_id does not exist)
+
+    What happened: The new code has a feature to save Chatwoot settings. It tried to run a command like: SELECT * FROM departments WHERE chatwoot_inbox_id = '123'
+
+    The Crash: The database looked at the departments table and said, "I don't have a column with that name."
+
+    Why your manual fix wasn't enough: You manually added the column, which stopped that specific error, but you missed the next one...
+
+2. The Invisible Constraints (foreign key constraint ... violates ...)
+
+    What happened: This was the nastiest error. Your code tried to create a "Managed User". In the database rules, a Managed User must belong to a valid "Team Member".
+
+    The Crash:
+
+    Key (team_member_id)=() is not present in table "team_members"
+
+    The Diagnosis: Because the database was in a half-broken state, the "Team Member" record was likely missing or had a different ID than what the code expected. The database rejected the data to prevent corruption ("Reference Integrity").
+
+3. The "Not Null" Violation (imap_host violates not-null constraint)
+
+    What happened: The code tried to save partial email settings (sending null for the host), assuming that was allowed.
+
+    The Crash: The old database rules said, "No! The imap_host field is REQUIRED (Not Null)."
+
+    The Drift: The new code likely changed that rule to make the field optional, but the database didn't get the memo, so it enforced the old, strict rule.
+
+Why did this happen now?
+
+You performed a git pull which brought in new code, but the mechanism to update the database (Migrations) failed silently.
+
+    Missing Tools: Your production Docker image didn't have drizzle-kit installed (because it's a "dev tool").
+
+    Missing Config: The drizzle.config.ts file wasn't copied into the container.
+
+    Result: The app started up, assumed the database was updated, and immediately started crashing when it couldn't find the new fields.
