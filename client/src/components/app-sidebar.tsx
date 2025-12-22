@@ -53,7 +53,8 @@ export function AppSidebar() {
     },
   });
 
-  const mainMenuItems = [
+  // Common items visible to all users
+  const commonMenuItems = [
     {
       title: "Dashboard",
       url: "/",
@@ -68,6 +69,31 @@ export function AppSidebar() {
       testId: "nav-tasks",
       show: hasPermission(PERMISSION_TYPES.VIEW_TASKS),
     },
+    {
+      title: "Inbox",
+      url: "/inbox",
+      icon: Inbox,
+      testId: "nav-inbox",
+      show: true,
+    },
+    {
+      title: "Analytics",
+      url: "/analytics",
+      icon: BarChart3,
+      testId: "nav-analytics",
+      show: hasPermission(PERMISSION_TYPES.VIEW_ANALYTICS),
+    },
+    {
+      title: "Activity Logs",
+      url: "/activity",
+      icon: Activity,
+      testId: "nav-activity",
+      show: hasPermission(PERMISSION_TYPES.VIEW_DEPARTMENT_LOGS) || hasPermission(PERMISSION_TYPES.VIEW_ALL_LOGS),
+    },
+  ];
+
+  // HR Management items (for admins)
+  const hrMenuItems = [
     {
       title: "Departments",
       url: "/departments",
@@ -104,20 +130,6 @@ export function AppSidebar() {
       show: isManagement,
     },
     {
-      title: "Analytics",
-      url: "/analytics",
-      icon: BarChart3,
-      testId: "nav-analytics",
-      show: hasPermission(PERMISSION_TYPES.VIEW_ANALYTICS),
-    },
-    {
-      title: "Activity Logs",
-      url: "/activity",
-      icon: Activity,
-      testId: "nav-activity",
-      show: hasPermission(PERMISSION_TYPES.VIEW_DEPARTMENT_LOGS) || hasPermission(PERMISSION_TYPES.VIEW_ALL_LOGS),
-    },
-    {
       title: "Configuration",
       url: "/config",
       icon: Settings,
@@ -139,16 +151,6 @@ export function AppSidebar() {
       show: isManagement || isDepartmentAdmin,
     },
     {
-      title: "Inbox",
-      url: "/inbox",
-      icon: Inbox,
-      testId: "nav-inbox",
-      show: true,
-    },
-  ];
-
-  const hrMenuItems = [
-    {
       title: "Email Credentials",
       url: "/hr-management",
       icon: Mail,
@@ -157,7 +159,7 @@ export function AppSidebar() {
     },
   ];
 
-  const visibleMenuItems = mainMenuItems.filter(item => item.show);
+  const visibleCommonItems = commonMenuItems.filter(item => item.show);
   const visibleHrItems = hrMenuItems.filter(item => item.show);
 
   const platformItems = [
@@ -211,11 +213,12 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
       <SidebarContent>
+        {/* Common Navigation - visible to all users */}
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {visibleMenuItems.map((item) => {
+              {visibleCommonItems.map((item) => {
                 const isActive = location === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -232,6 +235,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* HR Management Section - for admins */}
         {visibleHrItems.length > 0 && (
           <SidebarGroup>
             <SidebarGroupLabel>HR Management</SidebarGroupLabel>
