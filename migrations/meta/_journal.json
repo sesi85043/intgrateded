@@ -15,6 +15,13 @@
       "when": 1766162521923,
       "tag": "0001_condemned_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1766433319146,
+      "tag": "0002_sweet_valkyrie",
+      "breakpoints": true
     }
   ]
 }
