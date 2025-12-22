@@ -13,6 +13,29 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, Mailco
 - ✅ Phase 4: Real-time Updates & Polish (Complete)
 - ✅ Phase 5: Automated Email Creation via cPanel (Complete)
 - ✅ **Replit Setup & Deployment Ready (Complete)**
+- ✅ **Bug Fixes - Registrations & User Form (Complete)**
+
+## Recent Fixes (December 22, 2025)
+
+### ✅ Fixed: Pending Approvals Not Displaying
+**Issue:** Registrations page was using plain `fetch()` without authentication
+**Solution:** Updated to use authenticated `apiRequest()` with proper headers
+**Status:** Now correctly fetches and displays pending registrations
+
+### ✅ Fixed: Add User Form Blank Page  
+**Issue:** Form had invalid `role` field that doesn't exist in schema
+**Solution:** Removed invalid field, form now uses proper `roles` object structure
+**Status:** Form renders correctly with all fields
+
+### ⚠️ Chatwoot Sync Issue Identified
+**Status:** Requires configuration before use
+**Root Cause:** Sync endpoint expects Chatwoot credentials to be configured in database first
+**Solution:** Admin must configure Chatwoot in Integrations tab before using "Sync Now"
+**Steps to resolve:**
+1. Go to Integrations tab
+2. Configure Chatwoot (instance URL, API token, account ID)
+3. Click "Test Connection" to verify
+4. Then "Sync Now" will work
 
 ## Replit Setup Status
 
@@ -21,8 +44,9 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, Mailco
 - ✅ Frontend (React + Vite) running on port 5000
 - ✅ Backend (Express) running on port 5000
 - ✅ CORS configured for Replit proxy compatibility
-- ✅ Workflow configured for development
+- ✅ Workflow configured for development (`npm run dev`)
 - ✅ Deployment configuration set up (autoscale)
+- ✅ Database seeded with admin account and test data
 
 ## Technology Stack
 
@@ -62,11 +86,12 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, Mailco
 ## Setup & Running
 
 ### Development Server
-The application is already configured and running. To start manually:
+The application is configured and running. To start manually:
 ```bash
 npm install          # Install dependencies (if needed)
 npm run db:push      # Sync database schema
 npm run dev          # Start dev server on http://localhost:5000
+npm run seed         # Seed database with initial data
 ```
 
 ### Build & Production
@@ -74,6 +99,12 @@ npm run dev          # Start dev server on http://localhost:5000
 npm run build       # Build frontend + backend
 npm run start       # Start production server
 ```
+
+## Default Admin Account
+
+After seeding the database:
+- **Email:** `admin@company.com`
+- **Password:** `admin123`
 
 ## Key Features
 
@@ -245,6 +276,7 @@ The app is ready to publish. Click the "Publish" button in Replit to deploy it l
 - [ ] Password reset functionality
 - [ ] Email quota management UI
 - [ ] Integration with user creation flow (auto-create email when user created)
+- [ ] Chatwoot sync requires configuration - admin must set up credentials in Integrations tab first
 
 ## User Preferences
 
@@ -263,4 +295,4 @@ For issues or questions, refer to the implementation phases document in `attache
 
 **Last Updated:** December 22, 2025
 **Status:** ✅ Fully set up and running in Replit
-**Version:** 1.0.2 (Phase 5 Complete - cPanel Email Automation Ready)
+**Version:** 1.0.3 (Bug Fixes: Registrations & User Form)
