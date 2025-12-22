@@ -109,18 +109,14 @@ export default function Registrations() {
   const { data: registrations = [], isLoading, refetch } = useQuery<PendingRegistration[]>({
     queryKey: ["/api/registrations"],
     queryFn: async () => {
-      const response = await fetch("/api/registrations");
-      if (!response.ok) throw new Error("Failed to fetch registrations");
-      return response.json();
+      return await apiRequest("/api/registrations", "GET");
     },
   });
 
   const { data: roles = [] } = useQuery<Role[]>({
     queryKey: ["/api/roles"],
     queryFn: async () => {
-      const response = await fetch("/api/roles");
-      if (!response.ok) throw new Error("Failed to fetch roles");
-      return response.json();
+      return await apiRequest("/api/roles", "GET");
     },
   });
 
