@@ -285,6 +285,7 @@ export default function Users() {
             <SelectItem value="chatwoot">Chatwoot</SelectItem>
             <SelectItem value="typebot">Typebot</SelectItem>
             <SelectItem value="mailcow">Mailcow</SelectItem>
+            <SelectItem value="cpanel">cPanel</SelectItem>
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -459,7 +460,7 @@ export default function Users() {
                   <FormItem>
                     <FormLabel>Platforms</FormLabel>
                     <div className="grid grid-cols-2 gap-2 border rounded-md p-3">
-                      {["metabase", "chatwoot", "typebot", "mailcow"].map((platform) => (
+                      {["metabase", "chatwoot", "typebot", "mailcow", "cpanel"].map((platform) => (
                         <div key={platform} className="flex items-center space-x-2">
                           <Checkbox
                             id={`platform-${platform}`}
@@ -478,7 +479,7 @@ export default function Users() {
                             htmlFor={`platform-${platform}`}
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize cursor-pointer"
                           >
-                            {platform}
+                            {platform === 'cpanel' ? 'cPanel' : platform}
                           </label>
                         </div>
                       ))}
@@ -523,8 +524,8 @@ export default function Users() {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel htmlFor="provision-mailbox">Provision Mailbox (Mailcow)</FormLabel>
-                  <p className="text-xs text-muted-foreground">Automatically create an email account on the platform</p>
+                  <FormLabel htmlFor="provision-mailbox">Provision Email Account (cPanel)</FormLabel>
+                  <p className="text-xs text-muted-foreground">Automatically create an email account on cPanel</p>
                 </div>
               </FormItem>
               <FormField
