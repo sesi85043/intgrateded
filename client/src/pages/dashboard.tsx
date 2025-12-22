@@ -23,7 +23,11 @@ import {
   BarChart3,
   ArrowRight,
   ChevronDown,
-  UserPlus
+  UserPlus,
+  Phone,
+  Bot,
+  Server,
+  Zap
 } from "lucide-react";
 import PlatformBadge from "@/components/platform-badge";
 import { apiRequest } from "@/lib/queryClient";
@@ -494,7 +498,41 @@ function ManagementDashboard() {
     enabled: isManagement,
   });
 
+  const { data: integrationStatus, isLoading: statusLoading } = useQuery<{
+    chatwoot: { configured: boolean; enabled: boolean; lastSync?: string };
+    evolution: { configured: boolean; enabled: boolean; connectionStatus?: string };
+    typebot: { configured: boolean; enabled: boolean };
+    mailcow: { configured: boolean; enabled: boolean; lastSync?: string };
+    cpanel: { configured: boolean; enabled: boolean };
+  }>({
+    queryKey: ["/api/integrations/status"],
+  });
+
   const activeDepts = departments.filter(d => d.status === 'active');
+
+  const getServiceIcon = (service: string) => {
+    const icons: any = {
+      chatwoot: MessageSquare,
+      evolution: Phone,
+      typebot: Bot,
+      mailcow: Mail,
+      cpanel: Server,
+      metabase: Database,
+    };
+    return icons[service] || RefreshCw;
+  };
+
+  const getServiceColor = (service: string) => {
+    const colors: any = {
+      chatwoot: "bg-blue-100 text-blue-700 border-blue-200",
+      evolution: "bg-green-100 text-green-700 border-green-200",
+      typebot: "bg-amber-100 text-amber-700 border-amber-200",
+      mailcow: "bg-purple-100 text-purple-700 border-purple-200",
+      cpanel: "bg-red-100 text-red-700 border-red-200",
+      metabase: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    };
+    return colors[service] || "bg-gray-100 text-gray-700 border-gray-200";
+  };
 
   return (
     <div className="space-y-6">
@@ -648,29 +686,66 @@ function ManagementDashboard() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Service Status</CardTitle>
-              <CardDescription>Platform connectivity</CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5" />
+                Integration Status
+              </CardTitle>
+              <CardDescription>Real-time service health</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              {['metabase', 'chatwoot', 'typebot', 'mailcow'].map((p) => {
-                const svc = services?.find(s => s.serviceName === p);
-                const Icon = platformIcons[p as keyof typeof platformIcons];
-                return (
-                  <div key={p} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-md bg-muted">
-                        <Icon className="h-4 w-4" />
+            <CardContent className="space-y-3">
+              {statusLoading ? (
+                <div className="space-y-2">
+                  {[1,2,3,4,5,6].map(i => <Skeleton key={i} className="h-10 w-full" />)}
+                </div>
+              ) : (
+                <>
+                  {Object.entries({
+                    chatwoot: { name: 'Chatwoot', desc: 'Support & Chat' },
+                    evolution: { name: 'Evolution', desc: 'WhatsApp API' },
+                    typebot: { name: 'Typebot', desc: 'Chat Flows' },
+                    mailcow: { name: 'Mailcow', desc: 'Email Server' },
+                    cpanel: { name: 'cPanel', desc: 'Provisioning' },
+                    metabase: { name: 'Metabase', desc: 'Analytics' },
+                  }).map(([key, { name, desc }]) => {
+                    const svc = services?.find(s => s.serviceName === key);
+                    const integStatus = integrationStatus?.[key as keyof typeof integrationStatus];
+                    const Icon = getServiceIcon(key);
+                    const isConfigured = integStatus?.configured ?? svc?.enabled ?? false;
+                    const isEnabled = integStatus?.enabled ?? svc?.enabled ?? false;
+                    
+                    return (
+                      <div 
+                        key={key} 
+                        className={`flex items-center justify-between p-2.5 rounded-md border ${getServiceColor(key)} transition-colors`}
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Icon className="h-4 w-4 flex-shrink-0" />
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold leading-none">{name}</p>
+                            <p className="text-[10px] opacity-70 truncate">{desc}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          {isEnabled ? (
+                            <Badge className="bg-green-600 text-white text-[10px] h-5 px-1.5">Active</Badge>
+                          ) : isConfigured ? (
+                            <Badge className="bg-yellow-600 text-white text-[10px] h-5 px-1.5">Disabled</Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[10px] h-5 px-1.5">Pending</Badge>
+                          )}
+                        </div>
                       </div>
-                      <span className="text-sm font-medium capitalize">{p}</span>
-                    </div>
-                    {svc?.enabled ? (
-                      <Badge className="bg-green-500">Online</Badge>
-                    ) : (
-                      <Badge variant="secondary">Offline</Badge>
-                    )}
+                    );
+                  })}
+                  <div className="mt-3 pt-3 border-t">
+                    <Link href="/integrations">
+                      <Button variant="ghost" size="sm" className="w-full text-xs">
+                        Configure <ArrowRight className="h-3 w-3 ml-1" />
+                      </Button>
+                    </Link>
                   </div>
-                );
-              })}
+                </>
+              )}
             </CardContent>
           </Card>
 
