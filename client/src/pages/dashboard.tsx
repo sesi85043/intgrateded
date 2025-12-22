@@ -22,16 +22,17 @@ import {
   UserCheck,
   BarChart3,
   ArrowRight,
-  ChevronDown
+  ChevronDown,
+  UserPlus
 } from "lucide-react";
 import PlatformBadge from "@/components/platform-badge";
+import { apiRequest } from "@/lib/queryClient";
 import type { ServiceConfig, ActivityLog, Task, TeamMember, Department } from "@shared/schema";
 
 function TechnicianDashboard() {
   const { teamMember } = useAuth();
   const [platformsOpen, setPlatformsOpen] = useState(true);
 
-  // Fetch managed user record for the logged-in team member
   const { data: myManagedUser } = useQuery<any | null>({
     queryKey: ["/api/team-members", teamMember?.id, "managed-user"],
     queryFn: async () => {
@@ -71,7 +72,6 @@ function TechnicianDashboard() {
         </p>
       </div>
 
-      {/* My Platforms - show assigned platforms and quick access links */}
       <Card>
         <CardHeader 
           className="cursor-pointer flex flex-row items-center justify-between"
@@ -431,6 +431,7 @@ function DepartmentAdminDashboard() {
 }
 
 function ManagementDashboard() {
+  const { isManagement, isDepartmentAdmin } = useAuth();
   const { data: services, isLoading: servicesLoading } = useQuery<ServiceConfig[]>({
     queryKey: ["/api/services"],
   });
@@ -467,275 +468,263 @@ function ManagementDashboard() {
     mailcow: Mail,
   };
 
+  const { data: registrationStats } = useQuery<{
+    pending: number;
+    approved: number;
+    rejected: number;
+  }>({
+    queryKey: ["/api/registrations/stats"],
+    queryFn: async () => {
+      const res = await apiRequest("/api/registrations/stats", "GET");
+      return res.json();
+    },
+    enabled: isManagement || isDepartmentAdmin,
+  });
+
+  const { data: emailStats } = useQuery<{
+    total: number;
+    active: number;
+    inactive: number;
+  }>({
+    queryKey: ["/api/hr/email-credentials/stats"],
+    queryFn: async () => {
+      const res = await apiRequest("/api/hr/email-credentials/stats", "GET");
+      return res.json();
+    },
+    enabled: isManagement,
+  });
+
   const activeDepts = departments.filter(d => d.status === 'active');
-  const totalTechnicians = teamMembers.filter(m => m.role === 'technician').length;
-  const pendingTasks = tasks.filter(t => t.status === 'pending' || t.status === 'in_progress');
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold text-foreground">Global Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Management overview across all departments
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground">Global Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            Management overview across all departments
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Departments</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <Users className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-total-departments">
-              {activeDepts.length}
-            </div>
+            <div className="text-2xl font-bold">{stats?.totalUsers ?? 0}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Active departments
+              Across all platforms
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Team Members</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Pending Approvals</CardTitle>
+            <Clock className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-total-team">
-              {teamMembers.length}
-            </div>
+            <div className="text-2xl font-bold">{registrationStats?.pending ?? 0}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {totalTechnicians} technicians
+              New staff registrations
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Tasks</CardTitle>
-            <ClipboardList className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Email Accounts</CardTitle>
+            <Mail className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-total-tasks">
-              {tasks.length}
-            </div>
+            <div className="text-2xl font-bold">{emailStats?.total ?? 0}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {pendingTasks.length} pending
+              {emailStats?.active ?? 0} active accounts
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Services Online</CardTitle>
-            <RefreshCw className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Active Departments</CardTitle>
+            <Building2 className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold" data-testid="text-services-online">
-              {stats?.servicesEnabled ?? 0}/4
-            </div>
+            <div className="text-2xl font-bold">{activeDepts.length}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Connected platforms
+              Functional units
             </p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2">
-            <div>
-              <CardTitle>Departments</CardTitle>
-              <CardDescription>Organization structure</CardDescription>
-            </div>
-            <Link href="/departments">
-              <Button variant="outline" size="sm">
-                Manage <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {departments.map((dept) => {
-                const deptMembers = teamMembers.filter(m => m.departmentId === dept.id);
-                const deptTasks = tasks.filter(t => t.departmentId === dept.id);
-                return (
-                  <div
-                    key={dept.id}
-                    className="p-3 rounded-md border border-border"
-                    data-testid={`dept-${dept.id}`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="font-medium">{dept.name}</p>
-                      <Badge variant="outline">{dept.code}</Badge>
+        <div className="lg:col-span-2 space-y-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between gap-2">
+              <div>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Administrative shortcuts</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Link href="/users">
+                  <Button variant="outline" className="w-full h-24 flex flex-col gap-2 hover:bg-primary/5 hover:text-primary hover:border-primary">
+                    <UserPlus className="h-6 w-6" />
+                    <span>Create User</span>
+                  </Button>
+                </Link>
+                <Link href="/registrations">
+                  <Button variant="outline" className="w-full h-24 flex flex-col gap-2 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200">
+                    <Clock className="h-6 w-6" />
+                    <span>Approvals</span>
+                  </Button>
+                </Link>
+                <Link href="/integrations">
+                  <Button variant="outline" className="w-full h-24 flex flex-col gap-2 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200">
+                    <RefreshCw className="h-6 w-6" />
+                    <span>Integrations</span>
+                  </Button>
+                </Link>
+                <Link href="/hr-management">
+                  <Button variant="outline" className="w-full h-24 flex flex-col gap-2 hover:bg-green-50 hover:text-green-600 hover:border-green-200">
+                    <Mail className="h-6 w-6" />
+                    <span>Credentials</span>
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between gap-2">
+              <div>
+                <CardTitle>Departments</CardTitle>
+                <CardDescription>Organization structure</CardDescription>
+              </div>
+              <Link href="/departments">
+                <Button variant="outline" size="sm">
+                  Manage <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {departments.map((dept) => {
+                  const deptMembers = teamMembers.filter(m => m.departmentId === dept.id);
+                  const deptTasks = tasks.filter(t => t.departmentId === dept.id);
+                  return (
+                    <div
+                      key={dept.id}
+                      className="p-4 rounded-lg border border-border hover:bg-muted/30 transition-colors"
+                      data-testid={`dept-${dept.id}`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="font-semibold">{dept.name}</p>
+                        <Badge variant="outline" className="text-[10px] h-5">{dept.code}</Badge>
+                      </div>
+                      <div className="flex gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {deptMembers.length} members</span>
+                        <span className="flex items-center gap-1"><ClipboardList className="h-3 w-3" /> {deptTasks.length} tasks</span>
+                      </div>
                     </div>
-                    <div className="flex gap-4 text-xs text-muted-foreground">
-                      <span>{deptMembers.length} members</span>
-                      <span>{deptTasks.length} tasks</span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
               {departments.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
                   <Building2 className="h-12 w-12 mx-auto mb-2 opacity-50" />
                   <p>No departments</p>
                 </div>
               )}
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Service Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {servicesLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <Skeleton key={i} className="h-16 w-full" />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {services?.map((service) => {
-                  const Icon = platformIcons[service.serviceName as keyof typeof platformIcons] || Database;
-                  return (
-                    <div
-                      key={service.id}
-                      className="flex items-center justify-between p-3 rounded-md border border-border"
-                      data-testid={`service-status-${service.serviceName}`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
-                          <Icon className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="font-medium capitalize">{service.serviceName}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {service.lastSyncAt
-                              ? `Synced ${new Date(service.lastSyncAt).toLocaleString()}`
-                              : "Never synced"}
-                          </p>
-                        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Service Status</CardTitle>
+              <CardDescription>Platform connectivity</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {['metabase', 'chatwoot', 'typebot', 'mailcow'].map((p) => {
+                const svc = services?.find(s => s.serviceName === p);
+                const Icon = platformIcons[p as keyof typeof platformIcons];
+                return (
+                  <div key={p} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-md bg-muted">
+                        <Icon className="h-4 w-4" />
                       </div>
-                      <Badge variant={service.enabled ? "default" : "secondary"}>
-                        {service.enabled ? "Active" : "Inactive"}
-                      </Badge>
+                      <span className="text-sm font-medium capitalize">{p}</span>
                     </div>
-                  );
-                })}
-                {(!services || services.length === 0) && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <AlertCircle className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                    <p>No services configured</p>
-                    <Link href="/config">
-                      <Button variant="ghost" className="mt-2">
-                        Configure Services
-                      </Button>
-                    </Link>
+                    {svc?.enabled ? (
+                      <Badge className="bg-green-500">Online</Badge>
+                    ) : (
+                      <Badge variant="secondary">Offline</Badge>
+                    )}
                   </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                );
+              })}
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-2">
-            <div>
+          <Card>
+            <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>System-wide activity</CardDescription>
-            </div>
-            <Link href="/activity">
-              <Button variant="outline" size="sm">
-                View All <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
-            {activityLoading ? (
-              <div className="space-y-3">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Skeleton key={i} className="h-12 w-full" />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {recentActivity?.slice(0, 5).map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="flex items-start gap-3 p-3 rounded-md border border-border"
-                    data-testid={`activity-${activity.id}`}
-                  >
-                    <Activity className="h-4 w-4 text-muted-foreground mt-0.5" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{activity.action}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {activity.platform && <span className="capitalize">{activity.platform}</span>}
-                        {activity.platform && " | "}
-                        {activity.createdAt && new Date(activity.createdAt).toLocaleTimeString()}
-                      </p>
+              <CardDescription>System events</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {activityLoading ? (
+                <div className="space-y-3">
+                  {[1, 2, 3].map(i => <Skeleton key={i} className="h-12 w-full" />)}
+                </div>
+              ) : recentActivity && recentActivity.length > 0 ? (
+                <div className="space-y-4">
+                  {recentActivity.slice(0, 5).map((log) => (
+                    <div key={log.id} className="flex gap-3 text-sm">
+                      <div className="mt-0.5 h-2 w-2 rounded-full bg-primary shrink-0" />
+                      <div>
+                        <p className="text-muted-foreground leading-snug">
+                          <span className="font-medium text-foreground capitalize">{log.action.replace(/_/g, ' ')}</span>
+                          {log.platform && ` on ${log.platform}`}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">
+                          {log.createdAt ? new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Unknown time'}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {(!recentActivity || recentActivity.length === 0) && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Activity className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                    <p>No recent activity</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center py-4 text-xs text-muted-foreground">No recent activity</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
 }
 
+function GlobalDashboard() {
+  return <ManagementDashboard />;
+}
+
 export default function Dashboard() {
-  const { isManagement, isDepartmentAdmin, isTechnician, isLoading, teamMember } = useAuth();
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-10 w-64" />
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-32 w-full" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!teamMember) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <h2 className="text-xl font-semibold">Access Denied</h2>
-          <p className="text-muted-foreground mt-2">
-            Your account is not linked to a team member profile.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const { isManagement, isDepartmentAdmin } = useAuth();
 
   if (isManagement) {
-    return <ManagementDashboard />;
+    return <GlobalDashboard />;
   }
 
   if (isDepartmentAdmin) {
     return <DepartmentAdminDashboard />;
-  }
-
-  if (isTechnician) {
-    return <TechnicianDashboard />;
   }
 
   return <TechnicianDashboard />;

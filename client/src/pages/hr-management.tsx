@@ -72,36 +72,74 @@ export default function HRManagement() {
     );
   }
 
+  const activeCount = emailCredentials.filter(c => c.status === "active").length;
+  const inactiveCount = emailCredentials.filter(c => c.status !== "active").length;
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Mail className="h-8 w-8" />
-          HR Management
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Manage employee email accounts and credentials
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <Mail className="h-8 w-8 text-primary" />
+            HR Management
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Manage employee email accounts and credentials
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-primary/5 border-primary/20">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Email Accounts</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{emailCredentials.length}</div>
+            <p className="text-xs text-muted-foreground">Across all departments</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-green-700 dark:text-green-400">Active Accounts</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-700 dark:text-green-400">{activeCount}</div>
+            <p className="text-xs text-green-600/70 dark:text-green-400/70">Fully operational</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-amber-700 dark:text-amber-400">Suspended/Inactive</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-amber-700 dark:text-amber-400">{inactiveCount}</div>
+            <p className="text-xs text-amber-600/70 dark:text-amber-400/70">Require attention</p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Email Credentials</CardTitle>
-          <CardDescription>
-            All generated employee email accounts and their credentials. This information is confidential and only visible to Management.
-          </CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Email Credentials</CardTitle>
+            <CardDescription>
+              Confidential employee email records
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+             <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search accounts..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name or email..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-
           {isLoading ? (
             <div className="flex items-center justify-center h-48">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -131,7 +169,7 @@ export default function HRManagement() {
             <div className="rounded-lg border border-border overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-muted/50">
                     <TableHead>Employee Name</TableHead>
                     <TableHead>Department</TableHead>
                     <TableHead>Email Address</TableHead>
@@ -143,36 +181,37 @@ export default function HRManagement() {
                 </TableHeader>
                 <TableBody>
                   {filteredCredentials.map((credential) => (
-                    <TableRow key={credential.id}>
+                    <TableRow key={credential.id} className="hover:bg-muted/30 transition-colors">
                       <TableCell className="font-medium">
                         {credential.teamMember.firstName} {credential.teamMember.lastName}
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="font-semibold px-2 py-0">
                           {credential.teamMember.departmentCode || "N/A"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="font-mono text-sm">
+                      <TableCell className="font-mono text-xs">
                         {credential.email}
                       </TableCell>
-                      <TableCell>
-                        {credential.quota ? (credential.quota / 1024).toFixed(2) + " GB" : "Unlimited"}
+                      <TableCell className="text-xs">
+                        {credential.quota ? (credential.quota / 1024).toFixed(1) + " GB" : "Unlimited"}
                       </TableCell>
                       <TableCell>
                         <Badge
                           variant={credential.status === "active" ? "default" : "secondary"}
-                          className="capitalize"
+                          className={`capitalize text-[10px] h-5 ${credential.status === 'active' ? 'bg-green-500 hover:bg-green-600' : ''}`}
                         >
                           {credential.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">
+                      <TableCell className="text-xs text-muted-foreground">
                         {format(new Date(credential.createdAt), "MMM d, yyyy")}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button
                           variant="ghost"
-                          size="sm"
+                          size="icon"
+                          className="h-8 w-8"
                           onClick={() => copyToClipboard(credential.email, credential.id)}
                         >
                           {copiedId === credential.id ? (

@@ -1297,6 +1297,37 @@ export default function registerIntegrationRoutes(app: Express) {
     }
   });
 
+  // Stats route for management
+  app.get('/api/registrations/stats', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const registrations = await storage.getAllPendingRegistrations();
+      const stats = {
+        pending: registrations.filter(r => r.status === "pending").length,
+        approved: registrations.filter(r => r.status === "approved").length,
+        rejected: registrations.filter(r => r.status === "rejected").length,
+      };
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching registration stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  app.get('/api/hr/email-credentials/stats', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const credentials = await db.select().from(emailAccounts);
+      const stats = {
+        total: credentials.length,
+        active: credentials.filter(c => c.status === "active").length,
+        inactive: credentials.filter(c => c.status !== "active").length,
+      };
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching email stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
   // ============================================
   // HR MANAGEMENT ROUTES (Admin Only)
   // ============================================
