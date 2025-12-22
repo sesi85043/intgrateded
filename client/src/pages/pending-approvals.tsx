@@ -42,6 +42,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, XCircle, Eye, Calendar, Mail, Phone, MapPin } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -68,6 +75,8 @@ export default function PendingApprovals() {
     retry: false,
   });
 
+  const [selectedRole, setSelectedRole] = useState<string>("technician");
+
   const approveMutation = useMutation({
     mutationFn: async (userId: string) => {
       const response = await fetch(`/api/admin/approve-user/${userId}`, {
@@ -75,6 +84,7 @@ export default function PendingApprovals() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ role: selectedRole })
       });
       if (!response.ok) {
         const error = await response.json();
@@ -85,7 +95,7 @@ export default function PendingApprovals() {
     onSuccess: (data) => {
       toast({
         title: "Success",
-        description: `${data.firstName} ${data.lastName} has been approved!`,
+        description: `${data.firstName} ${data.lastName} has been approved as ${selectedRole}!`,
       });
       refetch();
     },
@@ -256,7 +266,7 @@ export default function PendingApprovals() {
                       <TableCell className="text-sm">{user.email}</TableCell>
                       <TableCell>{user.department?.name || user.departmentId}</TableCell>
                       <TableCell className="text-sm">
-                        {formatDistanceToNow(new Date(user.createdAt), {
+                        {formatDistanceToNow(new Date(user.createdAt || new Date()), {
                           addSuffix: true,
                         })}
                       </TableCell>
@@ -345,7 +355,7 @@ export default function PendingApprovals() {
                       Signup Date
                     </p>
                     <p className="font-medium">
-                      {new Date(viewingUser.createdAt).toLocaleDateString()}
+                      {new Date(viewingUser.createdAt || new Date()).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -422,29 +432,45 @@ export default function PendingApprovals() {
                 </div>
               )}
 
-              <div className="flex gap-3 pt-4 border-t">
-                <Button
-                  className="flex-1 bg-green-600 hover:bg-green-700"
-                  onClick={() => {
-                    approveMutation.mutate(viewingUser.id);
-                    setViewingUser(null);
-                  }}
-                  disabled={approveMutation.isPending}
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Approve User
-                </Button>
-                <Button
-                  variant="destructive"
-                  className="flex-1"
-                  onClick={() => {
-                    setRejectingUser(viewingUser);
-                    setViewingUser(null);
-                  }}
-                >
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Reject User
-                </Button>
+              <div className="space-y-4 pt-4 border-t">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Assign Role</label>
+                  <Select value={selectedRole} onValueChange={setSelectedRole}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="technician">Technician</SelectItem>
+                      <SelectItem value="department_admin">Department Admin</SelectItem>
+                      <SelectItem value="management">Management</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                    onClick={() => {
+                      approveMutation.mutate(viewingUser.id);
+                      setViewingUser(null);
+                    }}
+                    disabled={approveMutation.isPending}
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Approve User
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="flex-1"
+                    onClick={() => {
+                      setRejectingUser(viewingUser);
+                      setViewingUser(null);
+                    }}
+                  >
+                    <XCircle className="w-4 h-4 mr-2" />
+                    Reject User
+                  </Button>
+                </div>
               </div>
             </div>
           )}

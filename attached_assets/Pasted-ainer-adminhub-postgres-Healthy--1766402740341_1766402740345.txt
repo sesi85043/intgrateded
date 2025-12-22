@@ -1,0 +1,290 @@
+ainer adminhub-postgres Healthy                                                                                                 1.3s 
+ ✔ Container adminhub-app      Recreated                                                                                               0.8s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | 2025-12-22T11:22:59: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | 11:23:00 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 11:23:01 AM [express] serving on port 5000
+adminhub-app  | 11:23:03 AM [express] GET /api/auth/user 401 in 10ms :: {"message":"Unauthorized"}
+adminhub-app  | 11:23:28 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: 'NWYiZwWoHOyicRO1M5ICAwRVN-iZn44W',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 11:23:39 AM [express] POST /api/auth/login 200 in 197ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 11:23:39 AM [express] GET /api/auth/user 200 in 13ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 11:23:39 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 11:23:40 AM [express] GET /api/services 304 in 50ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 11:23:40 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 11:23:40 AM [express] GET /api/stats 304 in 12ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 11:23:40 AM [express] GET /api/registrations/stats 304 in 18ms :: {"pending":1,"approved":0,"rejected…
+adminhub-app  | 11:23:40 AM [express] GET /api/departments 304 in 8ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0fd…
+adminhub-app  | 11:23:40 AM [express] GET /api/activity/recent 304 in 11ms :: [{"id":"260ae0c5-81f5-4688-8501-5a8566c…
+adminhub-app  | 11:23:40 AM [express] GET /api/hr/email-credentials/stats 304 in 8ms :: {"total":0,"active":0,"inacti…
+adminhub-app  | 11:23:40 AM [express] GET /api/team-members 200 in 14ms :: [{"id":"04ae989f-0074-4371-bd3b-000a1ffe1a…
+adminhub-app  | 11:23:40 AM [express] GET /api/tasks 304 in 9ms :: []
+adminhub-app  | 11:23:40 AM [express] GET /api/integrations/status 304 in 23ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 11:23:44 AM [express] GET /api/users 304 in 12ms :: []
+adminhub-app  | 11:23:50 AM [express] GET /api/registrations 304 in 48ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 11:23:50 AM [express] GET /api/roles 304 in 51ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | Error approving registration: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:6006:7 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 11:23:57 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 49m…
+adminhub-app  | 11:24:02 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 400 in 48m…
+adminhub-app  | 11:24:04 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 400 in 15m…
+adminhub-app  | 11:24:07 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/generate-otp 200 i…
+adminhub-app  | 11:24:08 AM [express] GET /api/registrations 200 in 50ms :: [{"id":"246c8006-f963-4c87-993c-de21a3a49…
+adminhub-app  | 11:24:16 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | Error approving registration: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:6006:7 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 11:24:22 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 53m…
+adminhub-app  | 11:24:36 AM [express] GET /api/admin/pending-users 200 in 64ms :: [{"id":"80843ae3-300b-4d75-b5cb-2ea…
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  | 11:24:38 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 58ms …
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  | 11:24:41 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 67ms …
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 11:24:42 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 77ms …
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 11:24:42 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 76ms …
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  | 11:24:43 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 64ms …
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 11:24:43 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 64ms …
+adminhub-app  | Error approving user: error: column "chatwoot_team_id" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5791:9 {
+adminhub-app  |   length: 116,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 11:24:44 AM [express] PATCH /api/admin/approve-user/80843ae3-300b-4d75-b5cb-2ea962079dcd 400 in 66ms …
+ad

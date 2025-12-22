@@ -937,7 +937,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Auto-join new member to default teams
-  async autoJoinDefaultTeams(teamMemberId: string): Promise<void> {
+  async autoJoinDefaultTeams(memberId: string): Promise<void> {
     const defaultTeams = await this.getDefaultTeams();
     for (const team of defaultTeams) {
       await this.addMemberToTeam(teamMemberId, team.id);

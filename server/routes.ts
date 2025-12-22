@@ -1536,6 +1536,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch('/api/admin/approve-user/:userId', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
       const { userId } = req.params;
+      const { role } = req.body;
       const member = req.teamMember;
 
       const registration = await storage.getPendingRegistration(userId);
@@ -1550,10 +1551,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         reviewedAt: new Date()
       });
 
-      // Update team member verification
+      // Update team member verification and role
       const existingMember = await storage.getTeamMemberByEmail(registration.email);
       if (existingMember) {
-        await storage.updateTeamMember(existingMember.id, { isVerified: true });
+        const updateData: any = { isVerified: true };
+        
+        // Map role string to role ID if provided
+        if (role) {
+          const rolesList = await storage.getRoles();
+          const targetRole = rolesList.find(r => r.code === role);
+          if (targetRole) {
+            updateData.roleId = targetRole.id;
+            updateData.role = role; // update legacy field too
+          }
+        }
+        
+        await storage.updateTeamMember(existingMember.id, updateData);
         
         // Auto-join teams
         await storage.autoJoinDefaultTeams(existingMember.id);
@@ -1565,7 +1578,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         "pending_registration",
         userId,
         undefined,
-        { email: registration.email }
+        { email: registration.email, role }
       );
 
       res.json({ success: true, firstName: registration.firstName, lastName: registration.lastName });
