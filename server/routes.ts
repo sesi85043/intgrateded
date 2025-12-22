@@ -605,28 +605,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let generatedEmail = null;
       const provisionMailbox = req.body?.provisionMailbox !== false; // default true
       if (provisionMailbox) {
-        try {
-          // Derive first/last name from fullName if available
-          const fullName = validatedData.fullName || '';
-          const parts = fullName.trim().split(/\s+/);
-          const firstName = parts.length > 0 ? parts[0] : 'user';
-          const lastName = parts.length > 1 ? parts.slice(1).join(' ') : 'user';
+          try {
+            // Derive first/last name from fullName if available
+            const fullName = validatedData.fullName || '';
+            const parts = fullName.trim().split(/\s+/);
+            const firstName = parts.length > 0 ? parts[0] : 'user';
+            const lastName = parts.length > 1 ? parts.slice(1).join(' ') : 'user';
 
-          // Determine department tag for email (prefer department code, fallback to name)
-          let deptTag = 'staff';
-          if (validatedData.teamMemberId) {
-            try {
-              const teamMember = await storage.getTeamMember(validatedData.teamMemberId);
-              if (teamMember && teamMember.departmentId) {
-                const dept = await storage.getDepartment(teamMember.departmentId);
-                if (dept) {
-                  deptTag = (dept.code || dept.name || 'staff').toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+            // Determine department tag for email (prefer department code, fallback to name)
+            let deptTag = 'staff';
+            if (validatedData.teamMemberId) {
+              try {
+                const teamMember = await storage.getTeamMember(validatedData.teamMemberId);
+                if (teamMember && teamMember.departmentId) {
+                  const dept = await storage.getDepartment(teamMember.departmentId);
+                  if (dept) {
+                    deptTag = (dept.code || dept.name || 'staff').toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+                  }
                 }
+              } catch (dErr) {
+                console.warn('Could not resolve department for mailbox tag, defaulting to staff', dErr);
               }
-            } catch (dErr) {
-              console.warn('Could not resolve department for mailbox tag, defaulting to staff', dErr);
             }
-          }
+
+            const cpanelEmailResult = await createCpanelEmailAccount(firstName, lastName, deptTag, user.id);
+            generatedEmail = cpanelEmailResult.email;
 
             // Activity log: provisioning success
             try {
@@ -636,7 +639,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 'managed_user',
                 user.id,
                 'cpanel',
-                { success: true, email: generatedEmail?.email }
+                { success: true, email: generatedEmail }
               );
             } catch (logErr) {
               console.warn('Failed to write provisioning activity log', logErr);
