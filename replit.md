@@ -337,6 +337,28 @@ For issues or questions, refer to the implementation phases document in `attache
 
 ---
 
+## New Feature: Automatic Chatwoot Agent Creation (December 22, 2025 - Session 4)
+
+### ✅ Added: Auto Chatwoot Agent on User Creation
+**Feature:** When a new user is created, they are automatically added as a Chatwoot agent
+**How It Works:**
+- User is created in managed_users table
+- System checks if Chatwoot is configured
+- Automatically calls Chatwoot API to create a new agent
+- Maps the user to Chatwoot agent in database
+- Logs all activity (success/failure) for audit trail
+**Benefits:**
+- New users can immediately receive and handle chats without manual setup
+- Seamless integration between user management and Chatwoot
+- Graceful error handling - fails silently if Chatwoot unavailable
+- All actions logged for compliance and debugging
+
+### Changes Made:
+- Added `createAgent()` method to ChatwootClient to call Chatwoot API
+- Added `createChatwootAgent()` storage method to map users to agents
+- Modified user creation endpoint to automatically provision Chatwoot agents
+- Activity logging for successful/failed agent creation
+
 ## Bug Fixes - Database Schema & Error Handling (December 22, 2025 - Session 3)
 
 ### ✅ Fixed: "Add User" Form Shows Blank Page

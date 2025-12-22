@@ -180,4 +180,19 @@ export class ChatwootClient {
   }> {
     return this.request("GET", `/accounts/${this.config.accountId}/agents`);
   }
+
+  /**
+   * Create a new agent in Chatwoot
+   */
+  async createAgent(email: string, name: string): Promise<any> {
+    return this.request(
+      "POST",
+      `/accounts/${this.config.accountId}/agents`,
+      {
+        email,
+        name,
+        role: "agent",
+      }
+    );
+  }
 }

@@ -26,6 +26,7 @@ import {
   pendingRegistrations,
   approvalOtps,
   adminNotifications,
+  chatwootAgents,
   type User,
   type UpsertUser,
   type Department,
@@ -946,6 +947,20 @@ export class DatabaseStorage implements IStorage {
   // Get teams by department (for department-specific routing)
   async getTeamsByDepartment(departmentId: string): Promise<Team[]> {
     return await db.select().from(teams).where(eq(teams.departmentId, departmentId));
+  }
+
+  // Create a mapping between team member and Chatwoot agent
+  async createChatwootAgent(teamMemberId: string, chatwootAgentId: number, chatwootAgentEmail?: string): Promise<any> {
+    const [result] = await db
+      .insert(chatwootAgents)
+      .values({
+        teamMemberId,
+        chatwootAgentId,
+        chatwootAgentEmail: chatwootAgentEmail || undefined,
+        isActive: true,
+      })
+      .returning();
+    return result;
   }
 }
 

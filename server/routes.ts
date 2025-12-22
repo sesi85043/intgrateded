@@ -594,6 +594,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
+      // Try to create a Chatwoot agent for this user
+      try {
+        const config = await db.query.chatwootConfig.findFirst({
+          where: (c) => eq(c.enabled, true),
+        });
+
+        if (config) {
+          const client = new ChatwootClient({
+            instanceUrl: config.instanceUrl,
+            apiAccessToken: config.apiAccessToken,
+            accountId: config.accountId,
+          });
+
+          const agentResponse = await client.createAgent(validatedData.email, validatedData.fullName);
+          if (agentResponse && agentResponse.id) {
+            // Create mapping in local database
+            await storage.createChatwootAgent(
+              validatedData.teamMemberId || user.id,
+              agentResponse.id,
+              agentResponse.email
+            );
+
+            // Log success
+            await storage.createActivityLog(
+              req.user.claims.sub,
+              'create_chatwoot_agent',
+              'managed_user',
+              user.id,
+              'chatwoot',
+              { success: true, agentId: agentResponse.id, email: validatedData.email }
+            );
+          }
+        }
+      } catch (chatwootErr) {
+        console.warn('Failed to create Chatwoot agent (optional):', chatwootErr);
+        // Log failure but don't fail the user creation
+        try {
+          await storage.createActivityLog(
+            req.user.claims.sub,
+            'create_chatwoot_agent',
+            'managed_user',
+            user.id,
+            'chatwoot',
+            { success: false, error: (chatwootErr as Error)?.message || String(chatwootErr) }
+          );
+        } catch (logErr) {
+          console.warn('Failed to log Chatwoot agent creation failure', logErr);
+        }
+      }
+
       res.json({ user, generatedEmail });
     } catch (error) {
       console.error("Error creating user:", error);
