@@ -74,7 +74,6 @@ export default function Users() {
       email: "",
       fullName: "",
       platforms: [],
-      role: "",
       status: "active",
       platformUserIds: {},
       roles: {},
@@ -223,6 +222,8 @@ export default function Users() {
       status: "active",
       platformUserIds: {},
       roles: {},
+      teamMemberId: "",
+      provisionMailbox: true,
     });
     setIsCreateOpen(true);
   };

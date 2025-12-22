@@ -339,6 +339,14 @@ For issues or questions, refer to the implementation phases document in `attache
 
 ## Bug Fixes - Database Schema & Error Handling (December 22, 2025 - Session 3)
 
+### ✅ Fixed: "Add User" Form Shows Blank Page
+**Issue:** User Management tab's "Add User" dialog showed blank form with no input fields
+**Solution:** 
+- Removed incorrect `role: ""` field from form initialization that didn't exist in schema
+- Ensured form schema matches managed_users table structure exactly
+- Form now properly initializes with correct fields: email, fullName, platforms, roles, status, etc
+- Reset form in handleCreate now includes all necessary fields
+
 ### ✅ Fixed: Department Email Settings Validation
 **Issue:** Endpoint failed when optional email config fields (IMAP/SMTP) weren't provided
 **Solution:** 
