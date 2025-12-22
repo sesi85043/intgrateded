@@ -1,0 +1,666 @@
+adminhub-postgres  | 2025-12-21 20:47:49.379 UTC [73785] ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-postgres  | 2025-12-21 20:47:49.379 UTC [73785] STATEMENT:  ALTER TABLE "team_members" ADD CONSTRAINT "team_members_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+adminhub-postgres  | 2025-12-21 20:47:49.379 UTC [73785] ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-postgres  | 2025-12-21 20:47:49.379 UTC [73785] STATEMENT:  ALTER TABLE "team_members" ADD CONSTRAINT "team_members_department_id_departments_id_fk" FOREIGN KEY ("department_id") REFERENCES "public"."departments"("id") ON DELETE no action ON UPDATE no action;
+adminhub-postgres  | 2025-12-21 20:47:49.380 UTC [73785] ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-postgres  | 2025-12-21 20:47:49.380 UTC [73785] STATEMENT:  ALTER TABLE "team_members" ADD CONSTRAINT "team_members_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE no action ON UPDATE no action;
+adminhub-postgres  | 2025-12-21 20:47:49.380 UTC [73785] ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-postgres  | 2025-12-21 20:47:49.380 UTC [73785] STATEMENT:  ALTER TABLE "worklogs" ADD CONSTRAINT "worklogs_task_id_tasks_id_fk" FOREIGN KEY ("task_id") REFERENCES "public"."tasks"("id") ON DELETE cascade ON UPDATE no action;
+adminhub-postgres  | 2025-12-21 20:47:49.381 UTC [73785] ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-postgres  | 2025-12-21 20:47:49.381 UTC [73785] STATEMENT:  ALTER TABLE "worklogs" ADD CONSTRAINT "worklogs_team_member_id_team_members_id_fk" FOREIGN KEY ("team_member_id") REFERENCES "public"."team_members"("id") ON DELETE no action ON UPDATE no action;
+adminhub-postgres  | 2025-12-21 20:47:49.382 UTC [73785] ERROR:  relation "IDX_session_expire" already exists       
+adminhub-postgres  | 2025-12-21 20:47:49.382 UTC [73785] STATEMENT:  CREATE INDEX "IDX_session_expire" ON "sessions" USING btree ("expire");
+adminhub-postgres  | 2025-12-21 20:49:19.294 UTC [73852] ERROR:  relation "email_accounts" does not exist at character 121
+adminhub-postgres  | 2025-12-21 20:49:19.294 UTC [73852] STATEMENT:  select "id", "team_member_id", "email", "password_hash", "provider", "quota", "status", "created_at", "updated_at" from "email_accounts" where "email_accounts"."team_member_id" = $1
+adminhub-postgres  | 2025-12-21 20:52:20.361 UTC [26] LOG:  checkpoint starting: time
+adminhub-postgres  | 2025-12-21 20:52:20.582 UTC [26] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.209 s, sync=0.003 s, total=0.221 s; sync files=3, longest=0.002 s, average=0.001 s; distance=9 kB, estimate=123 kB; lsn=0/18A3730, redo lsn=0/18A36F8
+adminhub-app       | 6:26:15 AM [express] GET /api/auth/user 304 in 40ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app       | 6:26:15 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app       | [chatwoot] Error fetching conversations: TypeError: Cannot read properties of undefined (reading 'referencedTable')
+adminhub-app       |     at normalizeRelation (file:///app/node_modules/drizzle-orm/relations.js:212:75)
+adminhub-app       |     at PgDialect.buildRelationalQueryWithoutPK (file:///app/node_modules/drizzle-orm/pg-core/dialect.js:1006:36)
+adminhub-app       |     at QueryPromise._getQuery (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:84:25)
+adminhub-app       |     at QueryPromise._toSQL (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:99:24)
+adminhub-app       |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:62:42
+adminhub-app       |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app       |     at QueryPromise._prepare (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:61:19)
+adminhub-app       |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:114:19
+adminhub-app       |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app       |     at QueryPromise.execute (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:113:19)
+adminhub-app       | 6:26:15 AM [express] GET /api/chatwoot/conversations 500 in 15ms :: {"message":"Failed to fetch conv…
+adminhub-app       | 6:26:15 AM [express] GET /api/services 304 in 12ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app       | 6:26:15 AM [express] GET /api/integrations/status 304 in 63ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app       | 6:26:16 AM [express] GET /api/integrations/chatwoot/stats 200 in 224ms :: {"open":0,"pending":0,"res…
+adminhub-app       | 6:26:17 AM [chatwoot-sync] [chatwoot] Found undefined conversations
+adminhub-app       | [chatwoot] Sync error: TypeError: chatwootConversations is not iterable
+adminhub-app       |     at file:///app/dist/index.js:3943:28
+adminhub-app       |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app       | 6:26:17 AM [express] POST /api/chatwoot/sync 500 in 41ms :: {"message":"Failed to sync Chatwoot conv…
+adminhub-app       | [chatwoot] Sync error: TypeError: chatwootConversations is not iterable
+adminhub-app       |     at file:///app/dist/index.js:3943:28
+adminhub-app       |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app       | 6:26:18 AM [chatwoot-sync] [chatwoot] Found undefined conversations
+adminhub-app       | 6:26:18 AM [express] POST /api/chatwoot/sync 500 in 38ms :: {"message":"Failed to sync Chatwoot conv…
+adminhub-app       | 6:26:19 AM [chatwoot-sync] [chatwoot] Found undefined conversations
+adminhub-app       | [chatwoot] Sync error: TypeError: chatwootConversations is not iterable
+adminhub-app       |     at file:///app/dist/index.js:3943:28
+adminhub-app       |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app       | 6:26:19 AM [express] POST /api/chatwoot/sync 500 in 42ms :: {"message":"Failed to sync Chatwoot conv…
+adminhub-app       | [chatwoot] Sync error: TypeError: chatwootConversations is not iterable
+adminhub-app       | 6:26:20 AM [chatwoot-sync] [chatwoot] Found undefined conversations
+adminhub-app       |     at file:///app/dist/index.js:3943:28
+adminhub-app       |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app       | 6:26:20 AM [express] POST /api/chatwoot/sync 500 in 38ms :: {"message":"Failed to sync Chatwoot conv…
+adminhub-app       | 6:26:22 AM [express] GET /api/integrations/department-emails 304 in 10ms :: []
+adminhub-app       | 6:26:22 AM [express] GET /api/departments 304 in 18ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0d…
+adminhub-app       | 6:26:26 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app       | 6:26:27 AM [express] GET /api/integrations/chatwoot/config 304 in 7ms :: {"id":"861883db-005f-42e9-a…
+adminhub-app       | 6:26:32 AM [express] GET /api/activity 304 in 19ms :: [{"id":"da3f4d2f-2a4d-49a7-ae51-0ee8a8593e9a",…
+adminhub-app       | 6:26:36 AM [express] GET /api/analytics/metrics 200 in 16ms :: {"metabase":{"users":0,"active":0},"c…
+adminhub-app       | 6:26:50 AM [express] GET /api/admin/pending-users 304 in 54ms :: [{"id":"332e9e54-e721-4c9a-b4f0-303…
+adminhub-app       | 6:26:54 AM [express] GET /api/registrations 304 in 31ms :: [{"id":"bcd5c07c-53b4-4cc4-b39b-8e1e2d942…
+adminhub-app       | 6:26:54 AM [express] GET /api/roles 304 in 54ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app       | 6:26:56 AM [express] GET /api/team-members 304 in 48ms :: [{"id":"22f7af84-f514-4b6a-bb8f-e6e556d4d4…
+adminhub-app       | 6:26:56 AM [express] GET /api/users 304 in 68ms :: []
+adminhub-app       | 6:27:02 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app       | 6:27:06 AM [express] GET /api/auth/user 304 in 12ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app       | 6:27:06 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app       | 6:27:06 AM [express] GET /api/users 304 in 23ms :: []
+adminhub-app       | 6:27:06 AM [express] GET /api/services 304 in 73ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app       | 6:27:06 AM [express] GET /api/team-members 304 in 56ms :: [{"id":"22f7af84-f514-4b6a-bb8f-e6e556d4d4…
+adminhub-app       | 6:27:10 AM [express] GET /api/auth/user 304 in 8ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app       | 6:27:10 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app       | 6:27:10 AM [express] GET /api/services 304 in 31ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app       | 6:27:10 AM [express] GET /api/departments 304 in 31ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0d…
+adminhub-app       | 6:27:11 AM [express] GET /api/roles 304 in 51ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app       | 6:27:11 AM [express] GET /api/users 304 in 10ms :: []
+adminhub-app       | 6:27:11 AM [express] GET /api/team-members 304 in 9ms :: [{"id":"22f7af84-f514-4b6a-bb8f-e6e556d4d41…
+adminhub-postgres  | 2025-12-22 06:27:17.807 UTC [99923] ERROR:  relation "email_accounts" does not exist at character 121
+adminhub-postgres  | 2025-12-22 06:27:17.807 UTC [99923] STATEMENT:  select "id", "team_member_id", "email", "password_hash", "provider", "quota", "status", "created_at", "updated_at" from "email_accounts" where "email_accounts"."team_member_id" = $1
+adminhub-app       | Error fetching email accounts: error: relation "email_accounts" does not exist
+adminhub-app       |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app       |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app       |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app       |     at async file:///app/dist/index.js:3583:24 {
+adminhub-app       |   length: 114,
+adminhub-app       |   severity: 'ERROR',
+adminhub-app       |   code: '42P01',
+adminhub-app       |   detail: undefined,
+adminhub-app       |   hint: undefined,
+adminhub-app       |   position: '121',
+adminhub-app       |   internalPosition: undefined,
+adminhub-app       |   internalQuery: undefined,
+adminhub-app       |   where: undefined,
+adminhub-app       |   schema: undefined,
+adminhub-app       |   table: undefined,
+adminhub-app       |   column: undefined,
+adminhub-app       |   dataType: undefined,
+adminhub-app       |   constraint: undefined,
+adminhub-app       |   file: 'parse_relation.c',
+adminhub-app       |   line: '1449',
+adminhub-app       |   routine: 'parserOpenTable'
+adminhub-app       | }
+adminhub-app       | 6:27:17 AM [express] GET /api/integrations/cpanel/email/a74cccfb-d018-4767-9046-180dabb597b5 500 in …
+adminhub-app       | 6:27:31 AM [express] GET /api/registrations 304 in 71ms :: [{"id":"bcd5c07c-53b4-4cc4-b39b-8e1e2d942…
+adminhub-app       | 6:27:32 AM [express] GET /api/admin/pending-users 304 in 10ms :: [{"id":"332e9e54-e721-4c9a-b4f0-303…
+adminhub-app       | 6:27:36 AM [express] PATCH /api/admin/approve-user/332e9e54-e721-4c9a-b4f0-303533406767 200 in 25ms …
+adminhub-app       | 6:27:36 AM [express] GET /api/admin/pending-users 200 in 9ms :: []
+adminhub-app       | 6:27:39 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app       | 6:27:57 AM [express] DELETE /api/team-members/22f7af84-f514-4b6a-bb8f-e6e556d4d419 200 in 49ms :: {"…
+adminhub-app       | 6:27:57 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app       | 6:27:57 AM [express] GET /api/team-members 200 in 40ms :: [{"id":"332e9e54-e721-4c9a-b4f0-3035334067…
+adminhub-app       | 6:28:05 AM [express] GET /api/integrations/status 304 in 14ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app       | [chatwoot] Error fetching conversations: TypeError: Cannot read properties of undefined (reading 'referencedTable')
+adminhub-app       |     at normalizeRelation (file:///app/node_modules/drizzle-orm/relations.js:212:75)
+adminhub-app       |     at PgDialect.buildRelationalQueryWithoutPK (file:///app/node_modules/drizzle-orm/pg-core/dialect.js:1006:36)
+adminhub-app       |     at QueryPromise._getQuery (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:84:25)
+adminhub-app       |     at QueryPromise._toSQL (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:99:24)
+adminhub-app       |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:62:42
+adminhub-app       |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app       |     at QueryPromise._prepare (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:61:19)
+adminhub-app       |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:114:19
+adminhub-app       |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app       |     at QueryPromise.execute (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:113:19)
+adminhub-app       | 6:28:05 AM [express] GET /api/chatwoot/conversations 500 in 61ms :: {"message":"Failed to fetch conv…
+adminhub-app       | [chatwoot] Sync error: TypeError: chatwootConversations is not iterable
+adminhub-app       |     at file:///app/dist/index.js:3943:28
+adminhub-app       |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app       | 6:28:06 AM [chatwoot-sync] [chatwoot] Found undefined conversations
+adminhub-app       | 6:28:06 AM [express] POST /api/chatwoot/sync 500 in 41ms :: {"message":"Failed to sync Chatwoot conv…
+adminhub-app       | 6:28:08 AM [express] GET /api/integrations/chatwoot/stats 200 in 3087ms :: {"open":0,"pending":0,"re…
+adminhub-app       | 6:28:15 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app       | 6:28:51 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+adminhub-app       | 6:29:27 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres -d postgres -c "
+CREATE TABLE IF NOT EXISTS email_accounts (
+  id varchar PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  team_member_id varchar REFERENCES team_members(id),
+  email varchar NOT NULL,
+  password_hash text,
+  provider varchar DEFAULT 'cpanel',
+  quota integer DEFAULT 0,
+  status varchar DEFAULT 'active',
+  created_at timestamp DEFAULT now(),
+  updated_at timestamp DEFAULT now()
+);
+"
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+CREATE TABLE
+root@vmi2905850:~/adminhub# docker compose restart
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/2
+ ⠇ Container adminhub-postgres Restarting                                 
+                                     0.9s
+ ⠇ Container adminhub-app      Restarting                                 
+                                     0.9s
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  | 6:36:33 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 57m…
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:37:03 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:37:22 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 55m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:37:23 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 68m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:37:23 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 50m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:37:24 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 89m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:37:24 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 60m…
+adminhub-app  | 6:37:30 AM [express] GET /api/admin/pending-users 304 in 36ms :: []
+adminhub-app  | 6:37:37 AM [express] GET /api/auth/user 304 in 8ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 6:37:37 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:37:38 AM [express] GET /api/services 304 in 14ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:37:38 AM [express] GET /api/admin/pending-users 304 in 13ms :: []
+adminhub-app  | 6:37:39 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:37:41 AM [express] GET /api/analytics/metrics 304 in 18ms :: {"metabase":{"users":0,"active":0},"c…
+adminhub-app  | 6:37:43 AM [express] GET /api/roles 304 in 70ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 6:37:43 AM [express] GET /api/registrations 304 in 82ms :: [{"id":"80843ae3-300b-4d75-b5cb-2ea962079…
+adminhub-app  | 6:37:50 AM [express] GET /api/team-members 200 in 12ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:37:50 AM [express] GET /api/users 304 in 18ms :: []
+adminhub-app  | 6:38:15 AM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:38:52 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:39:28 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:39:29 AM [express] GET /api/auth/user 304 in 45ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 6:39:29 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:39:30 AM [express] GET /api/roles 304 in 38ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 6:39:30 AM [express] GET /api/users 304 in 83ms :: []
+adminhub-app  | 6:39:30 AM [express] GET /api/services 304 in 88ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:39:30 AM [express] GET /api/team-members 304 in 91ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:39:30 AM [express] GET /api/departments 304 in 113ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0…
+adminhub-app  | 6:39:38 AM [express] GET /api/tasks 304 in 11ms :: []
+adminhub-app  | 6:39:40 AM [express] GET /api/activity/recent 304 in 12ms :: [{"id":"ed36a394-f52d-4fd8-b55e-8032ed4…
+adminhub-app  | 6:39:40 AM [express] GET /api/stats 304 in 45ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 6:39:45 AM [express] GET /api/admin/pending-users 304 in 7ms :: []
+adminhub-app  | 6:39:46 AM [express] GET /api/registrations 304 in 12ms :: [{"id":"80843ae3-300b-4d75-b5cb-2ea962079…
+adminhub-app  | 6:39:54 AM [express] GET /api/analytics/metrics 304 in 10ms :: {"metabase":{"users":0,"active":0},"c…
+adminhub-app  | 6:40:04 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:40:17 AM [express] GET /api/auth/user 304 in 34ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 6:40:17 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:40:17 AM [express] GET /api/team-members 304 in 69ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:40:17 AM [express] GET /api/users 304 in 78ms :: []     
+adminhub-app  | 6:40:17 AM [express] GET /api/services 304 in 99ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:40:24 AM [express] GET /api/auth/user 304 in 9ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 6:40:25 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:40:25 AM [express] GET /api/services 304 in 38ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:40:25 AM [express] GET /api/users 304 in 36ms :: []     
+adminhub-app  | 6:40:25 AM [express] GET /api/team-members 304 in 33ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:40:31 AM [express] GET /api/auth/user 304 in 7ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 6:40:32 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:40:32 AM [express] GET /api/services 304 in 35ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:40:32 AM [express] GET /api/departments 304 in 34ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0d…
+adminhub-app  | 6:40:32 AM [express] GET /api/roles 304 in 34ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 6:40:32 AM [express] GET /api/team-members 304 in 18ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:40:32 AM [express] GET /api/users 304 in 54ms :: []
+adminhub-app  | 6:40:40 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:41:16 AM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:41:52 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:42:03 AM [express] GET /api/integrations/cpanel/email/d3874e09-3d2c-4b9a-99ae-b41a133591a6 200 in …
+adminhub-app  | 6:42:29 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:42:32 AM [express] GET /api/auth/user 304 in 31ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 6:42:32 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:42:32 AM [express] GET /api/team-members 304 in 17ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:42:32 AM [express] GET /api/services 304 in 12ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:42:32 AM [express] GET /api/departments 304 in 25ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0d…
+adminhub-app  | 6:42:32 AM [express] GET /api/roles 304 in 57ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 6:42:32 AM [express] GET /api/users 304 in 55ms :: []     
+adminhub-app  | 6:43:05 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:43:16 AM [express] GET /api/auth/user 304 in 38ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 6:43:16 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:43:16 AM [express] GET /api/users 304 in 58ms :: []
+adminhub-app  | 6:43:16 AM [express] GET /api/team-members 304 in 66ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:43:16 AM [express] GET /api/services 304 in 80ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:43:41 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:44:17 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:44:53 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:45:30 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:46:06 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:46:42 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:47:18 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:47:54 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:47:57 AM [express] GET /api/auth/user 304 in 43ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 6:47:57 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:47:57 AM [express] GET /api/services 304 in 51ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:47:58 AM [express] GET /api/departments 304 in 13ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0d…
+adminhub-app  | 6:48:31 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:49:07 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:49:11 AM [express] GET /api/users 304 in 52ms :: []
+adminhub-app  | 6:49:11 AM [express] GET /api/roles 304 in 65ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 6:49:11 AM [express] GET /api/team-members 304 in 64ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:49:43 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:50:19 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:50:55 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:51:25 AM [express] GET /api/auth/user 304 in 38ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 6:51:26 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:51:26 AM [express] GET /api/team-members 304 in 11ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:51:26 AM [express] GET /api/users 304 in 15ms :: []
+adminhub-app  | 6:51:26 AM [express] GET /api/services 304 in 38ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:51:32 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:51:34 AM [express] GET /api/auth/user 304 in 6ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 6:51:34 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 6:51:34 AM [express] GET /api/services 304 in 36ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 6:51:34 AM [express] GET /api/stats 304 in 46ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 6:51:34 AM [express] GET /api/activity/recent 304 in 82ms :: [{"id":"ed36a394-f52d-4fd8-b55e-8032ed4…
+adminhub-app  | 6:51:35 AM [express] GET /api/tasks 304 in 6ms :: []
+adminhub-app  | 6:51:35 AM [express] GET /api/departments 304 in 6ms :: [{"id":"7c222516-3643-46c1-94c1-6d19bbdca0d3…
+adminhub-app  | 6:51:35 AM [express] GET /api/team-members 304 in 12ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 6:51:38 AM [express] GET /api/roles 304 in 21ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 6:51:38 AM [express] GET /api/users 304 in 20ms :: []
+adminhub-app  | 6:51:50 AM [express] GET /api/admin/pending-users 304 in 52ms :: []
+adminhub-app  | 6:51:52 AM [express] GET /api/registrations 304 in 55ms :: [{"id":"80843ae3-300b-4d75-b5cb-2ea962079…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:52:02 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 37m…
+adminhub-app  | 6:52:08 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:52:44 AM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:53:20 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:53:39 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/generate-otp 200 i…
+adminhub-app  | 6:53:39 AM [express] GET /api/registrations 200 in 30ms :: [{"id":"80843ae3-300b-4d75-b5cb-2ea962079…
+adminhub-app  | 6:53:56 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:54:09 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 44m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:54:11 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 46m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:54:11 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 55m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:54:12 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 49m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:54:12 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 47m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:54:12 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 52m…
+adminhub-app  | 6:54:13 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 54m…
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5745:7 {
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+adminhub-app  |   routine: 'parserOpenTable'
+adminhub-app  | }
+adminhub-app  | 6:54:13 AM [express] POST /api/registrations/80843ae3-300b-4d75-b5cb-2ea962079dcd/approve 500 in 39m…
+adminhub-app  | 6:54:33 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:55:09 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:55:45 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:56:21 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:56:57 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:57:34 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:58:10 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:58:46 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:59:22 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 6:59:58 AM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+adminhub-app  | 7:00:34 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 7:01:11 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 7:01:47 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 7:02:23 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 7:02:59 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 7:03:35 AM [

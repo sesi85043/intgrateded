@@ -12,15 +12,26 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, Mailco
 - ✅ Phase 3: Reply & Send Functionality (Complete)
 - ✅ Phase 4: Real-time Updates & Polish (Complete)
 - ✅ Phase 5: Automated Email Creation via cPanel (Complete)
+- ✅ **Replit Setup & Deployment Ready (Complete)**
+
+## Replit Setup Status
+
+- ✅ PostgreSQL database created and configured
+- ✅ Database schema pushed (all tables including email_accounts)
+- ✅ Frontend (React + Vite) running on port 5000
+- ✅ Backend (Express) running on port 5000
+- ✅ CORS configured for Replit proxy compatibility
+- ✅ Workflow configured for development
+- ✅ Deployment configuration set up (autoscale)
 
 ## Technology Stack
 
 - **Frontend:** React 18 + Vite + TypeScript
 - **Backend:** Express.js + Node.js
-- **Database:** PostgreSQL (Neon)
+- **Database:** PostgreSQL (Replit-managed)
 - **UI Components:** Radix UI + Shadcn/ui + Tailwind CSS
 - **Real-time:** WebSocket support for live updates
-- **Authentication:** Replit Auth + Local session management
+- **Authentication:** Session-based (dev) / Replit Auth (production)
 - **Email Provisioning:** cPanel UAPI integration
 
 ## Project Structure
@@ -37,7 +48,8 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, Mailco
 │   ├── routes.ts        # Main API routes
 │   ├── routes-chatwoot.ts    # Chatwoot integration
 │   ├── routes-integrations.ts # Integration config & cPanel
-│   ├── cpanel-client.ts     # cPanel API client (NEW)
+│   ├── chatwoot-client.ts    # Chatwoot API client
+│   ├── cpanel-client.ts     # cPanel API client
 │   ├── auth.ts          # Authentication setup
 │   ├── db.ts            # Database connection
 │   └── websocket.ts     # WebSocket server
@@ -49,17 +61,12 @@ A comprehensive admin dashboard for managing Metabase, Chatwoot, Typebot, Mailco
 
 ## Setup & Running
 
-### Prerequisites
-- Node.js installed (handled by Replit)
-- PostgreSQL database (created via Replit)
-- cPanel instance (for email account creation)
-
 ### Development Server
+The application is already configured and running. To start manually:
 ```bash
-npm install          # Install dependencies
-npm run db:push      # Initialize database schema
-npm run seed        # Seed database with initial data
-npm run dev         # Start dev server on http://localhost:5000
+npm install          # Install dependencies (if needed)
+npm run db:push      # Sync database schema
+npm run dev          # Start dev server on http://localhost:5000
 ```
 
 ### Build & Production
@@ -78,7 +85,7 @@ npm run start       # Start production server
 - ✅ Activity logging for audit trails
 - ✅ Analytics dashboard
 
-### Phase 5: Automated Email Provisioning via cPanel (NEW)
+### Phase 5: Automated Email Provisioning via cPanel
 **Goal:** Automatically create email accounts when new employees join the system
 
 **Features:**
@@ -106,21 +113,35 @@ npm run start       # Start production server
 ## Database Schema
 
 Key tables:
+- `users` - User accounts with authentication
 - `team_members` - Users with roles and permissions
 - `conversations` - Synced from Chatwoot
 - `messages` - Individual messages in conversations
 - `contacts` - Customer/contact information
 - `agent_assignments` - Which agents are assigned to conversations
 - `chatwoot_config` - Chatwoot integration credentials
-- `cpanel_config` - cPanel integration credentials (NEW)
-- `email_accounts` - Created email accounts (NEW)
+- `cpanel_config` - cPanel integration credentials
+- `email_accounts` - Created email accounts
+- `roles` - RBAC role definitions
+- `permissions` - Granular action permissions
+- `departments` - Organization structure
+- `activity_logs` - Audit trail
 
 ## Environment Variables
 
-Required (auto-created):
+Auto-created by Replit:
 - `DATABASE_URL` - PostgreSQL connection string
-- `SESSION_SECRET` - Session encryption key
-- `NODE_ENV` - development/production
+- `PGHOST` - Database host
+- `PGPORT` - Database port
+- `PGUSER` - Database user
+- `PGPASSWORD` - Database password
+- `PGDATABASE` - Database name
+
+Development defaults:
+- `NODE_ENV` - Set to "development"
+- Default dev credentials (after seed):
+  - Email: `admin@company.com`
+  - Password: `admin123`
 
 Optional:
 - `CORS_ORIGIN` - Comma-separated allowed origins (default: all in dev)
@@ -131,10 +152,6 @@ Optional:
 Protected endpoints require authentication. Two auth methods available:
 1. **Replit Auth** - Production environment
 2. **Session-based** - Development environment with email/password
-
-Default dev credentials (after seed):
-- Email: `admin@company.com`
-- Password: `admin123`
 
 ## cPanel Email Integration
 
@@ -189,13 +206,17 @@ Default dev credentials (after seed):
 
 ## Development Notes
 
-### CORS Configuration
-The app allows all origins in development mode (auto-detected) for Replit iframe compatibility.
+### Replit Configuration
+The app is optimized for Replit:
+- **Frontend Host:** `0.0.0.0:5000` (listens on all interfaces)
+- **CORS:** Enabled for all origins in dev mode (Replit proxy compatible)
+- **allowedHosts:** `true` (accepts any host header)
+- **HMR:** Configured with secure WebSocket over `wss://`
 
 ### Vite Configuration
 - Host: `0.0.0.0` (listens on all interfaces)
 - Port: `5000` (only exposed port)
-- HMR: WebSocket for hot module replacement
+- HMR: WebSocket over secure connection
 - allowedHosts: `true` (accepts any host header)
 
 ### WebSocket
@@ -209,27 +230,12 @@ Real-time updates via WebSocket at `/ws`:
 ## Deployment
 
 Configured for Replit hosting:
-- Build: `npm run build`
-- Start: `npm run start`
-- Deployment type: autoscale
+- **Build:** `npm run build`
+- **Start:** `npm run start`
+- **Deployment type:** autoscale (auto-scales based on traffic)
+- **Port:** 5000 (auto-exposed)
 
-## Files Added in Phase 5
-
-1. **server/cpanel-client.ts**
-   - `CpanelClient` class for UAPI communication
-   - `hashPassword()` - Secure password hashing with salt
-   - `verifyPasswordHash()` - Password verification
-   - Methods for create/suspend/delete email accounts
-
-2. **shared/schema.ts** (updated)
-   - `cpanelConfig` table - cPanel integration settings
-   - `emailAccounts` table - Email account tracking
-
-3. **server/routes-integrations.ts** (updated)
-   - cPanel configuration endpoints
-   - Email account creation endpoint
-   - Email account lookup endpoint
-   - Connection testing
+The app is ready to publish. Click the "Publish" button in Replit to deploy it live.
 
 ## Known Issues & TODOs
 
@@ -255,5 +261,6 @@ For issues or questions, refer to the implementation phases document in `attache
 
 ---
 
-**Last Updated:** December 21, 2025
+**Last Updated:** December 22, 2025
+**Status:** ✅ Fully set up and running in Replit
 **Version:** 1.0.2 (Phase 5 Complete - cPanel Email Automation Ready)
