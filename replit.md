@@ -337,6 +337,30 @@ For issues or questions, refer to the implementation phases document in `attache
 
 ---
 
+## Bug Fixes - Database Schema & Error Handling (December 22, 2025 - Session 3)
+
+### ✅ Fixed: Department Email Settings Validation
+**Issue:** Endpoint failed when optional email config fields (IMAP/SMTP) weren't provided
+**Solution:** 
+- Ensure null values are properly handled for optional fields
+- All IMAP/SMTP configuration fields are now properly optional
+- Department email settings can be created with just parent email address
+- Email configuration can be added later
+
+### ✅ Fixed: Chatwoot Inbox Query Resilience  
+**Issue:** Inbox query could fail if database schema had inconsistencies
+**Solution:**
+- Wrapped inbox query in try-catch to handle schema issues gracefully
+- Returns empty list instead of 500 error if query fails
+- Allows app to continue functioning even with schema issues
+
+### ✅ Fixed: Content Security Policy (CSP)
+**Issue:** Google Fonts were blocked by dev CSP header
+**Solution:** 
+- Updated CSP to allow fonts.googleapis.com and fonts.gstatic.com
+- Separate style-src and font-src directives for better security
+- Production CSP remains strict while dev allows font resources
+
 ## Latest Updates (December 22, 2025 - Session 2)
 
 ### ✅ Service Status Dashboard - Enhanced

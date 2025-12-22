@@ -185,7 +185,14 @@ export default function registerIntegrationRoutes(app: Express) {
   // Get Chatwoot inboxes
   app.get('/api/integrations/chatwoot/inboxes', isTeamMemberAuthenticated, async (req: any, res) => {
     try {
-      const inboxes = await db.select().from(chatwootInboxes);
+      let inboxes: any[] = [];
+      try {
+        inboxes = await db.select().from(chatwootInboxes);
+      } catch (dbError: any) {
+        console.warn("Database query for chatwoot inboxes failed, returning empty list:", dbError?.message);
+        // Return empty list if table doesn't exist or has schema issues
+        inboxes = [];
+      }
       res.json(inboxes);
     } catch (error) {
       console.error("Error fetching Chatwoot inboxes:", error);
@@ -675,19 +682,30 @@ export default function registerIntegrationRoutes(app: Express) {
     try {
       const validatedData = insertDepartmentEmailSettingsSchema.parse(req.body);
       
+      // Ensure all optional fields are null if not provided
+      const cleanedData = {
+        ...validatedData,
+        imapHost: validatedData.imapHost || null,
+        imapUsername: validatedData.imapUsername || null,
+        imapPassword: validatedData.imapPassword || null,
+        smtpHost: validatedData.smtpHost || null,
+        smtpUsername: validatedData.smtpUsername || null,
+        smtpPassword: validatedData.smtpPassword || null,
+      };
+      
       // Check if settings exist for this department
       const [existing] = await db.select()
         .from(departmentEmailSettings)
-        .where(eq(departmentEmailSettings.departmentId, validatedData.departmentId));
+        .where(eq(departmentEmailSettings.departmentId, cleanedData.departmentId));
       
       let result;
       if (existing) {
         [result] = await db.update(departmentEmailSettings)
-          .set({ ...validatedData, updatedAt: new Date() })
+          .set({ ...cleanedData, updatedAt: new Date() })
           .where(eq(departmentEmailSettings.id, existing.id))
           .returning();
       } else {
-        [result] = await db.insert(departmentEmailSettings).values(validatedData).returning();
+        [result] = await db.insert(departmentEmailSettings).values(cleanedData).returning();
       }
 
       await storage.createActivityLog(
@@ -696,7 +714,7 @@ export default function registerIntegrationRoutes(app: Express) {
         "department_email_settings",
         result.id,
         undefined,
-        { departmentId: validatedData.departmentId }
+        { departmentId: cleanedData.departmentId }
       );
 
       const safeResult = {

@@ -1,0 +1,398 @@
+ ⠧ Container adminhub-app Restarting                                                          0.8s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" v... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" v... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "state" varchar(10... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "postal_code" varc... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add... 
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool... 
+adminhub-app  |   ✓ Done
+adminhub-app  |
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-22T09:52:22: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-22T09:52:22: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-22T09:52:22: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'        
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)      
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | 9:52:23 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 9:52:23 AM [express] serving on port 5000
+adminhub-app  | 9:52:26 AM [express] GET /api/auth/user 401 in 9ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:53:02 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:53:13 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: 'HsOaNTcIdJ9g8Ws651ua_rZKuFa6ibvg',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 9:53:18 AM [express] POST /api/auth/login 200 in 204ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 9:53:18 AM [express] GET /api/auth/user 200 in 13ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 9:53:19 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 200 in …
+adminhub-app  | 9:53:19 AM [express] GET /api/services 304 in 13ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 9:53:19 AM [express] GET /api/activity/recent 304 in 18ms :: [{"id":"ee381c1d-1eb3-469c-b790-96e0a02…
+adminhub-app  | 9:53:19 AM [express] GET /api/registrations/stats 304 in 24ms :: {"pending":1,"approved":0,"rejected…
+adminhub-app  | 9:53:19 AM [express] GET /api/team-members 200 in 23ms :: [{"id":"d3874e09-3d2c-4b9a-99ae-b41a133591…
+adminhub-app  | 9:53:19 AM [express] GET /api/stats 304 in 79ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 9:53:19 AM [express] GET /api/departments 304 in 67ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0f…
+adminhub-app  | 9:53:19 AM [express] GET /api/tasks 304 in 51ms :: []
+adminhub-app  | 9:53:19 AM [express] GET /api/hr/email-credentials/stats 304 in 12ms :: {"total":0,"active":0,"inact…
+adminhub-app  | 9:53:19 AM [express] GET /api/integrations/status 304 in 37ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 9:53:23 AM [express] GET /api/integrations/department-emails 200 in 8ms :: []
+adminhub-app  | Error fetching Chatwoot inboxes: error: column "inbox_type" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)  
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22   
+adminhub-app  |     at async file:///app/dist/index.js:2766:23 {
+adminhub-app  |   length: 185,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: 'Perhaps you meant to reference the column "chatwoot_inboxes.inbox_token".',
+adminhub-app  |   position: '75',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3729',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 9:53:25 AM [express] GET /api/integrations/chatwoot/inboxes 500 in 26ms :: {"message":"Failed to fet…
+adminhub-app  | 9:53:25 AM [express] GET /api/integrations/chatwoot/teams 200 in 24ms :: []        
+adminhub-app  | Error saving department email settings: error: null value in column "imap_host" of relation "department_email_settings" violates not-null constraint
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)  
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22   
+adminhub-app  |     at async file:///app/dist/index.js:3138:20 {
+adminhub-app  |   length: 460,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23502',
+adminhub-app  |   detail: 'Failing row contains (d8d6b6b0-74da-454c-a072-bad2d5dc8f35, be0adc30-66ef-4c7e-aa7a-5add8577f0fd, support.dtv@allelctronics.one, null, null, null, null, f, null, null, null, null, f, t, null, 2025-12-22 09:53:29.757593, 2025-12-22 09:53:29.757593).',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'department_email_settings',
+adminhub-app  |   column: 'imap_host',
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'execMain.c',
+adminhub-app  |   line: '2057',
+adminhub-app  |   routine: 'ExecConstraints'
+adminhub-app  | }
+adminhub-app  | 9:53:29 AM [express] POST /api/integrations/department-emails 400 in 20ms :: {"message":"Failed to s…
+adminhub-app  | Error saving department email settings: error: null value in column "imap_host" of relation "department_email_settings" violates not-null constraint
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)  
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22   
+adminhub-app  |     at async file:///app/dist/index.js:3138:20 {
+adminhub-app  |   length: 458,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23502',
+adminhub-app  |   detail: 'Failing row contains (c5acbdab-8e20-46d5-8ea0-a6c1872c3911, be0adc30-66ef-4c7e-aa7a-5add8577f0fd, support.dtv@allelctronics.one, null, null, null, null, f, null, null, null, null, f, t, null, 2025-12-22 09:53:33.28405, 2025-12-22 09:53:33.28405).',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'department_email_settings',
+adminhub-app  |   column: 'imap_host',
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'execMain.c',
+adminhub-app  |   line: '2057',
+adminhub-app  |   routine: 'ExecConstraints'
+adminhub-app  | }
+adminhub-app  | 9:53:33 AM [express] POST /api/integrations/department-emails 400 in 51ms :: {"message":"Failed to s…
+adminhub-app  | 9:53:34 AM [express] POST /api/integrations/department-emails 400 in 48ms :: {"message":"Failed to s…
+adminhub-app  | Error saving department email settings: error: null value in column "imap_host" of relation "department_email_settings" violates not-null constraint
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)  
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22   
+adminhub-app  |     at async file:///app/dist/index.js:3138:20 {
+adminhub-app  |   length: 460,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23502',
+adminhub-app  |   detail: 'Failing row contains (df500567-ebde-4eba-b549-20297e0f1540, be0adc30-66ef-4c7e-aa7a-5add8577f0fd, support.dtv@allelctronics.one, null, null, null, null, f, null, null, null, null, f, t, null, 2025-12-22 09:53:34.588883, 2025-12-22 09:53:34.588883).',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'department_email_settings',
+adminhub-app  |   column: 'imap_host',
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'execMain.c',
+adminhub-app  |   line: '2057',
+adminhub-app  |   routine: 'ExecConstraints'
+adminhub-app  | }
+adminhub-app  | Error saving department email settings: error: null value in column "imap_host" of relation "department_email_settings" violates not-null constraint
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)  
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22   
+adminhub-app  |     at async file:///app/dist/index.js:3138:20 {
+adminhub-app  |   length: 460,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23502',
+adminhub-app  |   detail: 'Failing row contains (90a54ec3-1639-4cf3-a800-b1b1729950ae, be0adc30-66ef-4c7e-aa7a-5add8577f0fd, support.dtv@allelctronics.one, null, null, null, null, f, null, null, null, null, f, t, null, 2025-12-22 09:53:35.350531, 2025-12-22 09:53:35.350531).',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'department_email_settings',
+adminhub-app  |   column: 'imap_host',
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'execMain.c',
+adminhub-app  |   line: '2057',
+adminhub-app  |   routine: 'ExecConstraints'
+adminhub-app  | }
+adminhub-app  | 9:53:35 AM [express] POST /api/integrations/department-emails 400 in 52ms :: {"message":"Failed to s…
+adminhub-app  | Error saving department email settings: error: null value in column "imap_host" of relation "department_email_settings" violates not-null constraint
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)  
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22   
+adminhub-app  |     at async file:///app/dist/index.js:3138:20 {
+adminhub-app  |   length: 460,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23502',
+adminhub-app  |   detail: 'Failing row contains (c3706d48-287a-49b3-a9fb-dcf43ad242a8, be0adc30-66ef-4c7e-aa7a-5add8577f0fd, support.dtv@allelctronics.one, null, null, null, null, f, null, null, null, null, f, t, null, 2025-12-22 09:53:36.085628, 2025-12-22 09:53:36.085628).',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'department_email_settings',
+adminhub-app  |   column: 'imap_host',
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'execMain.c',
+adminhub-app  |   line: '2057',
+adminhub-app  |   routine: 'ExecConstraints'
+adminhub-app  | }
+adminhub-app  | 9:53:36 AM [express] POST /api/integrations/department-emails 400 in 41ms :: {"message":"Failed to s…
+adminhub-app  | 9:53:38 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:53:48 AM [express] GET /api/auth/user 304 in 54ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 9:53:48 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 9:53:48 AM [express] GET /api/services 304 in 10ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 9:53:48 AM [express] GET /api/integrations/status 304 in 33ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 9:54:15 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:54:51 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:55:27 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:56:03 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:56:15 AM [express] GET /api/integrations/chatwoot/config 304 in 51ms :: {"id":"861883db-005f-42e9-…
+adminhub-app  | 9:56:16 AM [express] GET /api/integrations/evolution/config 200 in 13ms
+adminhub-app  | 9:56:16 AM [express] GET /api/integrations/evolution/status 304 in 7ms :: {"connected":false,"messag…
+adminhub-app  | 9:56:17 AM [express] GET /api/integrations/typebot/config 200 in 11ms
+adminhub-app  | 9:56:18 AM [express] GET /api/integrations/mailcow/config 200 in 14ms
+adminhub-app  | 9:56:18 AM [express] GET /api/integrations/cpanel/config 200 in 8ms
+adminhub-app  | 9:56:39 AM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 9:57:16 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# exit
+logout
+Connection to 158.220.107.106 closed.
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        migrations/0004_create_chatwoot_tables.sql
+
+nothing added to commit but untracked files present (use "git add" to track)
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> git diff --name-only origin/main..HEAD
+                                                             git diff --name-only origin/main..HEAD^C
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> git diff --name-only origin/main..HEAD
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> git add .
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> git commit -m "Add chatwoot migration tables"
+[main 1cb95ce] Add chatwoot migration tables
+ 1 file changed, 35 insertions(+)
+ create mode 100644 migrations/0004_create_chatwoot_tables.sql
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> git push
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 745 bytes | 149.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/sesi85043/intgrateded
+   d54c1c0..1cb95ce  main -> main
+PS C:\Users\MM_SD\Downloads\ ADMINHUB PREFINAL\ADMINHUB PRE> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Mon Dec 22 11:01:14 CET 2025
+
+  System load:           4.58
+  Usage of /:            54.7% of 192.69GB
+  Memory usage:          80%
+  Swap usage:            0%
+  Processes:             386
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There is 1 zombie process.
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+1 update can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Mon Dec 22 10:20:44 2025 from 41.193.198.198
+root@vmi2905850:~# cd /root/adminhub
+git fetch origin
+git reset --hard origin/main
+remote: Enumerating objects: 6, done.
+remote: Counting objects: 100% (6/6), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 4 (delta 2), reused 4 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (4/4), 725 bytes | 362.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+   d54c1c0..1cb95ce  main       -> origin/main
+HEAD is now at 1cb95ce Add chatwoot migration tables
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 20
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  |   length: 105,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42P01',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '189',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '1449',
+rized"}
+rized"}
+adminhub-app  | 10:11:08 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:11:45 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 10:12:21 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose logs app | grep "does not exist" | tail -n 5
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | Error fetching Chatwoot inboxes: error: column "inbox_type" does not exist
+adminhub-app  | Error fetching Chatwoot inboxes: error: column "inbox_type" does not exist
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+adminhub-app  | Error approving registration: error: relation "teams" does not exist
+root@vmi2905850:~/adminhub#
