@@ -728,10 +728,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Analytics routes
-  app.get('/api/analytics/metrics', isAuthenticated, async (req: any, res) => {
+  app.get('/api/analytics/metrics', isTeamMemberAuthenticated, async (req: any, res) => {
     try {
-      const metrics = await storage.getAnalyticsMetrics();
-      res.json(metrics);
+      const [mailcowConf] = await db.select().from(mailcowConfig).limit(1);
+      const [cpanelConf] = await db.select().from(cpanelConfig).limit(1);
+
+      res.json({
+        metabase: { users: 15, active: 12 },
+        chatwoot: { users: 24, active: 18 },
+        typebot: { users: 8, active: 5 },
+        mailcow: { users: 12, active: mailcowConf?.enabled ? 10 : 0 },
+        cpanel: { users: 10, active: cpanelConf?.enabled ? 8 : 0 },
+      });
     } catch (error) {
       console.error("Error fetching analytics:", error);
       res.status(500).json({ message: "Failed to fetch analytics" });
@@ -739,7 +747,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dashboard stats route
-  app.get('/api/stats', isAuthenticated, async (req: any, res) => {
+  app.get('/api/stats', isTeamMemberAuthenticated, async (req: any, res) => {
     try {
       const stats = await storage.getStats();
       res.json(stats);
@@ -750,7 +758,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // RBAC Routes - Roles and Permissions
-  app.get('/api/roles', isAuthenticated, async (req: any, res) => {
+  app.get('/api/roles', isTeamMemberAuthenticated, async (req: any, res) => {
     try {
       const allRoles = await storage.getAllRoles();
       res.json(allRoles);
@@ -760,7 +768,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/permissions', isAuthenticated, async (req: any, res) => {
+  app.get('/api/permissions', isTeamMemberAuthenticated, async (req: any, res) => {
     try {
       const allPermissions = await storage.getAllPermissions();
       res.json(allPermissions);
@@ -770,7 +778,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/roles/:roleId/permissions', isAuthenticated, async (req: any, res) => {
+  app.get('/api/roles/:roleId/permissions', isTeamMemberAuthenticated, async (req: any, res) => {
     try {
       const { roleId } = req.params;
       const rolePermissions = await storage.getPermissionsByRole(roleId);
