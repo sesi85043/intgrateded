@@ -425,7 +425,7 @@ export default function Users() {
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
               <FormField
                 control={form.control}
                 name="fullName"
@@ -458,7 +458,7 @@ export default function Users() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Platforms</FormLabel>
-                    <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2 border rounded-md p-3">
                       {["metabase", "chatwoot", "typebot", "mailcow"].map((platform) => (
                         <div key={platform} className="flex items-center space-x-2">
                           <Checkbox
@@ -494,34 +494,37 @@ export default function Users() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Team Member (optional)</FormLabel>
-                    <FormControl>
-                      <Select value={field.value} onValueChange={field.onChange}>
+                    <Select value={field.value || ""} onValueChange={field.onChange}>
+                      <FormControl>
                         <SelectTrigger data-testid="select-team-member">
-                          <SelectValue placeholder="Link to a team member (for department)" />
+                          <SelectValue placeholder="Link to a team member" />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="">None</SelectItem>
-                          {Array.isArray(teamMembers) && teamMembers.map((tm: any) => (
-                            <SelectItem key={tm.id} value={tm.id}>{tm.firstName} {tm.lastName} — {tm.email}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="none_selected">None</SelectItem>
+                        {Array.isArray(teamMembers) && teamMembers.map((tm: any) => (
+                          <SelectItem key={tm.id} value={tm.id}>{tm.firstName} {tm.lastName} — {tm.email}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
               {/* Provision mailbox toggle */}
-              <FormItem>
-                <div className="flex items-center space-x-2">
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormControl>
                   <Checkbox
                     id="provision-mailbox"
-                    checked={!!form.getValues().provisionMailbox}
+                    checked={!!form.watch('provisionMailbox')}
                     onCheckedChange={(val) => form.setValue('provisionMailbox', !!val)}
                     data-testid="checkbox-provision-mailbox"
                   />
-                  <label htmlFor="provision-mailbox" className="text-sm">Provision Mailbox (Mailcow)</label>
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel htmlFor="provision-mailbox">Provision Mailbox (Mailcow)</FormLabel>
+                  <p className="text-xs text-muted-foreground">Automatically create an email account on the platform</p>
                 </div>
               </FormItem>
               <FormField
@@ -546,7 +549,7 @@ export default function Users() {
                   </FormItem>
                 )}
               />
-              <DialogFooter>
+              <DialogFooter className="pt-4">
                 <Button
                   type="button"
                   variant="outline"
@@ -564,7 +567,7 @@ export default function Users() {
                   disabled={createMutation.isPending || updateMutation.isPending}
                   data-testid="button-save-user"
                 >
-                  {createMutation.isPending || updateMutation.isPending ? "Saving..." : "Save"}
+                  {createMutation.isPending || updateMutation.isPending ? "Saving..." : (editingUser ? "Update User" : "Create User")}
                 </Button>
               </DialogFooter>
             </form>
