@@ -1,8 +1,9 @@
 import crypto from 'crypto';
 import { db } from './db';
-import { mailcowConfig, chatwootConfig, chatwootTeams, chatwootAgents, teamMembers, managedUsers } from '@shared/schema';
+import { cpanelConfig, chatwootConfig, chatwootTeams, chatwootAgents, teamMembers, managedUsers, emailAccounts } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 import type { TeamMember, Department } from '@shared/schema';
+import { CpanelClient, hashPassword, generateSecurePassword as generateCpanelPassword } from './cpanel-client';
 
 export function generateSecurePassword(length = 16): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=';
@@ -21,41 +22,42 @@ function generateUsername(firstName: string, lastName: string, departmentCode: s
   return `${cleanLast}.${cleanFirst}_${cleanDept}`;
 }
 
-export async function createMailcowMailbox(firstName: string, lastName: string, department: string) {
-  const [config] = await db.select().from(mailcowConfig).where(eq(mailcowConfig.enabled, true)).limit(1);
+export async function createCpanelEmailAccount(firstName: string, lastName: string, department: string, teamMemberId: string) {
+  const [config] = await db.select().from(cpanelConfig).where(eq(cpanelConfig.enabled, true)).limit(1);
 
-  if (!config || !config.instanceUrl || !config.apiKey || !config.domain) {
-    throw new Error('Mailcow is not configured or enabled.');
+  if (!config) {
+    throw new Error('cPanel is not configured or enabled.');
   }
 
-  const cleanLast = lastName.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
-  const cleanFirst = firstName.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
-  const cleanDept = (department || 'staff').toLowerCase().trim().replace(/[^a-z0-9]/g, '');
-
-  const localPart = `${cleanLast}.${cleanFirst}_${cleanDept}`;
-  const email = `${localPart}@${config.domain}`;
-  const password = generateSecurePassword(16);
-
-  const res = await fetch(`${config.instanceUrl.replace(/\/$/, '')}/api/v1/add/mailbox`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-Key': config.apiKey,
-    },
-    body: JSON.stringify({
-      local_part: localPart,
-      domain: config.domain,
-      password,
-      name: `${firstName} ${lastName}`,
-      active: '1',
-      quota: 3072,
-    }),
+  const client = new CpanelClient({
+    hostname: config.hostname,
+    apiToken: config.apiToken,
+    cpanelUsername: config.cpanelUsername,
   });
 
-  const result = await res.json();
-  if (Array.isArray(result) && result[0] && result[0].type === 'error') {
-    throw new Error(`Mailcow Error: ${result[0].msg}`);
+  const localPart = generateUsername(firstName, lastName, department);
+  const email = `${localPart}@${config.domain}`;
+  const password = generateCpanelPassword();
+
+  const result = await client.createEmailAccount({
+    email,
+    password,
+    firstName,
+    lastName,
+  });
+
+  if (!result.success) {
+    throw new Error(`cPanel Error: ${result.error}`);
   }
+
+  // Save to Email Credentials / emailAccounts table
+  await db.insert(emailAccounts).values({
+    teamMemberId,
+    email,
+    passwordHash: hashPassword(password),
+    provider: 'cpanel',
+    status: 'active',
+  });
 
   return { email, password };
 }
@@ -187,10 +189,11 @@ export async function provisionTeamMember(
 
   if (createMailbox) {
     try {
-      const mailboxResult = await createMailcowMailbox(
+      const mailboxResult = await createCpanelEmailAccount(
         member.firstName,
         member.lastName,
-        department.code
+        department.code,
+        member.id
       );
       result.mailcow = {
         success: true,

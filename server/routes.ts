@@ -398,11 +398,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertServiceConfigSchema.parse(req.body);
       
-      // Check if service already exists
-      const existing = await storage.getServiceByName(validatedData.serviceName);
-      if (existing) {
-        return res.status(400).json({ message: "Service already exists" });
-      }
+    // Check if service already exists
+    const existing = await storage.getServiceByName(validatedData.serviceName);
+    if (existing) {
+      return res.status(400).json({ message: "Service already exists" });
+    }
 
       const service = await storage.createService(validatedData);
       
