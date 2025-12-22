@@ -25,7 +25,7 @@ import {
   mailcowConfig,
   cpanelConfig,
 } from "@shared/schema";
-import { createMailcowMailbox } from './provisioning';
+import { createCpanelEmailAccount } from './provisioning';
 import { CpanelClient, hashPassword, generateSecurePassword } from './cpanel-client';
 import { ChatwootClient } from './chatwoot-client';
 import { z } from "zod";
@@ -551,7 +551,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
 
-          generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
+          generatedEmail = await createCpanelEmailAccount(firstName, lastName, deptTag, user.id);
 
           // Activity log: provisioning success
           try {
@@ -560,14 +560,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
               'provision_mailbox',
               'managed_user',
               user.id,
-              'mailcow',
+              'cpanel',
               { success: true, email: generatedEmail?.email }
             );
           } catch (logErr) {
             console.warn('Failed to write provisioning activity log', logErr);
           }
         } catch (emailErr) {
-          console.error('Failed to provision Mailcow mailbox:', emailErr);
+          console.error('Failed to provision cPanel email:', emailErr);
           // Activity log: provisioning failure
           try {
             await storage.createActivityLog(
@@ -575,7 +575,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               'provision_mailbox',
               'managed_user',
               user.id,
-              'mailcow',
+              'cpanel',
               { success: false, error: (emailErr as Error)?.message || String(emailErr) }
             );
           } catch (logErr) {

@@ -244,8 +244,8 @@ export async function provisionTeamMember(
   const platformUserIds: Record<string, any> = {};
 
   if (result.mailcow?.success) {
-    platforms.push('mailcow');
-    platformUserIds['mailcow'] = { email: result.mailcow.email };
+    platforms.push('cpanel');
+    platformUserIds['cpanel'] = { email: result.mailcow.email };
   }
 
   if (result.chatwoot?.success) {
@@ -292,6 +292,6 @@ export async function provisionTeamMember(
 
 export const provisioning = {
   generateSecurePassword,
-  createMailcowMailbox,
+  createCpanelEmailAccount,
   provisionTeamMember,
 };
