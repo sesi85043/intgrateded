@@ -337,6 +337,27 @@ For issues or questions, refer to the implementation phases document in `attache
 
 ---
 
+## Latest Updates (December 22, 2025 - Session 2)
+
+### ✅ Service Status Dashboard
+**New Feature:** Added Service Status tab in Integrations page
+- Real-time status monitoring for all 6 services:
+  - Chatwoot (Customer support & chat)
+  - Evolution API (WhatsApp integration)
+  - Typebot (Chat flows & routing)
+  - Mailcow (Email server)
+  - cPanel (Email provisioning)
+- Color-coded status indicators (Configured/Active/Disabled)
+- Last sync timestamps for applicable services
+
+### ✅ Activity Logs in HR Management
+**Feature Addition:** Moved Activity Logs into HR Management tab
+- Two-tab interface:
+  1. **Email Credentials** - View and manage email accounts
+  2. **Activity Logs** - Monitor all administrative actions
+- Now admins can track changes directly in HR Management section
+- Consistent with email credential management workflow
+
 **Last Updated:** December 22, 2025
 **Status:** ✅ Fully set up and running in Replit
-**Version:** 1.0.3 (Bug Fixes: Registrations & User Form)
+**Version:** 1.0.4 (Service Status + Activity Logs in HR Management)

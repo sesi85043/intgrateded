@@ -1068,8 +1068,12 @@ export default function Integrations() {
           </CardContent>
         </Card>
       ) : (
-        <Tabs defaultValue="chatwoot" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-5">
+        <Tabs defaultValue="status" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="status" className="gap-2" data-testid="tab-status">
+              <Server className="h-4 w-4" />
+              <span className="hidden sm:inline">Status</span>
+            </TabsTrigger>
             <TabsTrigger value="chatwoot" className="gap-2" data-testid="tab-chatwoot">
               <MessageSquare className="h-4 w-4" />
               <span className="hidden sm:inline">Chatwoot</span>
@@ -1091,6 +1095,148 @@ export default function Integrations() {
               <span className="hidden sm:inline">cPanel</span>
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="status">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Server className="h-5 w-5" />
+                  Service Status
+                </CardTitle>
+                <CardDescription>
+                  Monitor the connection status of all integrated services
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="border-l-4 border-l-blue-500">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <MessageSquare className="h-5 w-5 text-blue-600" />
+                          <div>
+                            <p className="font-medium">Chatwoot</p>
+                            <p className="text-xs text-muted-foreground">Customer support & chat</p>
+                          </div>
+                        </div>
+                        {statusLoading ? (
+                          <Skeleton className="h-5 w-16" />
+                        ) : (
+                          <StatusBadge 
+                            configured={status?.chatwoot?.configured || false} 
+                            enabled={status?.chatwoot?.enabled || false} 
+                          />
+                        )}
+                      </div>
+                      {status?.chatwoot?.lastSync && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Last sync: {new Date(status.chatwoot.lastSync).toLocaleString()}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-l-4 border-l-green-500">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Phone className="h-5 w-5 text-green-600" />
+                          <div>
+                            <p className="font-medium">Evolution API</p>
+                            <p className="text-xs text-muted-foreground">WhatsApp integration</p>
+                          </div>
+                        </div>
+                        {statusLoading ? (
+                          <Skeleton className="h-5 w-16" />
+                        ) : (
+                          <StatusBadge 
+                            configured={status?.evolution?.configured || false} 
+                            enabled={status?.evolution?.enabled || false} 
+                          />
+                        )}
+                      </div>
+                      {status?.evolution?.connectionStatus && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Status: {status.evolution.connectionStatus}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-l-4 border-l-purple-500">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Mail className="h-5 w-5 text-purple-600" />
+                          <div>
+                            <p className="font-medium">Mailcow</p>
+                            <p className="text-xs text-muted-foreground">Email server</p>
+                          </div>
+                        </div>
+                        {statusLoading ? (
+                          <Skeleton className="h-5 w-16" />
+                        ) : (
+                          <StatusBadge 
+                            configured={status?.mailcow?.configured || false} 
+                            enabled={status?.mailcow?.enabled || false} 
+                          />
+                        )}
+                      </div>
+                      {status?.mailcow?.lastSync && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          Last sync: {new Date(status.mailcow.lastSync).toLocaleString()}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-l-4 border-l-orange-500">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Server className="h-5 w-5 text-orange-600" />
+                          <div>
+                            <p className="font-medium">cPanel</p>
+                            <p className="text-xs text-muted-foreground">Email provisioning</p>
+                          </div>
+                        </div>
+                        {statusLoading ? (
+                          <Skeleton className="h-5 w-16" />
+                        ) : (
+                          <StatusBadge 
+                            configured={status?.cpanel?.configured || false} 
+                            enabled={status?.cpanel?.enabled || false} 
+                          />
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="border-l-4 border-l-amber-500">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <Bot className="h-5 w-5 text-amber-600" />
+                          <div>
+                            <p className="font-medium">Typebot</p>
+                            <p className="text-xs text-muted-foreground">Chat flows & routing</p>
+                          </div>
+                        </div>
+                        {statusLoading ? (
+                          <Skeleton className="h-5 w-16" />
+                        ) : (
+                          <StatusBadge 
+                            configured={status?.typebot?.configured || false} 
+                            enabled={status?.typebot?.enabled || false} 
+                          />
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="chatwoot">
             <Card>

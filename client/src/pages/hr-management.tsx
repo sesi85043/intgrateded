@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -14,9 +15,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Copy, Check, Mail, AlertCircle, Loader2, Search } from "lucide-react";
+import { Copy, Check, Mail, AlertCircle, Loader2, Search, Activity, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
+import type { ActivityLog } from "@shared/schema";
 
 interface EmailCredential {
   id: string;
@@ -46,6 +49,17 @@ export default function HRManagement() {
       return res.json();
     },
   });
+
+  const { data: activities = [], isLoading: activitiesLoading } = useQuery<ActivityLog[]>({
+    queryKey: ["/api/activity"],
+  });
+
+  const getActionBadgeVariant = (action: string) => {
+    if (action.includes("create")) return "default";
+    if (action.includes("delete")) return "destructive";
+    if (action.includes("update")) return "secondary";
+    return "outline";
+  };
 
   const filteredCredentials = emailCredentials.filter(cred =>
     cred.teamMember.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -119,27 +133,40 @@ export default function HRManagement() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Email Credentials</CardTitle>
-            <CardDescription>
-              Confidential employee email records
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-             <div className="relative w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search accounts..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <Tabs defaultValue="credentials" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="credentials" className="gap-2">
+            <Mail className="h-4 w-4" />
+            Email Credentials
+          </TabsTrigger>
+          <TabsTrigger value="activity" className="gap-2">
+            <Activity className="h-4 w-4" />
+            Activity Logs
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="credentials">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Email Credentials</CardTitle>
+                <CardDescription>
+                  Confidential employee email records
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="relative w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search accounts..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
           {isLoading ? (
             <div className="flex items-center justify-center h-48">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -226,9 +253,95 @@ export default function HRManagement() {
                 </TableBody>
               </Table>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </CardContent>
+        </Card>
+        </TabsContent>
+
+        <TabsContent value="activity">
+          <Card>
+            <CardHeader>
+              <CardTitle>Activity Logs</CardTitle>
+              <CardDescription>
+                Track all administrative actions and system changes
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-md border border-border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Timestamp</TableHead>
+                      <TableHead>Action</TableHead>
+                      <TableHead>Platform</TableHead>
+                      <TableHead>Target</TableHead>
+                      <TableHead>Details</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {activitiesLoading ? (
+                      Array.from({ length: 8 }).map((_, i) => (
+                        <TableRow key={i}>
+                          <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                          <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                          <TableCell><Skeleton className="h-6 w-20" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-28" /></TableCell>
+                          <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                        </TableRow>
+                      ))
+                    ) : activities && activities.length > 0 ? (
+                      activities.map((activity) => (
+                        <TableRow key={activity.id} data-testid={`activity-row-${activity.id}`}>
+                          <TableCell className="text-sm">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-muted-foreground" />
+                              {format(new Date(activity.createdAt), "MMM dd, yyyy HH:mm")}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={getActionBadgeVariant(activity.action)}>
+                              {activity.action}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {activity.platform ? (
+                              <Badge variant="outline" className="capitalize">
+                                {activity.platform}
+                              </Badge>
+                            ) : (
+                              <span className="text-muted-foreground text-sm">N/A</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-sm">
+                            {activity.targetType || "N/A"}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground max-w-md truncate">
+                            {activity.details
+                              ? typeof activity.details === "string"
+                                ? activity.details
+                                : JSON.stringify(activity.details)
+                              : "No additional details"}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-12">
+                          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                            <Activity className="h-12 w-12 opacity-50" />
+                            <p>No activity logs found</p>
+                            <p className="text-sm">Admin actions will appear here</p>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       <Alert>
         <AlertCircle className="h-4 w-4" />
