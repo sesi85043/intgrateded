@@ -1,9 +1,15 @@
 import pkg from 'pg';
 const { Client } = pkg;
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@postgres:5432/postgres';
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error('❌ DATABASE_URL must be set');
+  process.exit(1);
+}
 
 const migrations = [
+  // Core schema additions
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" varchar(255)`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" varchar(255)`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100)`,
@@ -21,19 +27,28 @@ const migrations = [
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_email" varchar`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_address" text`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" boolean DEFAULT false NOT NULL`,
+  
+  // Chatwoot integration columns
+  `ALTER TABLE "teams" ADD COLUMN IF NOT EXISTS "chatwoot_team_id" integer`,
+  `ALTER TABLE "teams" ADD COLUMN IF NOT EXISTS "chatwoot_inbox_id" integer`,
+  
+  // Managed users team_member_id column
+  `ALTER TABLE "managed_users" ADD COLUMN IF NOT EXISTS "team_member_id" varchar`,
 ];
 
 async function runMigrations() {
   const client = new Client({ connectionString });
   try {
     await client.connect();
-    console.log('Connected to database');
+    console.log('✓ Connected to database');
     
     for (const migration of migrations) {
-      console.log(`Running: ${migration.substring(0, 60)}...`);
-      await client.query(migration);
+      const sql = migration.trim();
+      console.log(`Running: ${sql.substring(0, 60)}...`);
+      await client.query(sql);
       console.log(`✓ Done`);
     }
+    
     console.log('\n✅ All migrations completed successfully!');
     process.exit(0);
   } catch (error) {
