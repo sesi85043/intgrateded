@@ -67,7 +67,10 @@ async function createChatwootAgent(
   email: string,
   firstName: string,
   lastName: string,
-  teamMemberId: string
+  teamMemberId: string,
+  departmentName: string,
+  domain: string,
+  password?: string
 ): Promise<{ success: boolean; agentId?: number; error?: string }> {
   const [config] = await db.select().from(chatwootConfig).where(eq(chatwootConfig.enabled, true)).limit(1);
 
@@ -76,27 +79,14 @@ async function createChatwootAgent(
   }
 
   try {
-    const response = await fetch(`${config.instanceUrl}/api/v1/accounts/${config.accountId}/agents`, {
-      method: 'POST',
-      headers: {
-        'api_access_token': config.apiAccessToken,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: `${firstName} ${lastName}`,
-        email: email,
-        role: 'agent',
-        availability_status: 'online',
-        auto_offline: true,
-      }),
+    const client = new ChatwootClient({
+      instanceUrl: config.instanceUrl,
+      apiAccessToken: config.apiAccessToken,
+      accountId: config.accountId,
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      return { success: false, error: errorData.message || `HTTP ${response.status}` };
-    }
-
-    const agent = await response.json();
+    const signature = `<b>${firstName} ${lastName}</b><br><em>${departmentName}</em><br>${domain}`;
+    const agent = await client.createAgent(email, `${firstName} ${lastName}`, password, signature);
     
     await db.insert(chatwootAgents).values({
       teamMemberId,
@@ -107,6 +97,30 @@ async function createChatwootAgent(
 
     return { success: true, agentId: agent.id };
   } catch (error: any) {
+    // Check if agent already exists (Chatwoot returns 422 if email is taken)
+    if (error.message.includes('422')) {
+      try {
+        const client = new ChatwootClient({
+          instanceUrl: config.instanceUrl,
+          apiAccessToken: config.apiAccessToken,
+          accountId: config.accountId,
+        });
+        const agents: any = await client.getAgents();
+        const existingAgent = agents.data.find((a: any) => a.email.toLowerCase() === email.toLowerCase());
+        
+        if (existingAgent) {
+          await db.insert(chatwootAgents).values({
+            teamMemberId,
+            chatwootAgentId: existingAgent.id,
+            chatwootAgentEmail: email,
+            isActive: true,
+          });
+          return { success: true, agentId: existingAgent.id };
+        }
+      } catch (innerErr) {
+        console.error('Failed to recover existing Chatwoot agent:', innerErr);
+      }
+    }
     return { success: false, error: error.message };
   }
 }
@@ -217,11 +231,17 @@ export async function provisionTeamMember(
   }
 
   if (createAgent) {
+    const [cpanelCfg] = await db.select().from(cpanelConfig).where(eq(cpanelConfig.enabled, true)).limit(1);
+    const domain = cpanelCfg?.domain || 'company.com';
+    
     const agentResult = await createChatwootAgent(
       generatedEmail,
       member.firstName,
       member.lastName,
-      member.id
+      member.id,
+      department.name,
+      domain,
+      result.mailcow?.password
     );
 
     result.chatwoot = {

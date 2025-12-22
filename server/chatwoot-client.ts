@@ -182,17 +182,65 @@ export class ChatwootClient {
   }
 
   /**
-   * Create a new agent in Chatwoot
+   * Create a new agent in Chatwoot with password and signature
    */
-  async createAgent(email: string, name: string): Promise<any> {
+  async createAgent(email: string, name: string, password?: string, signature?: string): Promise<any> {
+    const payload: any = {
+      email,
+      name,
+      role: "agent",
+    };
+    if (password) payload.password = password;
+
+    const response = await this.request<any>("POST", `/accounts/${this.config.accountId}/agents`, payload);
+    
+    if (signature && response.id) {
+      await this.updateAgent(response.id, { message_signature: signature });
+    }
+    
+    return response;
+  }
+
+  /**
+   * Update an agent in Chatwoot
+   */
+  async updateAgent(agentId: number, data: { name?: string; role?: string; message_signature?: string }): Promise<any> {
+    return this.request(
+      "PATCH",
+      `/accounts/${this.config.accountId}/agents/${agentId}`,
+      data
+    );
+  }
+
+  /**
+   * Delete an agent from Chatwoot by email
+   */
+  async deleteAgent(email: string): Promise<boolean> {
+    try {
+      // 1. Find the agent ID first
+      const agents: any = await this.getAgents();
+      const agent = agents.data.find((a: any) => a.email.toLowerCase() === email.toLowerCase());
+      
+      if (agent) {
+        // 2. Delete using the ID
+        await this.request("DELETE", `/accounts/${this.config.accountId}/agents/${agent.id}`);
+        return true;
+      }
+      return true; // Agent already gone
+    } catch (error) {
+      console.error('[Chatwoot] Delete agent failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Add agent to team
+   */
+  async addAgentToTeam(teamId: number, agentId: number): Promise<any> {
     return this.request(
       "POST",
-      `/accounts/${this.config.accountId}/agents`,
-      {
-        email,
-        name,
-        role: "agent",
-      }
+      `/accounts/${this.config.accountId}/teams/${teamId}/team_members`,
+      { user_ids: [agentId] }
     );
   }
 }

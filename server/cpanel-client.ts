@@ -110,13 +110,55 @@ export class CpanelClient {
   }
 
   /**
+   * Reset password for an email account in cPanel
+   */
+  async resetEmailPassword(email: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const url = `https://${this.hostname}:2087/execute/Email/passwd_pop`;
+
+      const params = new URLSearchParams({
+        email,
+        password: newPassword,
+        domain: email.split('@')[1] || '',
+      });
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `cpanel ${this.cpanelUsername}:${this.apiToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+      });
+
+      const result = await response.json() as any;
+
+      if (!response.ok || (result.metadata && result.metadata.result === 0)) {
+        const errorMsg = result.metadata?.reason || 'Unknown error';
+        return { success: false, error: errorMsg };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('[cPanel] Email password reset error:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      };
+    }
+  }
+
+  /**
    * Delete an email account from cPanel
    */
   async deleteEmailAccount(email: string): Promise<{ success: boolean; error?: string }> {
     try {
       const url = `https://${this.hostname}:2087/execute/Email/delpop`;
 
-      const params = new URLSearchParams({ email });
+      const params = new URLSearchParams({
+        email,
+        domain: email.split('@')[1] || '',
+      });
 
       const response = await fetch(url, {
         method: 'POST',

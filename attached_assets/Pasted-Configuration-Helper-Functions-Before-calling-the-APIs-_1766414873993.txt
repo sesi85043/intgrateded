@@ -1,0 +1,157 @@
+Configuration Helper Functions
+Before calling the APIs, the system needs to fetch the credentials (URL, User, Token) from the database or environment variables.
+Python
+import requests
+import sqlite3
+import os
+
+# Helper to get settings from Database
+def get_config(key, default_env_var=None):
+    conn = sqlite3.connect('data/employee_data.db')
+    row = conn.execute("SELECT value FROM System_Config WHERE key=?", (key,)).fetchone()
+    conn.close()
+    if row and row[0]: return row[0]
+    return os.getenv(default_env_var, "")
+
+# 1. Get cPanel Credentials
+def get_cpanel_config():
+    return { 
+        "host": get_config("CPANEL_HOST"), 
+        "user": get_config("CPANEL_USER"), 
+        "token": get_config("CPANEL_TOKEN"), 
+        "domain": get_config("CPANEL_DOMAIN") 
+    }
+
+# 2. Get Chatwoot Credentials
+def get_chatwoot_config():
+    return { 
+        "url": get_config("CHATWOOT_URL"), 
+        "token": get_config("CHATWOOT_TOKEN"), 
+        "account_id": get_config("CHATWOOT_ACCOUNT_ID") 
+    }
+2. cPanel API Logic (Email Management)
+cPanel uses a system called UAPI. We construct a URL like host/execute/Module/function and send the credentials in the Header.
+Python
+# --- CREATE EMAIL ---
+def create_cpanel_email(username, password):
+    cfg = get_cpanel_config()
+    
+    # URL Structure: /execute/Email/add_pop
+    url = f"{cfg['host']}/execute/Email/add_pop"
+    
+    # Authentication Header
+    headers = {'Authorization': f"cpanel {cfg['user']}:{cfg['token']}"}
+    
+    # Parameters
+    params = {
+        'email': username.lower(), 
+        'password': password, 
+        'domain': cfg['domain'], 
+        'quota': 1024  # 1GB Limit
+    }
+    
+    try:
+        r = requests.get(url, headers=headers, params=params, verify=True)
+        # cPanel returns 'status': 1 for success, 0 for failure
+        if r.json().get('status') == 1:
+            return True, "Created"
+        else:
+            return False, r.json().get('errors', ['Unknown Error'])[0]
+    except Exception as e:
+        return False, str(e)
+
+# --- RESET PASSWORD ---
+def reset_cpanel_password(username, new_password):
+    cfg = get_cpanel_config()
+    # URL Structure: /execute/Email/passwd_pop
+    url = f"{cfg['host']}/execute/Email/passwd_pop"
+    headers = {'Authorization': f"cpanel {cfg['user']}:{cfg['token']}"}
+    params = {'email': username, 'password': new_password, 'domain': cfg['domain']}
+    
+    try:
+        r = requests.get(url, headers=headers, params=params)
+        return r.json().get('status') == 1
+    except: return False
+
+# --- DELETE EMAIL ---
+def delete_cpanel_email(username):
+    cfg = get_cpanel_config()
+    # URL Structure: /execute/Email/delete_pop
+    url = f"{cfg['host']}/execute/Email/delete_pop"
+    headers = {'Authorization': f"cpanel {cfg['user']}:{cfg['token']}"}
+    params = {'email': username, 'domain': cfg['domain']}
+    
+    try:
+        r = requests.get(url, headers=headers, params=params)
+        return r.json().get('status') == 1
+    except: return False
+3. Chatwoot API Logic (Agent Management)
+Chatwoot is a REST API. We send JSON data to endpoints. Creating an agent is a multi-step process because we have to create the user first, then set their signature, then add them to a team.
+Python
+# --- CREATE & SETUP AGENT ---
+def create_chatwoot_agent(name, email, password, dept_name):
+    cfg = get_chatwoot_config()
+    headers = {'api_access_token': cfg['token']}
+    base_url = f"{cfg['url']}/api/v1/accounts/{cfg['account_id']}"
+    
+    # 1. CREATE USER
+    payload = {
+        "name": name, 
+        "email": email.lower(), 
+        "password": password, 
+        "role": "agent"
+    }
+    
+    try:
+        r = requests.post(f"{base_url}/agents", json=payload, headers=headers)
+        
+        agent_id = None
+        if r.status_code == 200:
+            agent_id = r.json().get('id')
+        elif r.status_code == 422:
+            # User already exists? Search for their ID
+            search = requests.get(f"{base_url}/agents", headers=headers).json()
+            # Find the ID from the list
+            agent_id = next((a['id'] for a in search if a['email'] == email.lower()), None)
+        
+        if agent_id:
+            # 2. UPDATE SIGNATURE (PATCH Request)
+            cp_domain = get_cpanel_config()['domain']
+            sig_html = f"<b>{name}</b><br><em>{dept_name}</em><br>{cp_domain}"
+            
+            requests.patch(f"{base_url}/agents/{agent_id}", 
+                           json={"message_signature": sig_html}, 
+                           headers=headers)
+            
+            # 3. ADD TO TEAM (POST Request)
+            # Map the department name to the Team ID (e.g., Sales -> 5)
+            # (Assuming DEPARTMENT_TEAMS dictionary exists globally)
+            team_id = DEPARTMENT_TEAMS.get(dept_name)
+            
+            if team_id:
+                requests.post(f"{base_url}/teams/{team_id}/team_members", 
+                              json={"user_ids": [agent_id]}, 
+                              headers=headers)
+            
+            return True, "Synced"
+        return False, "Failed to get Agent ID"
+    except Exception as e:
+        return False, str(e)
+
+# --- DELETE AGENT ---
+def delete_chatwoot_agent(email):
+    cfg = get_chatwoot_config()
+    headers = {'api_access_token': cfg['token']}
+    base_url = f"{cfg['url']}/api/v1/accounts/{cfg['account_id']}"
+    
+    try:
+        # 1. We must FIND the user ID first (Chatwoot doesn't delete by email)
+        search = requests.get(f"{base_url}/agents", headers=headers).json()
+        agent = next((a for a in search if a['email'] == email.lower()), None)
+        
+        if agent:
+            # 2. DELETE using the ID
+            r = requests.delete(f"{base_url}/agents/{agent['id']}", headers=headers)
+            return r.status_code == 200 or r.status_code == 204
+        return True # Agent already gone
+    except: return False
