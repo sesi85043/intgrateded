@@ -19,6 +19,7 @@ function generateUsername(firstName: string, lastName: string, departmentCode: s
   const cleanLast = lastName.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
   const cleanFirst = firstName.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
   const cleanDept = (departmentCode || 'staff').toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+  // lastName.firstName_dept format
   return `${cleanLast}.${cleanFirst}_${cleanDept}`;
 }
 

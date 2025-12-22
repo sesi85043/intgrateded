@@ -25,7 +25,7 @@ import {
   mailcowConfig,
   cpanelConfig,
 } from "@shared/schema";
-import { createCpanelEmailAccount } from './provisioning';
+import { createCpanelEmailAccount, provisionTeamMember } from './provisioning';
 import { CpanelClient, hashPassword, generateSecurePassword } from './cpanel-client';
 import { ChatwootClient } from './chatwoot-client';
 import { z } from "zod";
@@ -306,8 +306,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register communication integration routes (Chatwoot, Evolution API, Typebot, Mailcow)
   registerIntegrationRoutes(app);
 
-  // Register Chatwoot inbox routes (Phase 1: Sync conversations and messages)
-  await registerChatwootRoutes(app);
+    // Register Chatwoot inbox routes (Phase 1: Sync conversations and messages)
+    await registerChatwootRoutes(app);
+
+    // Approval route enhancement
+    app.post('/api/pending-registrations/:id/approve', isAuthenticated, async (req: any, res) => {
+      try {
+        const { id } = req.params;
+        const registration = await storage.getPendingRegistration(id);
+        if (!registration) {
+          return res.status(404).json({ message: "Registration not found" });
+        }
+
+        const department = await storage.getDepartment(registration.departmentId);
+        if (!department) {
+          return res.status(400).json({ message: "Invalid department" });
+        }
+
+        // 1. Create Team Member
+        const member = await storage.createTeamMember({
+          email: registration.email,
+          firstName: registration.firstName,
+          lastName: registration.lastName,
+          departmentId: registration.departmentId,
+          role: 'technician',
+          passwordHash: registration.passwordHash,
+          phone: registration.phone,
+          status: 'active',
+          isVerified: true,
+          addressLine1: registration.addressLine1,
+          addressLine2: registration.addressLine2,
+          city: registration.city,
+          state: registration.state,
+          postalCode: registration.postalCode,
+          country: registration.country,
+          nextOfKin1Name: registration.nextOfKin1Name,
+          nextOfKin1Relationship: registration.nextOfKin1Relationship,
+          nextOfKin1Phone: registration.nextOfKin1Phone,
+          nextOfKin1Email: registration.nextOfKin1Email,
+          nextOfKin1Address: registration.nextOfKin1Address,
+          nextOfKin2Name: registration.nextOfKin2Name,
+          nextOfKin2Relationship: registration.nextOfKin2Relationship,
+          nextOfKin2Phone: registration.nextOfKin2Phone,
+          nextOfKin2Email: registration.nextOfKin2Email,
+          nextOfKin2Address: registration.nextOfKin2Address,
+        });
+
+        // 2. Automated Provisioning: cPanel Email + Chatwoot Agent
+        const provisionResult = await provisionTeamMember(member, department, {
+          createMailbox: true,
+          createChatwootAgent: true,
+          assignToTeam: true
+        });
+
+        // 3. Update registration status
+        await storage.updatePendingRegistration(id, {
+          status: 'approved',
+          reviewedById: req.user.claims.sub,
+          reviewedAt: new Date(),
+        });
+
+        await storage.createActivityLog(
+          req.user.claims.sub,
+          "approved_registration",
+          "team_member",
+          member.id,
+          undefined,
+          { 
+            email: provisionResult.generatedEmail,
+            cpanel: provisionResult.mailcow?.success,
+            chatwoot: provisionResult.chatwoot?.success
+          }
+        );
+
+        res.json({ success: true, member, provisionResult });
+      } catch (error: any) {
+        console.error("Error approving registration:", error);
+        res.status(500).json({ message: error.message || "Failed to approve registration" });
+      }
+    });
 
   app.get('/api/team-members', isAuthenticated, async (req: any, res) => {
     try {
