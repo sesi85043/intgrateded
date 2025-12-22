@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink, CheckCircle2, Link2, Inbox, MessageCircle } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3, Activity, Settings, Database, MessageSquare, FormInput, Mail, Building2, UserCog, ClipboardList, Shield, UserPlus, ExternalLink, CheckCircle2, Link2, Inbox, MessageCircle, Briefcase } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -147,7 +147,18 @@ export function AppSidebar() {
     },
   ];
 
+  const hrMenuItems = [
+    {
+      title: "Email Credentials",
+      url: "/hr-management",
+      icon: Mail,
+      testId: "nav-hr-management",
+      show: isManagement,
+    },
+  ];
+
   const visibleMenuItems = mainMenuItems.filter(item => item.show);
+  const visibleHrItems = hrMenuItems.filter(item => item.show);
 
   const platformItems = [
     {
@@ -220,6 +231,29 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {visibleHrItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>HR Management</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {visibleHrItems.map((item) => {
+                  const isActive = location === item.url;
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild isActive={isActive} data-testid={item.testId}>
+                        <Link href={item.url}>
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         {myManagedUser && Array.isArray(myManagedUser.platforms) && myManagedUser.platforms.length > 0 && (
           <SidebarGroup>

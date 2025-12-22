@@ -37,6 +37,7 @@ import PendingApprovals from "@/pages/pending-approvals";
 import Integrations from "@/pages/integrations";
 import DepartmentChannels from "@/pages/department-channels";
 import Inbox from "@/pages/inbox";
+import HRManagement from "@/pages/hr-management";
 
 function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -149,6 +150,7 @@ function Router() {
         <Route path="/integrations" component={Integrations} />
         <Route path="/department-channels" component={DepartmentChannels} />
         <Route path="/inbox" component={Inbox} />
+        <Route path="/hr-management" component={HRManagement} />
         <Route component={NotFound} />
       </Switch>
     </AuthenticatedLayout>

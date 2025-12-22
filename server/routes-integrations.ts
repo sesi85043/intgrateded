@@ -1296,4 +1296,44 @@ export default function registerIntegrationRoutes(app: Express) {
       res.status(500).json({ message: "Failed to fetch email accounts" });
     }
   });
+
+  // ============================================
+  // HR MANAGEMENT ROUTES (Admin Only)
+  // ============================================
+
+  // Get all email credentials with team member info (Management only)
+  app.get('/api/hr/email-credentials', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
+    try {
+      const accounts = await db.query.emailAccounts.findMany({
+        with: {
+          teamMember: {
+            columns: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+              departmentCode: true,
+            },
+          },
+        },
+        orderBy: (ea) => [ea.createdAt],
+      });
+
+      // Don't expose password hashes
+      const safeAccounts = accounts.map(acc => ({
+        id: acc.id,
+        teamMemberId: acc.teamMemberId,
+        email: acc.email,
+        quota: acc.quota,
+        status: acc.status,
+        createdAt: acc.createdAt,
+        teamMember: acc.teamMember,
+      }));
+
+      res.json(safeAccounts);
+    } catch (error) {
+      console.error("Error fetching email credentials:", error);
+      res.status(500).json({ message: "Failed to fetch email credentials" });
+    }
+  });
 }
