@@ -1,0 +1,967 @@
+pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists 
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" v...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" v...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "state" varchar(10...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "postal_code" varc...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...
+adminhub-app  |   ✓ Done
+adminhub-app  |
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-22T11:57:05: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-22T11:57:05: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-22T11:57:05: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | 11:57:06 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 11:57:06 AM [express] serving on port 5000
+adminhub-app  | 11:57:10 AM [express] GET /api/auth/user 401 in 13ms :: {"message":"Unauthorized"}
+adminhub-app  | 2025-12-22T11:57:12: PM2 log: Stopping app:adminhub id:0
+adminhub-app  | 2025-12-22T11:57:12: PM2 log: App [adminhub:0] exited with code [0] via signal [SIGINT]
+adminhub-app  | 2025-12-22T11:57:13: PM2 log: pid=46 msg=process killed
+adminhub-app  | 2025-12-22T11:57:13: PM2 log: PM2 successfully stopped
+adminhub-app exited with code 0 (restarting)
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 280
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 22 11:38 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 22 11:38 ..
+adminhub-app  | -rw-r--r--    1 root     root        258824 Dec 22 11:38 index.js
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 22 11:38 public
+adminhub-app  | -rw-r--r--    1 root     root          2320 Dec 22 11:38 run-migration.cjs
+adminhub-app  | -rw-r--r--    1 root     root          2931 Dec 22 11:38 run-seed.cjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 22 11:38 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 22 11:38 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 22 11:38 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 22 11:38 devpulse.favicon.png
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 22 11:38 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists 
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" v...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" v...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "state" varchar(10...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "postal_code" varc...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...
+adminhub-app  |   ✓ Done
+adminhub-app  |
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-22T11:57:14: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-22T11:57:15: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-22T11:57:15: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | 11:57:16 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]
+adminhub-app  | 11:57:16 AM [express] serving on port 5000
+adminhub-app  | 11:57:18 AM [express] GET /api/auth/user 401 in 11ms :: {"message":"Unauthorized"}
+adminhub-app  | 11:57:32 AM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: 'znKxGs48qFejowEZdVNENm3HFSfRXjZa',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 11:57:37 AM [express] POST /api/auth/login 200 in 187ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 11:57:37 AM [express] GET /api/auth/user 200 in 16ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 11:57:37 AM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 11:57:37 AM [express] GET /api/stats 304 in 14ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 11:57:37 AM [express] GET /api/departments 304 in 8ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0fd…
+adminhub-app  | 11:57:37 AM [express] GET /api/registrations/stats 200 in 37ms :: {"pending":0,"approved":3,"rejected…
+adminhub-app  | 11:57:37 AM [express] GET /api/activity/recent 304 in 30ms :: [{"id":"1508c017-8402-40fd-94db-1783974…
+adminhub-app  | 11:57:37 AM [express] GET /api/team-members 200 in 20ms :: [{"id":"f7f392fa-3817-4dca-8e67-f3f92ab9f3…
+adminhub-app  | 11:57:38 AM [express] GET /api/hr/email-credentials/stats 304 in 100ms :: {"total":0,"active":0,"inac…
+adminhub-app  | 11:57:38 AM [express] GET /api/tasks 304 in 76ms :: []
+adminhub-app  | 11:57:38 AM [express] GET /api/services 304 in 117ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5"…
+adminhub-app  | 11:57:38 AM [express] GET /api/integrations/status 304 in 21ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 11:57:40 AM [express] GET /api/roles 304 in 35ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 11:57:40 AM [express] GET /api/registrations 200 in 91ms :: [{"id":"fce2286c-3714-4362-85aa-5f1e08f09…
+adminhub-app  | 11:57:41 AM [express] GET /api/admin/pending-users 200 in 22ms :: []
+adminhub-app  | 11:57:55 AM [express] GET /api/auth/user 401 in 6ms :: {"message":"Unauthorized"}
+adminhub-app  | 11:58:31 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 11:58:38 AM [express] GET /api/users 304 in 60ms :: []
+adminhub-app  | Error creating user: error: insert or update on table "managed_users" violates foreign key constraint "managed_users_team_member_id_team_members_id_fk"
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.createManagedUser (file:///app/dist/index.js:1025:27)
+adminhub-app  |     at async file:///app/dist/index.js:4917:20 {
+adminhub-app  |   length: 329,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23503',
+adminhub-app  |   detail: 'Key (team_member_id)=() is not present in table "team_members".',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'managed_users',
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: 'managed_users_team_member_id_team_members_id_fk',
+adminhub-app  |   file: 'ri_triggers.c',
+adminhub-app  |   line: '2608',
+adminhub-app  |   routine: 'ri_ReportViolation'
+adminhub-app  | }
+adminhub-app  | 11:58:56 AM [express] POST /api/users 400 in 54ms :: {"message":"Failed to create user"}
+adminhub-app  | Error creating user: error: insert or update on table "managed_users" violates foreign key constraint "managed_users_team_member_id_team_members_id_fk"
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.createManagedUser (file:///app/dist/index.js:1025:27)
+adminhub-app  |     at async file:///app/dist/index.js:4917:20 {
+adminhub-app  |   length: 329,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23503',
+adminhub-app  |   detail: 'Key (team_member_id)=() is not present in table "team_members".',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'managed_users',
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: 'managed_users_team_member_id_team_members_id_fk',
+adminhub-app  |   file: 'ri_triggers.c',
+adminhub-app  |   line: '2608',
+adminhub-app  |   routine: 'ri_ReportViolation'
+adminhub-app  | }
+adminhub-app  | 11:58:59 AM [express] POST /api/users 400 in 63ms :: {"message":"Failed to create user"}
+adminhub-app  | 11:59:07 AM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 11:59:43 AM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:00:20 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:00:56 PM [express] GET /api/auth/user 401 in 0ms :: {"message":"Unauthorized"}
+^C
+root@vmi2905850:~/adminhub# docker compose exec postgres psql -U postgres
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+psql (16.11)
+Type "help" for help.
+
+postgres=# -- First, list all databases to find yours
+postgres=# \l
+                                                       List of databases
+   Name    |  Owner   | Encoding | Locale Provider |   Collate   |    Ctype    | ICU Locale | ICU Rules |   Access privileges
+-----------+----------+----------+-----------------+-------------+-------------+------------+-----------+-----------------------
+ postgres  | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           |
+ template0 | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |             |             |            |           | postgres=CTc/postgres
+(3 rows)
+
+postgres=#
+postgres=# -- Connect to your database (likely 'postgres' based on the logs)
+postgres=# \c postgres
+les
+ALTER TABLE teams ADD COLUMN IF NOT You are now connected to database "postgres" as user "postgres".
+postgres=#
+postgres=# -- Add the missing column to both tables
+postgres=# ALTER TABLE teams ADD COLUMN IF NOT EXISTS chatwoot_inbox_id TEXT;
+ER TALTER TABLE
+postgres=# ALTER TABLE departments ADD COLUMN IF NOT EXISTS chatwoot_inbox_id TEXT;
+ALTER TABLE
+postgres=#
+postgres=# -- Verify columns were added
+postgres=# \d teams
+                                         Table "public.teams"
+      Column       |            Type             | Collation | Nullable |           Default
+-------------------+-----------------------------+-----------+----------+------------------------------
+ id                | character varying           |           | not null | gen_random_uuid()
+ name              | character varying           |           | not null |
+ description       | text                        |           |          |
+ is_default        | boolean                     |           |          | false
+ created_at        | timestamp without time zone |           |          | now()
+ updated_at        | timestamp without time zone |           |          | now()
+ code              | character varying           |           |          |
+ team_type         | character varying           |           |          | 'system'::character varying
+ department_id     | character varying           |           |          |
+ parent_team_id    | character varying           |           |          |
+ color             | character varying           |           |          | '#3b82f6'::character varying
+ icon              | character varying           |           |          |
+ slug              | character varying           |           |          |
+ metadata          | jsonb                       |           |          | '{}'::jsonb
+ is_archived       | boolean                     |           |          | false
+ chatwoot_team_id  | text                        |           |          |
+ chatwoot_inbox_id | text                        |           |          |
+Indexes:
+    "teams_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "teams_department_id_fkey" FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
+    "teams_parent_team_id_fkey" FOREIGN KEY (parent_team_id) REFERENCES teams(id)
+Referenced by:
+    TABLE "teams" CONSTRAINT "teams_parent_team_id_fkey" FOREIGN KEY (parent_team_id) REFERENCES teams(id)
+
+postgres=# -- Exit
+postgres=# \q
+root@vmi2905850:~/adminhub# # Connect to postgres
+docker compose exec postgres psql -U postgres
+
+# Then paste all these commands:^C
+root@vmi2905850:~/adminhub# # Connect to postgres
+docker compose exec postgres psql -U postgres
+
+# Then paste all these commands:
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+psql (16.11)
+Type "help" for help.
+
+postgres=# \c postgres
+You are now connected to database "postgres" as user "postgres".
+postgres=#
+postgres=# -- Add missing Chatwoot columns
+postgres=# ALTER TABLE teams ADD COLUMN IF NOT EXISTS chatwoot_inbox_id TEXT;
+ADD CNOTICE:  column "chatwoot_inbox_id" of relation "teams" already exists, skipping
+ALTER TABLE
+postgres=# ALTER TABLE departments ADD COLUMN IF NOT EXISTS chatwoot_inbox_id TEXT;
+NOTICE:  column "chatwoot_inbox_id" of relation "departments" already exists, skipping
+ALTER TABLE
+postgres=#
+postgres=# -- Make team_member_id nullable if needed (check your requirements first)
+postgres=# ALTER TABLE managed_users ALTER COLUMN team_member_id DROP NOT NULL;
+ALTER TABLE
+postgres=#
+postgres=# -- Verify changes
+postgres=# SELECT column_name, is_nullable, data_type
+postgres-# FROM information_schema.columns
+postgres-# WHERE table_name IN ('teams', 'departments', 'managed_users')
+postgres-# AND column_name IN ('chatwoot_inbox_id', 'chatwoot_team_id', 'team_member_id')
+postgres-# ORDER BY table_name, column_name;
+    column_name    | is_nullable |     data_type     
+-------------------+-------------+-------------------
+ chatwoot_inbox_id | YES         | text
+ chatwoot_team_id  | YES         | text
+ team_member_id    | YES         | character varying
+ chatwoot_inbox_id | YES         | text
+ chatwoot_team_id  | YES         | text
+(5 rows)
+
+postgres=#
+postgres=# \q
+root@vmi2905850:~/adminhub# docker compose restart app
+docker compose logs -f app --tail 50
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] restart 0/1
+ ⠦ Container adminhub-app Restarting                                                                           0.7s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 22 11:38 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_1" v...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "address_line_2" v...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "city" varchar(100...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "state" varchar(10...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "postal_code" varc...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "country" varchar(...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_nam...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_rel...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_1_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_nam...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_rel...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...
+adminhub-app  |   ✓ Done
+adminhub-app  |
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-22T12:02:35: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-22T12:02:35: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-22T12:02:35: PM2 log: App [adminhub:0] online
+adminhub-app  | [auth] Production mode without Replit/OIDC detected - using password-based auth (devAuth)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | [auth] Session cookie config: secure=false sameSite=lax (NODE_ENV=production)
+adminhub-app  | Warning: connect.session() MemoryStore is not
+adminhub-app  | designed for a production environment, as it will leak
+adminhub-app  | memory, and will not scale past a single process.
+adminhub-app  | 12:02:36 PM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Looking for static files at: /app/dist/public
+adminhub-app  | [static] Current directory: /app
+adminhub-app  | [static] __dirname: /app/dist
+adminhub-app  | [static] Found 3 items in public directory: [ 'assets', 'devpulse.favicon.png', 'index.html' ]      
+adminhub-app  | 12:02:36 PM [express] serving on port 5000
+adminhub-app  | 12:02:39 PM [express] GET /api/auth/user 401 in 17ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:02:48 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: '7GNOZIVHtDWhizFFkFNGAGeEy1uVrqye',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 12:02:57 PM [express] POST /api/auth/login 200 in 194ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 12:02:58 PM [express] GET /api/auth/user 200 in 25ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 12:02:58 PM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 12:02:58 PM [express] GET /api/departments 304 in 11ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0f…
+adminhub-app  | 12:02:58 PM [express] GET /api/activity/recent 304 in 24ms :: [{"id":"1508c017-8402-40fd-94db-1783974…
+adminhub-app  | 12:02:58 PM [express] GET /api/team-members 200 in 28ms :: [{"id":"f7f392fa-3817-4dca-8e67-f3f92ab9f3…
+adminhub-app  | 12:02:59 PM [express] GET /api/services 304 in 121ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5"…
+adminhub-app  | 12:02:59 PM [express] GET /api/tasks 304 in 96ms :: []
+adminhub-app  | 12:02:59 PM [express] GET /api/stats 304 in 132ms :: {"totalUsers":0,"activeUsers":0,"totalActivities…
+adminhub-app  | 12:02:59 PM [express] GET /api/registrations/stats 304 in 115ms :: {"pending":0,"approved":3,"rejecte…
+adminhub-app  | 12:02:59 PM [express] GET /api/hr/email-credentials/stats 304 in 29ms :: {"total":0,"active":0,"inact…
+adminhub-app  | 12:02:59 PM [express] GET /api/integrations/status 304 in 43ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 12:03:08 PM [express] GET /api/roles 304 in 24ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 12:03:08 PM [express] GET /api/registrations 304 in 55ms :: [{"id":"fce2286c-3714-4362-85aa-5f1e08f09…
+adminhub-app  | 12:03:10 PM [express] GET /api/users 200 in 24ms :: []
+adminhub-app  | 12:03:16 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | Error creating user: error: insert or update on table "managed_users" violates foreign key constraint "managed_users_team_member_id_team_members_id_fk"
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.createManagedUser (file:///app/dist/index.js:1025:27)
+adminhub-app  |     at async file:///app/dist/index.js:4917:20 {
+adminhub-app  |   length: 329,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23503',
+adminhub-app  |   detail: 'Key (team_member_id)=() is not present in table "team_members".',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'managed_users',
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: 'managed_users_team_member_id_team_members_id_fk',
+adminhub-app  |   file: 'ri_triggers.c',
+adminhub-app  |   line: '2608',
+adminhub-app  |   routine: 'ri_ReportViolation'
+adminhub-app  | }
+adminhub-app  | 12:03:19 PM [express] POST /api/users 400 in 33ms :: {"message":"Failed to create user"}
+adminhub-app  | 12:03:52 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:04:28 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:05:04 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:05:41 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:06:17 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:06:53 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:07:29 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:08:05 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:08:32 PM [express] GET /api/logout 302 in 4ms
+adminhub-app  | 12:08:33 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:08:35 PM [express] GET /api/public/departments 200 in 31ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add…
+adminhub-app  | 12:08:42 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:09:18 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:09:54 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:10:01 PM [express] POST /api/auth/register 201 in 172ms :: {"message":"Registration submitted succ…
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: '4Op7VSs1VNIrNUPFDi0Mtd68pWsobZOF',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 12:10:05 PM [express] POST /api/auth/login 200 in 189ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 12:10:05 PM [express] GET /api/auth/user 200 in 8ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 12:10:06 PM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 12:10:07 PM [express] GET /api/stats 304 in 18ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 12:10:07 PM [express] GET /api/activity/recent 304 in 18ms :: [{"id":"1508c017-8402-40fd-94db-1783974…
+adminhub-app  | 12:10:07 PM [express] GET /api/registrations/stats 200 in 30ms :: {"pending":1,"approved":3,"rejected…
+adminhub-app  | 12:10:07 PM [express] GET /api/departments 304 in 74ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0f…
+adminhub-app  | 12:10:07 PM [express] GET /api/services 304 in 81ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 12:10:07 PM [express] GET /api/hr/email-credentials/stats 304 in 15ms :: {"total":0,"active":0,"inact…
+adminhub-app  | 12:10:07 PM [express] GET /api/integrations/status 304 in 19ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 12:10:07 PM [express] GET /api/tasks 304 in 10ms :: []
+adminhub-app  | 12:10:08 PM [express] GET /api/team-members 200 in 13ms :: [{"id":"9a1c141b-6fff-4092-a57a-28429c41ff…
+adminhub-app  | 12:10:08 PM [express] GET /api/roles 304 in 24ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 12:10:08 PM [express] GET /api/registrations 200 in 113ms :: [{"id":"bb4283aa-9fb2-430f-9793-094c21eb…
+adminhub-app  | 12:10:11 PM [express] GET /api/admin/pending-users 200 in 20ms :: [{"id":"bb4283aa-9fb2-430f-9793-094…
+adminhub-app  | Error approving user: error: column "email_address" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.getDefaultTeams (file:///app/dist/index.js:1400:16)
+adminhub-app  |     at async DatabaseStorage.autoJoinDefaultTeams (file:///app/dist/index.js:1404:30)
+adminhub-app  |     at async file:///app/dist/index.js:5801:9 {
+adminhub-app  |   length: 114,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '116',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_relation.c',
+adminhub-app  |   line: '3722',
+adminhub-app  |   routine: 'errorMissingColumn'
+adminhub-app  | }
+adminhub-app  | 12:10:16 PM [express] PATCH /api/admin/approve-user/bb4283aa-9fb2-430f-9793-094c21eb4f08 400 in 25ms …
+adminhub-app  | 12:10:30 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:10:31 PM [express] POST /api/registrations/bb4283aa-9fb2-430f-9793-094c21eb4f08/approve 400 in 56m…
+adminhub-app  | 12:10:58 PM [express] GET /api/users 200 in 64ms :: []
+adminhub-app  | 12:11:06 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:11:24 PM [express] GET /api/integrations/chatwoot/config 304 in 43ms :: {"id":"861883db-005f-42e9-…
+adminhub-app  | 12:11:26 PM [express] POST /api/integrations/chatwoot/config 200 in 26ms :: {"id":"861883db-005f-42e9…
+adminhub-app  | 12:11:26 PM [express] GET /api/integrations/chatwoot/config 200 in 8ms :: {"id":"861883db-005f-42e9-a…
+adminhub-app  | 12:11:27 PM [express] GET /api/integrations/status 304 in 19ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 12:11:30 PM [express] POST /api/integrations/chatwoot/test 400 in 3262ms :: {"success":false,"message…
+adminhub-app  | [chatwoot] Error fetching conversations: TypeError: Cannot read properties of undefined (reading 'referencedTable')
+adminhub-app  |     at normalizeRelation (file:///app/node_modules/drizzle-orm/relations.js:212:75)
+adminhub-app  |     at PgDialect.buildRelationalQueryWithoutPK (file:///app/node_modules/drizzle-orm/pg-core/dialect.js:1006:36)
+adminhub-app  |     at QueryPromise._getQuery (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:84:25)
+adminhub-app  |     at QueryPromise._toSQL (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:99:24)
+adminhub-app  |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:62:42
+adminhub-app  |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app  |     at QueryPromise._prepare (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:61:19)
+adminhub-app  |     at file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:114:19
+adminhub-app  |     at Object.startActiveSpan (file:///app/node_modules/drizzle-orm/tracing.js:8:14)
+adminhub-app  |     at QueryPromise.execute (file:///app/node_modules/drizzle-orm/pg-core/query-builders/query.js:113:19)
+adminhub-app  | 12:11:43 PM [express] GET /api/chatwoot/conversations 500 in 55ms :: {"message":"Failed to fetch conv…
+adminhub-app  | 12:11:43 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [chatwoot] Sync error: Error: Chatwoot API error: 401 Unauthorized
+adminhub-app  | 12:11:49 PM [chatwoot-client] [Chatwoot] Request failed: GET /accounts/2/conversations?page=1
+adminhub-app  |     at ChatwootClient.request (file:///app/dist/index.js:2636:15)
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/dist/index.js:4037:38
+adminhub-app  | 12:11:49 PM [express] POST /api/chatwoot/sync 500 in 4239ms :: {"message":"Failed to sync Chatwoot co…
+adminhub-app  | 12:11:49 PM [express] GET /api/integrations/chatwoot/stats 200 in 6120ms :: {"open":0,"pending":0,"re…
+adminhub-app  | 12:12:05 PM [chatwoot-client] [Chatwoot] Request failed: GET /accounts/2/conversations?page=1
+adminhub-app  | [chatwoot] Sync error: Error: Chatwoot API error: 401 Unauthorized
+adminhub-app  |     at ChatwootClient.request (file:///app/dist/index.js:2636:15)
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/dist/index.js:4037:38
+adminhub-app  | 12:12:05 PM [express] POST /api/chatwoot/sync 500 in 3017ms :: {"message":"Failed to sync Chatwoot co…
+adminhub-app  | 12:12:06 PM [express] GET /api/integrations/department-emails 304 in 12ms :: []
+adminhub-app  | Database query for chatwoot inboxes failed, returning empty list: column "enabled" does not exist
+adminhub-app  | 12:12:09 PM [express] GET /api/integrations/chatwoot/inboxes 200 in 25ms :: []
+adminhub-app  | 12:12:09 PM [express] GET /api/integrations/chatwoot/teams 304 in 49ms :: []
+adminhub-app  | Error saving department email settings: error: null value in column "imap_host" of relation "department_email_settings" violates not-null constraint
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async file:///app/dist/index.js:3299:20 {
+adminhub-app  |   length: 460,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23502',
+adminhub-app  |   detail: 'Failing row contains (ae15cc9d-2f88-412e-9df7-805fb9ae4615, be0adc30-66ef-4c7e-aa7a-5add8577f0fd, support.dtv@allelctronics.one, null, null, null, null, f, null, null, null, null, f, t, null, 2025-12-22 12:12:15.436928, 2025-12-22 12:12:15.436928).',   
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'department_email_settings',
+adminhub-app  |   column: 'imap_host',
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'execMain.c',
+adminhub-app  |   line: '2057',
+adminhub-app  |   routine: 'ExecConstraints'
+adminhub-app  | }
+adminhub-app  | 12:12:15 PM [express] POST /api/integrations/department-emails 400 in 28ms :: {"message":"Failed to s…
+adminhub-app  | 12:12:19 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:12:55 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:13:31 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:13:49 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:14:08 PM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:14:14 PM [express] POST /api/integrations/chatwoot/teams 200 in 66ms :: {"id":"2c4e65f1-2a22-449c-…
+adminhub-app  | 12:14:14 PM [express] GET /api/integrations/chatwoot/teams 200 in 13ms :: [{"id":"2c4e65f1-2a22-449c-…
+adminhub-app  | Error creating Chatwoot inbox: error: column "enabled" of relation "chatwoot_inboxes" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async file:///app/dist/index.js:2928:23 {
+adminhub-app  |   length: 137,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '114',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_target.c',
+adminhub-app  |   line: '1066',
+adminhub-app  |   routine: 'checkInsertTargets'
+adminhub-app  | }
+adminhub-app  | 12:14:24 PM [express] POST /api/integrations/chatwoot/inboxes 400 in 20ms :: {"message":"Failed to cr…
+adminhub-app  | 12:14:39 PM [express] POST /api/integrations/chatwoot/inboxes 400 in 36ms :: {"message":"Failed to cr…
+adminhub-app  | Error creating Chatwoot inbox: error: column "enabled" of relation "chatwoot_inboxes" does not exist
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async file:///app/dist/index.js:2928:23 {
+adminhub-app  |   length: 137,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '42703',
+adminhub-app  |   detail: undefined,
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: '114',
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: undefined,
+adminhub-app  |   table: undefined,
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: undefined,
+adminhub-app  |   file: 'parse_target.c',
+adminhub-app  |   line: '1066',
+adminhub-app  |   routine: 'checkInsertTargets'
+adminhub-app  | }
+adminhub-app  | 12:14:44 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:15:20 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:15:56 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:16:33 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:17:09 PM [express] GET /api/auth/user 401 in 10ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:17:45 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:18:22 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:18:58 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:19:24 PM [express] GET /api/integrations/status 304 in 91ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 12:19:27 PM [express] GET /api/integrations/cpanel/config 304 in 8ms
+adminhub-app  | 12:19:34 PM [express] GET /api/auth/user 401 in 9ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:20:10 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:20:47 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:21:23 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:21:59 PM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:22:35 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:23:11 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:23:48 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:24:24 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:25:00 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:25:36 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:26:13 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:26:23 PM [express] POST /api/integrations/cpanel/config 200 in 54ms :: {"id":"30f39942-f14e-4161-8…
+adminhub-app  | 12:26:23 PM [express] GET /api/integrations/cpanel/config 200 in 17ms :: {"id":"30f39942-f14e-4161-85…
+adminhub-app  | 12:26:23 PM [express] GET /api/integrations/status 200 in 51ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | [cPanel] Email creation error: TypeError: fetch failed
+adminhub-app  |     at node:internal/deps/undici/undici:14900:13
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async CpanelClient.createEmailAccount (file:///app/dist/index.js:2516:24)
+adminhub-app  |     at async file:///app/dist/index.js:3676:22 {
+adminhub-app  |   [cause]: Error: getaddrinfo EAI_AGAIN https
+adminhub-app  |       at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+adminhub-app  |     errno: -3001,
+adminhub-app  |     code: 'EAI_AGAIN',
+adminhub-app  |     syscall: 'getaddrinfo',
+adminhub-app  |     hostname: 'https'
+adminhub-app  |   }
+adminhub-app  | }
+adminhub-app  | 12:26:32 PM [express] POST /api/integrations/cpanel/test 200 in 5027ms :: {"success":true,"message":"…
+adminhub-app  | 12:26:49 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:26:50 PM [express] GET /api/logout 302 in 4ms
+adminhub-app  | 12:26:51 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | [auth] Session data set: {
+adminhub-app  |   sessionID: 'sERhgofkVb88LZoOkY7GrfPVeJ0MpiOQ',
+adminhub-app  |   user: 'admin@company.com',
+adminhub-app  |   teamMemberId: 'a74cccfb-d018-4767-9046-180dabb597b5'
+adminhub-app  | }
+adminhub-app  | [auth] Session saved successfully
+adminhub-app  | [auth] Set-Cookie header: undefined
+adminhub-app  | [auth] set-cookie header for /api/auth/login: undefined
+adminhub-app  | 12:26:56 PM [express] POST /api/auth/login 200 in 185ms :: {"user":{"id":"a74cccfb-d018-4767-9046-180…
+adminhub-app  | 12:26:57 PM [express] GET /api/auth/user 200 in 10ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 12:26:57 PM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 12:26:57 PM [express] GET /api/departments 304 in 13ms :: [{"id":"be0adc30-66ef-4c7e-aa7a-5add8577f0f…
+adminhub-app  | 12:26:57 PM [express] GET /api/stats 200 in 27ms :: {"totalUsers":0,"activeUsers":0,"totalActivities"…
+adminhub-app  | 12:26:57 PM [express] GET /api/registrations/stats 200 in 44ms :: {"pending":0,"approved":4,"rejected…
+adminhub-app  | 12:26:57 PM [express] GET /api/team-members 200 in 109ms :: [{"id":"9a1c141b-6fff-4092-a57a-28429c41f…
+adminhub-app  | 12:26:57 PM [express] GET /api/activity/recent 200 in 122ms :: [{"id":"d896f587-95fd-4bbc-8405-b2f0cb…
+adminhub-app  | 12:26:57 PM [express] GET /api/tasks 304 in 107ms :: []
+adminhub-app  | 12:26:57 PM [express] GET /api/services 304 in 134ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5"…
+adminhub-app  | 12:26:57 PM [express] GET /api/hr/email-credentials/stats 304 in 13ms :: {"total":0,"active":0,"inact…
+adminhub-app  | 12:26:58 PM [express] GET /api/integrations/status 304 in 28ms :: {"chatwoot":{"configured":true,"ena…
+adminhub-app  | 12:26:59 PM [express] GET /api/users 200 in 17ms :: []
+adminhub-app  | 12:27:25 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:27:34 PM [express] GET /api/auth/user 304 in 31ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5",…
+adminhub-app  | 12:27:35 PM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 12:27:35 PM [express] GET /api/services 304 in 54ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 12:27:35 PM [express] GET /api/team-members 304 in 62ms :: [{"id":"9a1c141b-6fff-4092-a57a-28429c41ff…
+adminhub-app  | 12:27:35 PM [express] GET /api/users 304 in 71ms :: []
+adminhub-app  | 12:27:37 PM [express] GET /api/auth/user 304 in 7ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 12:27:37 PM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 304 in …
+adminhub-app  | 12:27:37 PM [express] GET /api/services 304 in 21ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 12:27:37 PM [express] GET /api/users 304 in 17ms :: []
+adminhub-app  | 12:27:37 PM [express] GET /api/team-members 304 in 14ms :: [{"id":"9a1c141b-6fff-4092-a57a-28429c41ff…
+adminhub-app  | 12:28:01 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | Error creating user: error: insert or update on table "managed_users" violates foreign key constraint "managed_users_team_member_id_team_members_id_fk"
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.createManagedUser (file:///app/dist/index.js:1025:27)
+adminhub-app  |     at async file:///app/dist/index.js:4917:20 {
+adminhub-app  |   length: 329,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23503',
+adminhub-app  |   detail: 'Key (team_member_id)=() is not present in table "team_members".',
+adminhub-app  |   hint: undefined,
+adminhub-app  | 12:28:13 PM [express] POST /api/users 400 in 51ms :: {"message":"Failed to create user"}
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'managed_users',
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: 'managed_users_team_member_id_team_members_id_fk',
+adminhub-app  |   file: 'ri_triggers.c',
+adminhub-app  |   line: '2608',
+adminhub-app  |   routine: 'ri_ReportViolation'
+adminhub-app  | }
+adminhub-app  | Error creating user: error: insert or update on table "managed_users" violates foreign key constraint "managed_users_team_member_id_team_members_id_fk"
+adminhub-app  |     at /app/node_modules/pg-pool/index.js:45:11
+adminhub-app  |     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+adminhub-app  |     at async file:///app/node_modules/drizzle-orm/node-postgres/session.js:83:22
+adminhub-app  |     at async DatabaseStorage.createManagedUser (file:///app/dist/index.js:1025:27)
+adminhub-app  |     at async file:///app/dist/index.js:4917:20 {
+adminhub-app  |   length: 329,
+adminhub-app  |   severity: 'ERROR',
+adminhub-app  |   code: '23503',
+adminhub-app  |   detail: 'Key (team_member_id)=() is not present in table "team_members".',
+adminhub-app  |   hint: undefined,
+adminhub-app  |   position: undefined,
+adminhub-app  |   internalPosition: undefined,
+adminhub-app  |   internalQuery: undefined,
+adminhub-app  |   where: undefined,
+adminhub-app  |   schema: 'public',
+adminhub-app  |   table: 'managed_users',
+adminhub-app  |   column: undefined,
+adminhub-app  |   dataType: undefined,
+adminhub-app  |   constraint: 'managed_users_team_member_id_team_members_id_fk',
+adminhub-app  |   file: 'ri_triggers.c',
+adminhub-app  |   line: '2608',
+adminhub-app  |   routine: 'ri_ReportViolation'
+adminhub-app  | }
+adminhub-app  | 12:28:21 PM [express] POST /api/users 400 in 50ms :: {"message":"Failed to create user"}
+adminhub-app  | 12:28:30 PM [express] GET /api/roles 304 in 47ms :: [{"id":"fbd0cac0-ac4a-4a6e-9ade-ce10c57b2a4a","na…
+adminhub-app  | 12:28:30 PM [express] GET /api/registrations 200 in 113ms :: [{"id":"bb4283aa-9fb2-430f-9793-094c21eb…
+adminhub-app  | 12:28:37 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:29:14 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:29:50 PM [express] GET /api/auth/user 401 in 7ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:30:26 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:31:02 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:31:38 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:32:15 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:32:51 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:33:27 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:34:03 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:34:39 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:35:16 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:35:52 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:36:28 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:37:04 PM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:37:41 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:38:17 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:38:53 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:39:29 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:40:05 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:40:42 PM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:41:18 PM [express] GET /api/auth/user 401 in 3ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:41:54 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:42:30 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:43:07 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:43:43 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:44:19 PM [express] GET /api/auth/user 401 in 6ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:44:55 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:45:31 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:46:08 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:46:43 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:46:44 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:47:20 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:47:56 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:48:32 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:49:09 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:49:45 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:50:21 PM [express] GET /api/auth/user 401 in 5ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:50:57 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:51:34 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:52:10 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:52:46 PM [express] GET /api/auth/user 401 in 6ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:53:22 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:53:58 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:54:35 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:55:11 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:55:47 PM [express] GET /api/auth/user 401 in 2ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:56:23 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:56:59 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:57:35 PM [express] GET /api/auth/user 401 in 6ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:58:12 PM [express] GET /api/auth/user 401 in 10ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:58:48 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
+adminhub-app  | 12:59:24 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 1:00:01 PM [express] GET /api/auth/user 401 in 4ms :: {"message":"Unauthorized"}
+adminhub-app  | 1:00:25 PM [express] GET /api/users 200 in 46ms :: []
+adminhub-app  | 1:00:25 PM [express] GET /api/team-members 304 in 11ms :: [{"id":"9a1c141b-6fff-4092-a57a-28429c41ff…
+adminhub-app  | 1:00:32 PM [express] GET /api/auth/user 304 in 5ms :: {"id":"a74cccfb-d018-4767-9046-180dabb597b5","…
+adminhub-app  | 1:00:33 PM [express] GET /api/team-members/a74cccfb-d018-4767-9046-180dabb597b5/managed-user 200 in …
+adminhub-app  | 1:00:33 PM [express] GET /api/services 304 in 63ms :: [{"id":"1db092a4-b6e0-4360-8c33-a63ef4b0dac5",…
+adminhub-app  | 1:00:33 PM [express] GET /api/users 304 in 19ms :: []
+adminhub-app  | 1:00:33 PM [express] GET /api/team-members 304 in 21ms :: [{"id":"9a1c141b-6fff-4092-a57a-28429c41ff…
+adminhub-app  | 1:00:37 PM [express] GET /api/auth/user 401 in 1ms :: {"message":"Unauthorized"}
