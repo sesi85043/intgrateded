@@ -220,7 +220,6 @@ export default function Users() {
       email: "",
       fullName: "",
       platforms: [],
-      role: "",
       status: "active",
       platformUserIds: {},
       roles: {},
@@ -233,7 +232,6 @@ export default function Users() {
       email: user.email,
       fullName: user.fullName,
       platforms: Array.isArray(user.platforms) ? user.platforms : [],
-      role: user.role || "",
       status: user.status,
       platformUserIds: user.platformUserIds || {},
       roles: user.roles || {},
@@ -347,7 +345,7 @@ export default function Users() {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="capitalize">{user.role || "N/A"}</TableCell>
+                  <TableCell className="capitalize">{typeof user.roles === 'object' && user.roles ? Object.keys(user.roles)[0] || "N/A" : "N/A"}</TableCell>
                   <TableCell>
                     <Badge
                       variant={
@@ -392,7 +390,7 @@ export default function Users() {
                     <p>No users found</p>
                     {(searchQuery || platformFilter !== "all" || statusFilter !== "all") && (
                       <Button
-                        variant="link"
+                        variant="ghost"
                         onClick={() => {
                           setSearchQuery("");
                           setPlatformFilter("all");
@@ -525,19 +523,6 @@ export default function Users() {
                   <label htmlFor="provision-mailbox" className="text-sm">Provision Mailbox (Mailcow)</label>
                 </div>
               </FormItem>
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Admin, Agent, Viewer, etc." data-testid="input-role" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="status"

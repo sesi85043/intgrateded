@@ -109,14 +109,16 @@ export default function Registrations() {
   const { data: registrations = [], isLoading, refetch } = useQuery<PendingRegistration[]>({
     queryKey: ["/api/registrations"],
     queryFn: async () => {
-      return await apiRequest("/api/registrations", "GET");
+      const res = await apiRequest("/api/registrations", "GET");
+      return res.json();
     },
   });
 
   const { data: roles = [] } = useQuery<Role[]>({
     queryKey: ["/api/roles"],
     queryFn: async () => {
-      return await apiRequest("/api/roles", "GET");
+      const res = await apiRequest("/api/roles", "GET");
+      return res.json();
     },
   });
 
