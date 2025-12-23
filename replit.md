@@ -40,6 +40,30 @@ The Admin Hub is built with a modern web stack: React for the frontend, Express.
 - Focuses on auditability through comprehensive activity logging.
 - Designed for Replit deployment, with specific configurations for hosting and development.
 
+## Replit Setup (December 23, 2025)
+
+### Environment & Deployment
+- **Database:** PostgreSQL (Replit managed) connected via DATABASE_URL
+- **Workflow:** "Start application" configured on port 5000 with webview output
+- **Build Format:** Fixed esbuild to use `--format=esm` for proper ES Module compatibility with `.mjs` files
+- **Frontend:** Configured with Vite on port 5000, `allowedHosts: true` for Replit proxy support
+- **Backend:** Express.js serving combined API + static frontend on port 5000
+- **Deployment:** Configured for autoscale deployment with `npm run build` and `npm run start`
+
+### Recent Fixes (Replit Import)
+1. **Fixed build format mismatch:** Changed esbuild from `--format=cjs` to `--format=esm` to align with package.json `"type": "module"` and `.mjs` file extensions
+2. **Removed invalid runtime flag:** Deleted `--input-type=module` from start-prod script (not allowed when pointing to actual files)
+3. **Fixed storage.getRoles():** Changed to `storage.getRoleByCode()` which is the actual implemented method
+4. **Fixed undefined OTP handling:** Added null check before accessing `validOtp.id`
+5. **Commented out unimplemented mailbox provisioning:** Disabled `createMailcowMailbox()` call and related code paths
+6. **All LSP diagnostics resolved:** No remaining type errors
+
+### Running the App
+- Start workflow: `npm run dev` (development with Vite HMR)
+- Build: `npm run build` (Vite + esbuild production bundle)
+- Production: `npm run start` (runs dist/index.mjs)
+- Database: `npm run db:push` (sync Drizzle schema)
+
 ## External Dependencies
 - **Chatwoot:** For unified inbox and communication management.
 - **cPanel UAPI:** For automated email account provisioning.

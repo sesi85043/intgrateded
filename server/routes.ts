@@ -789,33 +789,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
 
-          generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
+          // Note: createMailcowMailbox is not yet implemented
+          // generatedEmail = await createMailcowMailbox(firstName, lastName, deptTag);
 
-          // Update managed user to record mailbox info in platformUserIds
-          try {
-            const mergedPlatformIds = {
-              ...(existingUser.platformUserIds || {}),
-              ...(user.platformUserIds || {}),
-              mailcow: generatedEmail?.email,
-            };
-            await storage.updateManagedUser(id, { platformUserIds: mergedPlatformIds });
-          } catch (updErr) {
-            console.warn('Failed to update managed user with mailcow info', updErr);
-          }
-
-          // Activity log: provisioning success
-          try {
-            await storage.createActivityLog(
-              req.user.claims.sub,
-              'provision_mailbox',
-              'managed_user',
-              id,
-              'mailcow',
-              { success: true, email: generatedEmail?.email }
-            );
-          } catch (logErr) {
-            console.warn('Failed to write provisioning activity log (update)', logErr);
-          }
+          // Note: Mailbox provisioning is not yet implemented
+          // When implemented, update managed user platformUserIds and create activity log here
         } catch (emailErr) {
           console.error('Failed to provision Mailcow mailbox during update:', emailErr);
           try {
@@ -1643,8 +1621,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // Map role string to role ID if provided
         if (role) {
-          const rolesList = await storage.getRoles();
-          const targetRole = rolesList.find(r => r.code === role);
+          const targetRole = await storage.getRoleByCode(role);
           if (targetRole) {
             updateData.roleId = targetRole.id;
             updateData.role = role; // update legacy field too
@@ -1982,7 +1959,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Mark OTP as used
-      await storage.markOtpAsUsed(validOtp.id, member.id);
+      if (validOtp) {
+        await storage.markOtpAsUsed(validOtp.id, member.id);
+      }
 
       // Update registration status
       await storage.updatePendingRegistration(id, {

@@ -1,0 +1,57 @@
+. The "Top-Level Await" Wall
+
+    The Issue: Your source code used await outside of any function at the very top of the file.
+
+    Why it broke: Modern Node.js allows this, but Bundlers (like esbuild) often wrap your code in a "wrapper function" during the build process. Once inside that wrapper, await is no longer "top-level," and Node.js throws a SyntaxError.
+
+    The Fix: We moved to a .then().catch() structure, which works inside or outside of wrappers.
+
+2. The "Module System" Identity Crisis
+
+    The Issue: Your project is set to "type": "module" in package.json, and the file extension is .mjs. This tells Node: "I am a modern ES Module."
+
+    Why it broke: The build script was using --format=cjs. This told the bundler: "Write the code in the old CommonJS style (using module.exports)."
+
+    The Result: Node opened a .mjs file, expected modern code, but found old module.exports code and threw a ReferenceError: module is not defined.
+
+3. The "Runtime Flag" Restriction
+
+    The Issue: The docker-compose.yml had a flag called --input-type=module.
+
+    Why it broke: In Node.js, you can only use that flag if you are sending raw text (like a string) into Node. If you point Node to an actual file (like dist/index.mjs), Node considers that flag "illegal" and crashes immediately with ERR_INPUT_TYPE_NOT_ALLOWED.
+
+4. The "Pathing" Mystery
+
+    The Issue: Your server was looking for the frontend website files in /app/public.
+
+    Why it broke: Your build command actually puts those files in /app/dist/public.
+
+    The Result: The server started, but as soon as it tried to show you the website, it crashed because the folder "didn't exist."
+
+5. The "Claims" Logic Bug (Current Head)
+
+    The Issue: The server is finally running! But when the browser asks for the current user, the code tries to read user.claims.
+
+    Why it's breaking: If a user isn't logged in, user is undefined. Trying to read undefined.claims causes a TypeError.
+
+    The Status: This is a "good" error because it proves the server is actually alive and answering requests.
+
+6. The "Git Conflict" Mess
+
+    The Issue: Because we tried to fix things on the VPS and on your local PC at the same time, the two versions of the "truth" clashed.
+
+    The Result: You couldn't push or pull without Git getting confused, which is why your 6 local fixes weren't reaching the server.
+
+Summary of the "Untangling"
+
+To get this working, all these gears have to mesh at once:
+
+    Code uses .then() (Fixes #1)
+
+    Bundler uses --format=esm (Fixes #2)
+
+    Compose removes --input-type (Fixes #3)
+
+    Path points to dist/public (Fixes #4)
+
+    Git is "Force Pushed" to clear the history (Fixes #6)
