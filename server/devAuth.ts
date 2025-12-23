@@ -187,13 +187,21 @@ export async function setupAuth(app: Express) {
       });
 
       // CRITICAL: Save session to ensure Set-Cookie header is sent
+      console.log('[auth] About to save session with ID:', req.sessionID);
+      console.log('[auth] Session data before save:', {
+        userId: req.session.user?.id,
+        email: req.session.user?.email,
+        teamMemberId: req.session.teamMemberId,
+      });
+      
       req.session.save((err: any) => {
         if (err) {
           console.error('[auth] Session save error:', err);
+          console.error('[auth] Session store type:', sessionStore.constructor.name);
           return res.status(500).json({ message: "Session save failed" });
         }
 
-        console.log('[auth] Session saved successfully');
+        console.log('[auth] Session saved successfully with ID:', req.sessionID);
         console.log('[auth] Set-Cookie header:', res.getHeader('set-cookie'));
 
         getTeamMemberWithPermissions(member.id).then(memberWithPerms => {

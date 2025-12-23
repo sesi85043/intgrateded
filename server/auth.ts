@@ -58,9 +58,20 @@ async function initAuth() {
   return auth;
 }
 
-export const setupAuth = (app: any) => {
-  // Note: setupAuth is called after initialization, so auth will be available
-  return (auth && (auth.setupAuth || auth.default?.setupAuth || auth.setupAuth)) || (() => {});
+export const setupAuth = async (app: any) => {
+  // Initialize auth module if not already done
+  if (!auth) {
+    await initAuth();
+  }
+  
+  // Call the auth module's setupAuth function
+  if (auth && auth.setupAuth) {
+    return await auth.setupAuth(app);
+  } else if (auth && auth.default && auth.default.setupAuth) {
+    return await auth.default.setupAuth(app);
+  } else {
+    console.warn('[auth] No setupAuth function found in loaded auth module');
+  }
 };
 
 export const isAuthenticated = (req: any, res: any, next: any) => {

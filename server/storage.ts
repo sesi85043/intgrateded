@@ -968,11 +968,26 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Initialize the Postgres session store
-export const sessionStore = new PostgresStore({
-  pool: pool,
-  tableName: 'sessions', // Must match the plural name we found in your DB
-  createTableIfMissing: true // Safety net
-});
+// Initialize the Postgres session store with error handling
+let sessionStore: any;
+try {
+  sessionStore = new PostgresStore({
+    pool: pool,
+    tableName: 'sessions',
+    createTableIfMissing: true,
+  });
+  console.log('[storage] PostgreSQL session store initialized successfully');
+} catch (err) {
+  console.error('[storage] Failed to initialize PostgreSQL session store:', err);
+  // Fallback to memory store if pool connection fails
+  import('memorystore').then((MemoryStore) => {
+    console.warn('[storage] Using fallback MemoryStore for sessions');
+    const Store = MemoryStore.default;
+    sessionStore = new Store({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
+  });
+}
 
+export { sessionStore };
 export const storage = new DatabaseStorage();
