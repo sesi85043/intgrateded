@@ -1,0 +1,988 @@
+sed 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (9/9), completed with 5 local objects.
+To https://github.com/sesi85043/intgrateded
+ + 299d611...4ab85ec main -> main (forced update)
+PS C:\Users\MM_SD\Downloads\intgrateded-1(3)\adminhub> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Dec 23 10:45:27 CET 2025
+
+  System load:           0.08
+  Usage of /:            19.4% of 192.69GB
+  Memory usage:          51%
+  Swap usage:            0%
+  Processes:             358
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There is 1 zombie process.
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Tue Dec 23 10:33:33 2025 from 41.193.198.198
+root@vmi2905850:~# cd ~/adminhub && \
+git fetch origin main && \
+git reset --hard origin/main && \
+docker compose down && \
+docker builder prune -a -f && \
+rm -rf dist/ && \
+docker compose build --no-cache app && \
+docker compose up -d app && \
+docker compose logs -f app
+remote: Enumerating objects: 17, done.
+remote: Counting objects: 100% (17/17), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 12 (delta 9), reused 12 (delta 9), pack-reused 0 (from 0)
+Unpacking objects: 100% (12/12), 6.67 KiB | 455.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+ + 299d611...4ab85ec main       -> origin/main  (forced update)
+HEAD is now at 4ab85ec Add user authentication checks to prevent runtime errors
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+ID Container adminhub-app            Removed    RECLAIMABLE     SIZE            LAST ACCESSED                 10.3s 
+isg44jw2m79y8c3nadmnxsi9b               oved    true            46.07kB         15 minutes ago                 0.3s 
+x1hefnzcizhcxbp0roli7hdd9*              oving   true    8.192kB         11 minutes ago                         0.1s 
+4m0c0y67j3kl6p9gwhso8ixam*                      true    8.192kB         11 minutes ago
+ebq0icsw6zt6tsj39itcnbfln*                      true    2.29MB          11 minutes ago
+pcs4tjq1dlq4q24fe15uqf7zz*                      true    2.29MB          15 minutes ago
+uskrffk4alge64v7o737vzs3t*                      true    28.5MB          11 minutes ago
+wrfvnqgu1y4v0sc7f3xsm1ewn                       true    46.07kB         11 minutes ago
+mhyuifgl5wgmjxthcxf4qpngd                       true    595.7MB         15 minutes ago
+u8b3v3k0ha6jr2lq982ftfsls                       true    595.7MB         11 minutes ago
+5dtz38oi4mtkhfl2qml4wji4f                       true    20.95kB         11 minutes ago
+77wjl19yzds0vh6dtyxqqmhe2                       true    20.95kB         15 minutes ago
+vwsnf1q6eorrrunxunm0j5hf3                       true    17.33kB         11 minutes ago
+yi5567f9ek2pvhq3v0qqx0xt7                       true    28.5MB          15 minutes ago
+9kezalf4c8wtlncf6xr7roakr                       true    28.5MB          11 minutes ago
+qdcb0iwwerv74p6axjlqr483a                       true    17.34kB         15 minutes ago
+mme68511mk3iefa45qrnboea2                       true    13.25kB         11 minutes ago
+q0c8f3mpnjk1x25243y29auci                       true    13.25kB         15 minutes ago
+lazhsshdemfov7gxrpk6dgjtm                       true    64.98kB         15 minutes ago
+5oehtfw3kjjs6gw5vd14ie7ai                       true    64.98kB         11 minutes ago
+twmo7pe8khjq9v7406b976p83                       true    393.8kB         11 minutes ago
+k6g4h5sy4qk6lihxf6mfw2mi0                       true    393.8kB         15 minutes ago
+wsp7xtkxi9uymiawspo960flo                       true    354.8kB         15 minutes ago
+fp9wch2kxxtrpba0rrq6w628f                       true    354.8kB         11 minutes ago
+agozce1lt0jtq7ysosvcly9gc                       true    3.275MB         11 minutes ago
+svs0c2ldg92hso76wocllhkxz                       true    3.275MB         15 minutes ago
+ziesx5qthpo17kyj8ukr9hsap                       true    482MB           11 minutes ago
+i7yuts1p1obyzn0byfux2klb6                       true    12.76kB         15 minutes ago
+ji0xgu4sq7kcu9md2ismgrd1l                       true    289.4kB         15 minutes ago
+thge2b3zl209ex6u1otl59hwy                       true    81.84MB         15 minutes ago
+el7egf5c0d0i0n6odewzy9d81                       true    8.285kB         11 minutes ago
+9xuggdxvaglmag6n3x6lqs04c                       true    443B            15 minutes ago
+p8zkdgg2tmpgqj9r518x0xrsn                       true    1.262MB         15 minutes ago
+aio8hb5834nefge6miuesqkdk                       true    42.78MB         15 minutes ago
+xi9kk7l3g46gfu30fpg9j4n1g                       true    3.86MB          15 minutes ago
+Total:  1.902GB
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 58.3s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                     0.0s
+ => => reading from stdin 494B                                                                                 0.0s 
+ => [internal] load build definition from Dockerfile                                                           0.0s
+ => => transferring dockerfile: 1.86kB                                                                         0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                                              2.3s 
+ => [internal] load .dockerignore                                                                              0.0s
+ => => transferring context: 150B                                                                              0.0s 
+ => [internal] load build context                                                                              0.4s 
+ => => transferring context: 27.22MB                                                                           0.3s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d92  0.1s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac  0.0s 
+ => [builder 2/5] WORKDIR /app                                                                                 0.1s 
+ => [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                         8.6s
+ => [builder 3/5] COPY . .                                                                                     0.2s 
+ => [builder 4/5] RUN npm install                                                                             19.5s 
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                                     0.2s 
+ => [stage-1  5/14] COPY tsconfig.json ./                                                                      0.0s 
+ => [stage-1  6/14] RUN npm install --omit=dev                                                                14.3s 
+ => [builder 5/5] RUN npm run build                                                                           13.1s 
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                       0.3s 
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                           0.0s 
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                   0.0s 
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                   0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                            0.0s 
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh       0.2s 
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                             0.2s 
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                              0.2s 
+ => exporting to image                                                                                        20.4s 
+ => => exporting layers                                                                                       12.8s 
+ => => exporting manifest sha256:3799ca6ceae1285c24e77e202e7a708af4c2967664b5ba15f84d328643b9d7c9              0.0s 
+ => => exporting config sha256:2c39414211b6ef1feb8eab38255dc03fcc1246f33cb164046744ee7aa9a7f062                0.0s 
+ => => exporting attestation manifest sha256:ef1cd0ba926ac4d2c90d96854b3447af7a7437723aa83ab6d2edd0cabb25f1e4  0.0s 
+ => => exporting manifest list sha256:d4bcc244924afe8d650cd2fd87764804be8e0b4af5c382b70ff56a5e075d032c         0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                                         0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                                      7.5s 
+ => resolving provenance for metadata file                                                                     0.0s 
+[+] build 1/1
+ ✔ Image adminhub-app Built                                                                                   58.5s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 3/3
+ ✔ Network adminhub_adminhub-network Created                                                                   0.1s 
+ ✔ Container adminhub-postgres       Healthy                                                                  11.7s 
+ ✔ Container adminhub-app            Created                                                                   0.1s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  | 
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  | 
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+        adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  | 
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  | 
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | node:internal/modules/esm/resolve:1182
+adminhub-app  |     if (inputTypeFlag) { throw new ERR_INPUT_TYPE_NOT_ALLOWED(); }
+adminhub-app  |                                ^
+adminhub-app  |
+adminhub-app  | Error [ERR_INPUT_TYPE_NOT_ALLOWED]: --input-type can only be used with string input via --eval, --print, or STDIN
+adminhub-app  |     at defaultResolve (node:internal/modules/esm/resolve:1182:32)
+adminhub-app  |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:708:12)
+adminhub-app  |     at #cachedDefaultResolve (node:internal/modules/esm/loader:657:25)
+adminhub-app  |     at ModuleLoader.resolve (node:internal/modules/esm/loader:640:38)
+adminhub-app  |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:264:38)
+adminhub-app  |     at ModuleLoader.import (node:internal/modules/esm/loader:605:34)
+adminhub-app  |     at node:internal/modules/run_main:174:35
+adminhub-app  |     at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:11)
+adminhub-app  |     at runEntryPointWithESMLoader (node:internal/modules/run_main:141:19)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5) {
+adminhub-app  |   code: 'ERR_INPUT_TYPE_NOT_ALLOWED'
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)

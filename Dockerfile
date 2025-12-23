@@ -52,5 +52,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # Expose internal port (not accessible from outside, only via port mapping)
 EXPOSE 5000
 
-# Use entrypoint script for initialization, then start PM2
-CMD ["/app/docker-entrypoint.sh", "pm2-runtime", "start", "dist/index.js", "--name", "adminhub"]
+# Use entrypoint script for initialization, then start application
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["node", "dist/index.mjs"]
