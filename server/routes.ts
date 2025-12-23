@@ -46,6 +46,8 @@ import {
   hasPermission,
   isRole,
   canAccessDepartment,
+  getTeamMemberWithPermissions,
+  type AuthenticatedTeamMember,
 } from "./rbac";
 import bcrypt from "bcryptjs";
 import registerTeamManagedRoutes from './routes-team-managed';
@@ -129,23 +131,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-      try {
-        // Handle case where user isn't properly authenticated
-        if (!req.user?.claims?.sub) {
-          return res.status(401).json({ message: "Unauthorized" });
+  app.get('/api/auth/user', async (req: any, res) => {
+    try {
+      // Support both session-based auth (devAuth) and OIDC auth (replitAuth/standaloneAuth)
+      
+      // Session-based auth (devAuth)
+      if (req.session?.user) {
+        let teamMember: AuthenticatedTeamMember | null = null;
+        
+        if (req.session.teamMemberId) {
+          teamMember = await getTeamMemberWithPermissions(req.session.teamMemberId);
         }
+
+        return res.json({
+          ...req.session.user,
+          teamMember,
+        });
+      }
+      
+      // OIDC-based auth (replitAuth/standaloneAuth)
+      if (req.user?.claims?.sub) {
         const userId = req.user.claims.sub;
         const user = await storage.getUser(userId);
         if (!user) {
           return res.status(404).json({ message: "User not found" });
         }
-        res.json(user);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        res.status(500).json({ message: "Failed to fetch user" });
+        return res.json(user);
       }
-    });
+      
+      // No valid authentication found
+      return res.status(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
   }
 
   // Profile routes - Update own profile
