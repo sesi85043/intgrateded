@@ -81,23 +81,28 @@ app.use((req, res, next) => {
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow all origins in dev/Replit mode or when CORS_ORIGIN=*
-    if (allowAllOrigins) {
+    // 1. Allow if no origin (Same-origin requests, internal health checks)
+    if (!origin) return callback(null, true);
+
+    // 2. Allow if dev mode or wildcard
+    if (allowAllOrigins || process.env.NODE_ENV !== 'production') {
       return callback(null, true);
     }
-    // Allow requests with no origin (curl, Postman, same-origin)
-    if (!origin) {
+
+    // 3. Normalize origin check (handles ports and trailing slashes)
+    const isAllowed = allowedOrigins.some(allowed => origin.startsWith(allowed));
+    
+    if (isAllowed) {
       return callback(null, true);
     }
-    // Check against allowed origins list
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    // Reject unknown origins
-    console.warn(`[CORS] Rejected origin: ${origin}`);
+
+    // 4. LOG THE REJECTION so we can see the exact string the browser sent
+    console.warn(`[CORS] ❌ REJECTED: "${origin}" | Expected one of: ${allowedOrigins.join(', ')}`);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 app.use((req, res, next) => {

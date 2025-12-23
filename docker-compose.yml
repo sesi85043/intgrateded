@@ -46,6 +46,7 @@ services:
       SESSION_SECRET: ${SESSION_SECRET:-your-secure-session-secret-change-this}
       SESSION_COOKIE_SECURE: "false"
       SESSION_COOKIE_SAME_SITE: "lax"
+      TRUST_PROXY: "1"
       SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-adminhub.sid}
       # Allowlist of origins (comma-separated). Set explicitly to the production frontend URLs.
       CORS_ORIGIN: "http://158.220.107.106:9100,https://hub.allelectronics.one"
