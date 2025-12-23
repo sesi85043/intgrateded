@@ -102,9 +102,9 @@ export async function setupAuth(app: Express) {
 
   // Middleware to verify session cookie handling
   app.use((req: any, res, next) => {
-    const cookieConfig = sessionMiddleware.cookie || {};
     if (req.path.startsWith('/api/auth/')) {
-      console.log(`[auth] ${req.method} ${req.path} | Secure=${cookieConfig.secure} SameSite=${cookieConfig.sameSite} | Cookies: ${req.get('cookie')}`);
+      const sessionInfo = req.session ? 'has-session' : 'no-session';
+      console.log(`[auth] ${req.method} ${req.path} | ${sessionInfo} | Cookies: ${req.get('cookie')}`);
     }
     next();
   });
@@ -134,10 +134,6 @@ export async function setupAuth(app: Express) {
         return res.status(401).json({ message: "Account is deactivated" });
       }
 
-      if (!member.isVerified) {
-        return res.status(401).json({ message: "Account is pending admin approval" });
-      }
-
       if (!member.passwordHash) {
         return res.status(401).json({ message: "Password not set for this account" });
       }
@@ -145,8 +141,8 @@ export async function setupAuth(app: Express) {
       let isValid = false;
       try {
         isValid = await bcrypt.compare(password, member.passwordHash);
-      } catch (bcryptErr) {
-        console.error('[auth] bcrypt compare failed:', bcryptErr && (bcryptErr.stack || bcryptErr));
+      } catch (bcryptErr: any) {
+        console.error('[auth] bcrypt compare failed:', bcryptErr && (bcryptErr?.stack || bcryptErr));
         // Avoid crashing: treat as invalid credentials
         isValid = false;
       }
@@ -174,8 +170,8 @@ export async function setupAuth(app: Express) {
           firstName: user.firstName,
           lastName: user.lastName,
         });
-      } catch (e) {
-        console.error('[auth] Failed upserting user row for session user:', e && (e.stack || e));
+      } catch (e: any) {
+        console.error('[auth] Failed upserting user row for session user:', e && (e?.stack || e));
       }
 
       req.session.user = user;
@@ -188,7 +184,7 @@ export async function setupAuth(app: Express) {
       });
 
       // CRITICAL: Save session to ensure Set-Cookie header is sent
-      req.session.save((err) => {
+      req.session.save((err: any) => {
         if (err) {
           console.error('[auth] Session save error:', err);
           return res.status(500).json({ message: "Session save failed" });
