@@ -29,27 +29,28 @@ const DEV_USER = {
 };
 
 export function getSession() {
-  // SESSION_COOKIE_SECURE env var takes precedence
-  // If not set, default to false for HTTP deployments (VPS without SSL)
-  // Set SESSION_COOKIE_SECURE=true explicitly when using HTTPS
+  // FORCE secure to false if we are on an IP or don't have SSL
+  // This is the "Loop Killer" fix
   const secureFlag = process.env.SESSION_COOKIE_SECURE === 'true';
   
-  // For sameSite: use 'lax' for HTTP, 'none' only works with secure cookies (HTTPS)
-  // If secure=false, sameSite must be 'lax' or 'strict' (not 'none')
-  let sameSiteVal: 'lax' | 'strict' | 'none' = 'lax';
-  if (process.env.SESSION_COOKIE_SAME_SITE) {
-    sameSiteVal = process.env.SESSION_COOKIE_SAME_SITE as any;
-  } else if (secureFlag) {
-    sameSiteVal = 'none';
-  }
+  // LOG the state so we can see it in the VPS logs
+  console.log(`[auth] ATTEMPTING SESSION: Secure=${secureFlag} | Env=${process.env.NODE_ENV}`);
 
-  console.log(`[auth] Session cookie config: secure=${secureFlag} sameSite=${sameSiteVal} (NODE_ENV=${process.env.NODE_ENV})`);
+  let sameSiteVal: 'lax' | 'strict' | 'none' = 'lax';
+  
+  // If we are NOT secure (HTTP), we MUST use 'lax' or browsers reject it
+  if (!secureFlag) {
+    sameSiteVal = 'lax';
+  } else if (process.env.SESSION_COOKIE_SAME_SITE) {
+    sameSiteVal = process.env.SESSION_COOKIE_SAME_SITE as any;
+  }
 
   return session({
     name: process.env.SESSION_COOKIE_NAME || 'adminhub.sid',
     secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
     resave: false,
     saveUninitialized: false,
+    proxy: true, // ADD THIS LINE - vital for Docker
     cookie: {
       httpOnly: true,
       secure: secureFlag,
