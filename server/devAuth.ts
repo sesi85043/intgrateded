@@ -94,7 +94,19 @@ async function ensureDevTeamMember(): Promise<string | null> {
 
 export async function setupAuth(app: Express) {
   app.set('trust proxy', 1);
-  app.use(getSession());
+  
+  // Initialize session middleware - must be after trust proxy and CORS
+  const sessionMiddleware = getSession();
+  app.use(sessionMiddleware);
+
+  // Middleware to verify session cookie handling
+  app.use((req: any, res, next) => {
+    const cookieConfig = sessionMiddleware.cookie || {};
+    if (req.path.startsWith('/api/auth/')) {
+      console.log(`[auth] ${req.method} ${req.path} | Secure=${cookieConfig.secure} SameSite=${cookieConfig.sameSite} | Cookies: ${req.get('cookie')}`);
+    }
+    next();
+  });
 
   app.get("/api/dev-login", async (req: any, res) => {
     await storage.upsertUser(DEV_USER);

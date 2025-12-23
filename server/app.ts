@@ -102,7 +102,9 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie', 'Content-Type', 'X-Total-Count'],
+  optionsSuccessStatus: 200
 }));
 
 app.use((req, res, next) => {
