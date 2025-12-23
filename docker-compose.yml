@@ -49,7 +49,7 @@ services:
       TRUST_PROXY: "1"
       SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME:-adminhub.sid}
       # Allowlist of origins (comma-separated). Set explicitly to the production frontend URLs.
-      CORS_ORIGIN: "http://158.220.107.106:9100,https://hub.allelectronics.one"
+      CORS_ORIGIN: "http://158.220.107.106:9100,http://hub.allelectronics.one,https://hub.allelectronics.one"
       # Admin password used for initial provisioning or CLI-style admin creation
       ADMIN_PASSWORD: admin123
       NODE_OPTIONS: --max-old-space-size=1024
