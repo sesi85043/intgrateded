@@ -1,0 +1,605 @@
+p Built                                                                                   57.5s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 3/3
+ ✔ Network adminhub_adminhub-network Created                                                                   0.0s 
+ ✔ Container adminhub-postgres       Healthy                                                                  11.5s 
+ ✔ Container adminhub-app            Created                                                                   0.1s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:05 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:07 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:08 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:09 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:11 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:13 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:17 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:24 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:31:38 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:32:04 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/public
+adminhub-app  | [static] ❌ ERROR: Directory not found: /app/public
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  | [static] Files in root: [
+adminhub-app  |   'dist',
+adminhub-app  |   'docker-entrypoint.sh',
+adminhub-app  |   'logs',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'migrations',
+adminhub-app  |   'node_modules',
+adminhub-app  |   'package-lock.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'package.json',
+adminhub-app  |   'server',
+adminhub-app  |   'shared',
+adminhub-app  |   'tsconfig.json'
+adminhub-app  | ]
+adminhub-app  | [init] ❌ CRITICAL: Failed to start application: Error: Could not find the build directory: /app/public. Ensure 'npm run build' completed successfully.
+adminhub-app  |     at serveStatic (file:///app/dist/index.mjs:6064:11)
+adminhub-app  |     at runApp (file:///app/dist/index.mjs:5932:9)
+adminhub-app exited with code 1 (restarting)
+^C
+root@vmi2905850:~/adminhub# git add .
+git commit -m "Fix: Point static server to dist/public"
+git push origin main
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+Username for 'https://github.com': ^C
+root@vmi2905850:~/adminhub# exit
+logout
+Connection to 158.220.107.106 closed.
+PS C:\Users\MM_SD\Downloads\intgrateded-1(2)\adminhub> git add .
+PS C:\Users\MM_SD\Downloads\intgrateded-1(2)\adminhub> git commit -m "Fix: Point static server to dist/public"
+[main 299d611] Fix: Point static server to dist/public
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\MM_SD\Downloads\intgrateded-1(2)\adminhub> git push origin main
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 390 bytes | 55.00 KiB/s, done.
+Total 4 (delta 3), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (3/3), completed with 3 local objects.
+To https://github.com/sesi85043/intgrateded
+   02a679e..299d611  main -> main
+PS C:\Users\MM_SD\Downloads\intgrateded-1(2)\adminhub> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Dec 23 10:33:32 CET 2025
+
+  System load:           0.25
+  Usage of /:            19.1% of 192.69GB
+  Memory usage:          50%
+  Swap usage:            0%
+  Processes:             360
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There is 1 zombie process.
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Tue Dec 23 10:29:39 2025 from 41.193.198.198
+root@vmi2905850:~# cd ~/adminhub && \
+git fetch origin main && \
+git reset --hard origin/main && \
+docker compose down && \
+docker compose up -d --build app
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 4 (delta 3), reused 4 (delta 3), pack-reused 0 (from 0)
+Unpacking objects: 100% (4/4), 370 bytes | 92.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+   02a679e..299d611  main       -> origin/main
+HEAD is now at 299d611 Fix: Point static server to dist/public
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+ ✔ Container adminhub-app            Removed                                                                   0.0s 
+ ✔ Container adminhub-postgres       Removed                                                                   0.3s 
+ ✔ Network adminhub_adminhub-network Removed                                                                   0.1s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 32.6s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                     0.0s 
+ => => reading from stdin 470B                                                                                 0.0s 
+ => [internal] load build definition from Dockerfile                                                           0.0s 
+ => => transferring dockerfile: 1.82kB                                                                         0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                                              0.7s 
+ => [internal] load .dockerignore                                                                              0.0s 
+ => => transferring context: 150B                                                                              0.0s 
+ => [internal] load build context                                                                              0.0s 
+ => => transferring context: 42.13kB                                                                           0.0s
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d92  0.0s
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac  0.0s
+ => CACHED [builder 2/5] WORKDIR /app                                                                          0.0s
+ => [builder 3/5] COPY . .                                                                                     0.2s
+ => [builder 4/5] RUN npm install                                                                             16.8s
+ => [builder 5/5] RUN npm run build                                                                           12.4s
+ => CACHED [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                  0.0s
+ => CACHED [stage-1  4/14] COPY package.json package-lock.json ./                                              0.0s
+ => CACHED [stage-1  5/14] COPY tsconfig.json ./                                                               0.0s
+ => CACHED [stage-1  6/14] RUN npm install --omit=dev                                                          0.0s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                       0.0s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                           0.0s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                   0.0s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                   0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                            0.0s
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh       0.2s
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                             0.2s
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                              0.2s
+ => exporting to image                                                                                         0.4s
+ => => exporting layers                                                                                        0.2s
+ => => exporting manifest sha256:cc76554fa298690c0805f348c051cf06c5550d65d60491c420ab801a411baa10              0.0s
+ => => exporting config sha256:4d46735a22ebcd0319ce3b23527a912f0456edd21efd061f830bcdefabbcca8e                0.0s
+ => => exporting attestation manifest sha256:a73709ec66dd4b6a9ad1e542849cea2c065c06a748443ef57683bb97c96de8cb  0.0s
+ => => exporting manifest list sha256:395fd40f5e4c3c229d8b29f33967eef1cfce4fdc46ae01afea21ec8f23ff810b         0.0s
+ => => naming to docker.io/library/adminhub-app:latest                                                         0.0s
+ => => unpacking to docker.io/library/adminhub-app:latest                                                      0.1s
+ => resolving provenance for metadata file                                                                     0.0s 
+[+] up 4/4
+ ✔ Image adminhub-app                Built                                                                    32.7s 
+ ✔ Network adminhub_adminhub-network Created                                                                   0.1s 
+ ✔ Container adminhub-postgres       Healthy                                                                  10.9s 
+ ✔ Container adminhub-app            Created                                                                   0.1s 
+root@vmi2905850:~/adminhub# docker compose logs -f app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | [CORS] Config: {
+adminhub-app  |   allowAllOrigins: false,
+adminhub-app  |   allowedOrigins: [ 'http://158.220.107.106:9100', 'https://hub.allelectronics.one' ],
+adminhub-app  |   NODE_ENV: 'production',
+adminhub-app  |   CORS_ORIGIN: 'http://158.220.107.106:9100,https://hub.allelectronics.one'
+adminhub-app  | }
+adminhub-app  | [STARTUP] ✅ All required environment variables present
+adminhub-app  | 9:34:29 AM [chatwoot] Chatwoot routes registered
+adminhub-app  | [static] Initializing static file server...
+adminhub-app  | [static] Root path: /app
+adminhub-app  | [static] Public path: /app/dist/public
+adminhub-app  | [static] ✅ Static file serving configured.
+adminhub-app  | 9:34:29 AM [express] serving on port 5000
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:34 AM [express] GET /api/auth/user 500 in 8ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:39 AM [express] GET /api/auth/user 500 in 1ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:44 AM [express] GET /api/auth/user 500 in 2ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:50 AM [express] GET /api/auth/user 500 in 1ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:54 AM [express] GET /api/auth/user 500 in 1ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:55 AM [express] GET /api/auth/user 500 in 1ms :: {"message":"Failed to fetch user"}
+adminhub-app  | 9:34:59 AM [express] POST /api/auth/login 200 in 5ms
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:34:59 AM [express] GET /api/auth/user 500 in 1ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:35:00 AM [express] GET /api/auth/user 500 in 2ms :: {"message":"Failed to fetch user"}
+adminhub-app  | 9:35:03 AM [express] POST /api/auth/login 200 in 2ms
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:35:03 AM [express] GET /api/auth/user 500 in 1ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:35:05 AM [express] GET /api/auth/user 500 in 2ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:35:10 AM [express] GET /api/auth/user 500 in 2ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:35:40 AM [express] GET /api/auth/user 500 in 2ms :: {"message":"Failed to fetch user"}
+adminhub-app  | Error fetching user: TypeError: Cannot read properties of undefined (reading 'claims')
+adminhub-app  |     at file:///app/dist/index.mjs:4087:33
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at isAuthenticated (file:///app/dist/index.mjs:1440:16)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at next (/app/node_modules/express/lib/router/route.js:149:13)
+adminhub-app  |     at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+adminhub-app  |     at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)        
+adminhub-app  |     at /app/node_modules/express/lib/router/index.js:284:15
+adminhub-app  |     at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+adminhub-app  | 9:36:11 AM [express] GET /api/auth/

@@ -7,14 +7,11 @@ import express, { type Express } from "express";
 import runApp from "./app";
 
 export async function serveStatic(app: Express, _server: Server) {
-  // Get directory path from process.cwd() since import.meta won't work in bundled CJS
-  const __dirname = path.resolve(process.cwd());
-  
-  const distPath = path.resolve(__dirname, "public");
+  // Vite outputs built files to dist/public/
+  const distPath = path.resolve(process.cwd(), "dist", "public");
   
   console.log(`[static] Looking for static files at: ${distPath}`);
   console.log(`[static] Current directory: ${process.cwd()}`);
-  console.log(`[static] __dirname: ${__dirname}`);
 
   if (!fs.existsSync(distPath)) {
     console.error(`[static] Directory not found: ${distPath}`);
