@@ -47,10 +47,11 @@ RUN adduser -S nodejs -u 1001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) throw new Error(r.statusCode)})"
+  CMD node -e "import('http').then(h => h.get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) process.exit(1)}))"
 
 # Expose internal port (not accessible from outside, only via port mapping)
 EXPOSE 5000
 
-# Use entrypoint script for initialization, then start PM2
-CMD ["/app/docker-entrypoint.sh", "pm2-runtime", "start", "dist/index.js", "--name", "adminhub"]
+# Use entrypoint script for initialization, then start application
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["node", "dist/index.mjs"]

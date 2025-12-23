@@ -57,7 +57,7 @@ services:
     networks:
       - adminhub-network
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      test: ["CMD", "node", "-e", "import('http').then(h => h.get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) process.exit(1)}))"]
       interval: 30s
       timeout: 10s
       retries: 3
