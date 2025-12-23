@@ -6,6 +6,8 @@ import { db } from "./db";
 import { roles, teamMembers, departments, ROLE_TYPES } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+// Import the store from storage
+import { sessionStore } from "./storage";
 
 declare module "express-session" {
   interface SessionData {
@@ -46,6 +48,7 @@ export function getSession() {
   }
 
   return session({
+    store: sessionStore,
     name: process.env.SESSION_COOKIE_NAME || 'adminhub.sid',
     secret: process.env.SESSION_SECRET || "dev-secret-change-in-production",
     resave: false,

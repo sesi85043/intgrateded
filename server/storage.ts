@@ -58,6 +58,10 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql, and, gte, or, inArray, lte } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db"; // Import the pool we created in db.ts
+const PostgresStore = connectPg(session);
 
 export interface IStorage {
   // User operations (required for Replit Auth)
@@ -963,5 +967,12 @@ export class DatabaseStorage implements IStorage {
     return result;
   }
 }
+
+// Initialize the Postgres session store
+export const sessionStore = new PostgresStore({
+  pool: pool,
+  tableName: 'sessions', // Must match the plural name we found in your DB
+  createTableIfMissing: true // Safety net
+});
 
 export const storage = new DatabaseStorage();
