@@ -1,10 +1,11 @@
 {
   "name": "rest-express",
   "version": "1.0.0",
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index-dev.ts",
-    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/index.js && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/run-migration.cjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/run-seed.cjs",
+    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/run-migration.cjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/run-seed.cjs",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc",
     "db:push": "drizzle-kit push",
