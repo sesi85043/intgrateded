@@ -1,0 +1,50 @@
+Here is the full diagnosis and the finalized roadmap to get your AdminHub live.
+The Diagnosis: Why it crashed
+
+You are experiencing a Runtime Conflict. Your code is modern (ES Modules/ESM), but your server was configured to load it using legacy tools.
+
+    The Code Requirement: You added cPanel and Chatwoot logic that uses top-level await and import.meta. These features only work if Node.js treats the file as an ES Module.
+
+    The Build Process: Initially, your build was creating .js files. Node.js on your VPS was guessing they were "CommonJS" (legacy) files, causing the SyntaxError: Unexpected reserved word.
+
+    The Middleware (PM2) Conflict: Even after we switched to .mjs extensions, the tool PM2 (pm2-runtime) was trying to wrap your code to monitor it. PM2 often fails to parse modern ESM features like top-level await when starting via a "fork" mode, leading to the same SyntaxError.
+
+The Solution Strategy
+
+We must make the VPS match your Replit environment exactly. Replit works because it runs the code directly with node and doesn't use legacy wrappers.
+Step-by-Step Recovery Plan
+1. Local Configuration (Your Computer)
+
+Update these files in VS Code to ensure the build and start commands are "PM2-free" and explicitly ESM.
+
+package.json Updates:
+
+    Ensure "type": "module" is present.
+
+    Update scripts to use .mjs and direct node calls:
+
+JSON
+
+"scripts": {
+  "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-seed.mjs",
+  "start": "NODE_ENV=production node dist/index.mjs"
+}
+
+docker-compose.yml Updates:
+
+    Remove the duplicate depends_on.
+
+    Change the command to run node directly.
+
+    Fix the healthcheck to use ESM dynamic imports.
+
+YAML
+
+app:
+  command: node dist/index.mjs
+  healthcheck:
+    test: ["CMD", "node", "-e", "import('http').then(h => h.get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) process.exit(1)}))"]
+
+docker-entrypoint.sh Updates:
+
+    Ensure it calls dist/run-migration.mjs and dist/run-seed.mjs (not .cjs).
