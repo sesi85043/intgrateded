@@ -1,0 +1,891 @@
+To https://github.com/sesi85043/intgrateded
+   2b30773..6df9ceb  main -> main
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Dec 23 08:29:50 CET 2025
+
+  System load:           0.71
+  Usage of /:            21.6% of 192.69GB
+  Memory usage:          53%
+  Swap usage:            0%
+  Processes:             352
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There are 2 zombie processes.
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Tue Dec 23 08:25:49 2025 from 41.193.198.198
+root@vmi2905850:~# cd ~/adminhub
+git fetch origin main
+git reset --hard origin/main
+
+# Kill the broken build leftovers
+docker compose down
+docker rmi adminhub-app
+docker compose up -d --build app
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 317 bytes | 79.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+   2b30773..6df9ceb  main       -> origin/main
+HEAD is now at 6df9ceb Restore ESM support for top-level await
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+Untagged: adminhub-app:latest
+Deleted: sha256:15f2642e89a93fec72cbcebc6a56d23ff26cd73053cfdb9aa6ba02399d0e4eda                               0.5s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion ork Removing                                                                  0.1s 
+[+] Building 61.2s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                     0.0s
+ => => reading from stdin 470B                                                                                 0.0s
+ => [internal] load build definition from Dockerfile                                                           0.0s
+ => => transferring dockerfile: 1.86kB                                                                         0.0s
+ => [internal] load metadata for docker.io/library/node:20-alpine                                              0.4s
+ => [internal] load .dockerignore                                                                              0.0s
+ => => transferring context: 150B                                                                              0.0s
+ => [internal] load build context                                                                              0.1s
+ => => transferring context: 43.80kB                                                                           0.1s
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d92  0.0s
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac  0.0s
+ => CACHED [builder 2/5] WORKDIR /app                                                                          0.0s
+ => CACHED [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                  0.0s
+ => [builder 3/5] COPY . .                                                                                     0.3s
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                                     0.1s
+ => [stage-1  5/14] COPY tsconfig.json ./                                                                      0.0s
+ => [stage-1  6/14] RUN npm install --omit=dev                                                                17.0s
+ => [builder 4/5] RUN npm install                                                                             21.1s
+ => [builder 5/5] RUN npm run build                                                                           14.6s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                       0.4s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                           0.0s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                   0.0s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                   0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                            0.0s
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh       0.2s
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                             0.3s
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                              0.3s
+ => exporting to image                                                                                        21.9s
+ => => exporting layers                                                                                       14.6s 
+ => => exporting manifest sha256:7150233b164ec131a4a7338fca648526b961d0ad771775169218d0fdb0cbe12f              0.0s
+ => => exporting config sha256:f1cee046f1c396c82113675039dcefbf78981c9548a567c6c9fa8d6498ebf643                0.0s 
+ => => exporting attestation manifest sha256:d8418a34ebbacb619cb01b54bbde26a1ed2677c5ff16fcc5cb5ae473a4e044cf  0.0s 
+ => => exporting manifest list sha256:b2d5cd107ca09abd07d2c1508210fa61eebf36b74ec5b1d2302f7f417cc0cc8b         0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                                         0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                                      7.1s
+ => resolving provenance for metadata file                                                                     0.0s 
+[+] up 4/4
+ ✔ Image adminhub-app                Built                                                                    61.4s 
+ ✔ Network adminhub_adminhub-network Created                                                                   0.1s 
+ ✔ Container adminhub-postgres       Healthy                                                                  11.5s 
+ ✔ Container adminhub-app            Created                                                                   0.1s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 30
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_pho...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_ema...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_add...
+adminhub-app  |   ✓ Done
+adminhub-app  | Running: ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" bool...
+adminhub-app  |   ✓ Done
+adminhub-app  |
+adminhub-app  | ✅ All migrations completed successfully!
+adminhub-app  | [db] ✓ Migrations completed
+adminhub-app  | [db] Running database seed...
+adminhub-app  | ✓ Connected to database
+adminhub-app  | ✓ Super admin already exists, skipping seed
+adminhub-app  | [db] ✓ Seed completed
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:31:23: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:31:23: PM2 log: App [adminhub:0] starting in -fork mode-
+adminhub-app  | 2025-12-23T07:31:23: PM2 log: App [adminhub:0] online
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+^C
+root@vmi2905850:~/adminhub# exit
+logout
+Connection to 158.220.107.106 closed.
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git diff --name-only
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> # This searches for common reserved words being used as variable names
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> Get-ChildItem -Recurse -Filter *.ts | Select-String -Pattern "\b(interface|enum|private|implements|package)\b\s*="
+
+node_modules\@babel\types\lib\index-legacy.d.ts:1744:export type Private = ClassPrivateProperty | 
+ClassPrivateMethod | PrivateName;
+node_modules\@babel\types\lib\index.d.ts:1843:type Private = ClassPrivateProperty | ClassPrivateMethod | 
+PrivateName;
+node_modules\typescript\lib\typescript.d.ts:4213:        Private = 2,
+node_modules\typescript\lib\typescript.d.ts:6408:        Interface = 64,
+node_modules\typescript\lib\typescript.d.ts:6431:        Enum = 384,
+node_modules\typescript\lib\typescript.d.ts:6530:        Enum = 32,
+node_modules\typescript\lib\typescript.d.ts:6633:        Interface = 2,
+node_modules\typescript\lib\typescript.d.ts:10351:        Enum = "Enum",
+
+
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git add package.json
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git commit -m "Fix: use .mjs extensions to force ESM loading"
+[main 3528dc6] Fix: use .mjs extensions to force ESM loading
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git push origin main 
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 403 bytes | 201.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/sesi85043/intgrateded
+   6df9ceb..3528dc6  main -> main
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> cd ~/adminhub
+cd : Cannot find path 'C:\Users\MM_SD\adminhub' because it does not exist.
+At line:1 char:1
++ cd ~/adminhub
++ ~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\MM_SD\adminhub:String) [Set-Location], ItemNotFoundExcepti  
+   on
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.SetLocationCommand
+
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git fetch origin main
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> git reset --hard origin/main
+HEAD is now at 3528dc6 Fix: use .mjs extensions to force ESM loading
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> rm -rf dist  # Wipe the old .js files
+Remove-Item : A parameter cannot be found that matches parameter name 'rf'.
+At line:1 char:4
++ rm -rf dist  # Wipe the old .js files
++    ~~~
+    + CategoryInfo          : InvalidArgument: (:) [Remove-Item], ParameterBindingException
+    + FullyQualifiedErrorId : NamedParameterNotFound,Microsoft.PowerShell.Commands.RemoveItemCommand
+
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> docker compose up -d --build app^C
+PS C:\Users\MM_SD\Downloads\intgrateded(12)\ADMINHUB ui improve> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Dec 23 08:40:23 CET 2025
+
+  System load:           0.68
+  Usage of /:            22.2% of 192.69GB
+  Memory usage:          60%
+  Swap usage:            0%
+  Processes:             362
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There are 2 zombie processes.
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Tue Dec 23 08:29:51 2025 from 41.193.198.198
+root@vmi2905850:~# cd ~/adminhub
+git fetch origin main
+git reset --hard origin/main
+rm -rf dist  # Wipe the old .js files
+docker compose up -d --build app
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 383 bytes | 95.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+   6df9ceb..3528dc6  main       -> origin/main
+HEAD is now at 3528dc6 Fix: use .mjs extensions to force ESM loading
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 67.0s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                     0.0s 
+ => => reading from stdin 470B                                                                                 0.0s
+ => [internal] load build definition from Dockerfile                                                           0.0s
+ => => transferring dockerfile: 1.86kB                                                                         0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                                              1.4s 
+ => [internal] load .dockerignore                                                                              0.0s
+ => => transferring context: 150B                                                                              0.0s 
+ => [internal] load build context                                                                              0.1s 
+ => => transferring context: 43.81kB                                                                           0.1s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d92  0.0s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac  0.0s 
+ => CACHED [builder 2/5] WORKDIR /app                                                                          0.0s
+ => CACHED [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                  0.0s 
+ => [builder 3/5] COPY . .                                                                                     0.3s 
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                                     0.1s 
+ => [stage-1  5/14] COPY tsconfig.json ./                                                                      0.0s
+ => [stage-1  6/14] RUN npm install --omit=dev                                                                17.9s 
+ => [builder 4/5] RUN npm install                                                                             22.5s
+ => [builder 5/5] RUN npm run build                                                                           15.4s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                       0.5s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                           0.0s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                   0.0s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                   0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                            0.0s
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh       0.3s
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                             0.3s
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                              0.3s
+ => exporting to image                                                                                        24.2s
+ => => exporting layers                                                                                       17.6s 
+ => => exporting manifest sha256:2d520c9934bfa9bf8f86b5b171192c40f66e2b6f7d6daee2e04441a29ccd1464              0.0s
+ => => exporting config sha256:9d545598d7eb8d618894e07ab909fefca777d1b949576a38f14a10c2de37d8ad                0.0s 
+ => => exporting attestation manifest sha256:9dd104e759f15cee411ca0e155fec644ea722e846a94d27c98508382e0d2fedd  0.0s 
+ => => exporting manifest list sha256:fac52d8ad6bda5edf173a4cf369aa3fd186e238b212e57625076ff8fb483d824         0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                                         0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                                      6.4s
+ => resolving provenance for metadata file                                                                     0.0s 
+[+] up 3/3
+ ✔ Image adminhub-app          Built                                                                          67.1s 
+ ✔ Container adminhub-postgres Healthy                                                                         3.0s 
+ ✔ Container adminhub-app      Recreated                                                                       2.5s 
+root@vmi2905850:~/adminhub# docker compose logs -f app --tail 30
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Migrations skipped (tables may not exist yet)
+adminhub-app  | [db] Running database seed...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-seed.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Seed skipped or already applied
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:45:39: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:45:39: PM2 error: Script not found: /app/dist/index.js
+adminhub-app  | 2025-12-23T07:45:39: PM2 log: PM2 successfully stopped
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 284
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | -rw-r--r--    1 root     root        267729 Dec 23 07:41 index.mjs
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 public
+adminhub-app  | -rw-r--r--    1 root     root          2293 Dec 23 07:41 run-migration.mjs
+adminhub-app  | -rw-r--r--    1 root     root          2904 Dec 23 07:41 run-seed.mjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 23 07:41 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 23 07:41 devpulse.favicon.png
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 23 07:41 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-migration.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Migrations skipped (tables may not exist yet)
+adminhub-app  | [db] Running database seed...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-seed.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Seed skipped or already applied
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:46:40: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:46:40: PM2 error: Script not found: /app/dist/index.js
+adminhub-app  | 2025-12-23T07:46:40: PM2 log: PM2 successfully stopped
+adminhub-app exited with code 0 (restarting)
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 284
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | -rw-r--r--    1 root     root        267729 Dec 23 07:41 index.mjs
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 public
+adminhub-app  | -rw-r--r--    1 root     root          2293 Dec 23 07:41 run-migration.mjs
+adminhub-app  | -rw-r--r--    1 root     root          2904 Dec 23 07:41 run-seed.mjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 23 07:41 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 23 07:41 devpulse.favicon.png
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 23 07:41 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-migration.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Migrations skipped (tables may not exist yet)
+adminhub-app  | [db] Running database seed...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-seed.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Seed skipped or already applied
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:47:41: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:47:41: PM2 error: Script not found: /app/dist/index.js
+adminhub-app  | 2025-12-23T07:47:42: PM2 log: PM2 successfully stopped
+adminhub-app exited with code 0 (restarting)
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 284
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | -rw-r--r--    1 root     root        267729 Dec 23 07:41 index.mjs
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 public
+adminhub-app  | -rw-r--r--    1 root     root          2293 Dec 23 07:41 run-migration.mjs
+adminhub-app  | -rw-r--r--    1 root     root          2904 Dec 23 07:41 run-seed.mjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 23 07:41 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 23 07:41 devpulse.favicon.png
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 23 07:41 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-migration.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Migrations skipped (tables may not exist yet)
+adminhub-app  | [db] Running database seed...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-seed.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Seed skipped or already applied
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:48:43: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:48:43: PM2 error: Script not found: /app/dist/index.js
+adminhub-app  | 2025-12-23T07:48:43: PM2 log: PM2 successfully stopped
+adminhub-app exited with code 0 (restarting)
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 284
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | -rw-r--r--    1 root     root        267729 Dec 23 07:41 index.mjs
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 public
+adminhub-app  | -rw-r--r--    1 root     root          2293 Dec 23 07:41 run-migration.mjs
+adminhub-app  | -rw-r--r--    1 root     root          2904 Dec 23 07:41 run-seed.mjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 23 07:41 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 23 07:41 devpulse.favicon.png
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 23 07:41 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-migration.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Migrations skipped (tables may not exist yet)
+adminhub-app  | [db] Running database seed...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-seed.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Seed skipped or already applied
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:49:44: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:49:44: PM2 error: Script not found: /app/dist/index.js
+adminhub-app  | 2025-12-23T07:49:44: PM2 log: PM2 successfully stopped
+adminhub-app exited with code 0 (restarting)
+adminhub-app  | ================================
+adminhub-app  | AdminHub Container Initialization
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | [init] Node version: v20.19.6
+adminhub-app  | [init] Working directory: /app
+adminhub-app  | [init] Files in /app/dist:
+adminhub-app  | total 284
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    1 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | -rw-r--r--    1 root     root        267729 Dec 23 07:41 index.mjs
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 public
+adminhub-app  | -rw-r--r--    1 root     root          2293 Dec 23 07:41 run-migration.mjs
+adminhub-app  | -rw-r--r--    1 root     root          2904 Dec 23 07:41 run-seed.mjs
+adminhub-app  |
+adminhub-app  | [init] Files in /app/dist/public:
+adminhub-app  | total 672
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 .
+adminhub-app  | drwxr-xr-x    3 root     root          4096 Dec 23 07:41 ..
+adminhub-app  | drwxr-xr-x    2 root     root          4096 Dec 23 07:41 assets
+adminhub-app  | -rw-r--r--    1 root     root        671127 Dec 23 07:41 devpulse.favicon.png
+adminhub-app  | -rw-r--r--    1 root     root           938 Dec 23 07:41 index.html
+adminhub-app  |
+adminhub-app  | [db] Waiting for PostgreSQL to be ready...
+adminhub-app  | [db] ✓ PostgreSQL is ready!
+adminhub-app  | [db] Initializing database schema...
+adminhub-app  | psql:/app/migrations/init.sql:5: NOTICE:  extension "pgcrypto" already exists, skipping
+adminhub-app  | CREATE EXTENSION
+adminhub-app  | psql:/app/migrations/init.sql:18: ERROR:  relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:33: ERROR:  relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:44: ERROR:  relation "analytics_metrics" already exists
+adminhub-app  | psql:/app/migrations/init.sql:55: ERROR:  relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:67: ERROR:  relation "departments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:80: ERROR:  relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:113: ERROR:  relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:124: ERROR:  relation "permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:131: ERROR:  relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:143: ERROR:  relation "roles" already exists
+adminhub-app  | psql:/app/migrations/init.sql:155: ERROR:  relation "service_configs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:161: ERROR:  relation "sessions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:171: ERROR:  relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:182: ERROR:  relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:198: ERROR:  relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:235: ERROR:  relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:246: ERROR:  relation "users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:258: ERROR:  relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:260: ERROR:  constraint "activity_logs_admin_id_team_members_id_fk" for relation "activity_logs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:261: ERROR:  constraint "admin_notifications_read_by_id_team_members_id_fk" for relation "admin_notifications" already exists
+adminhub-app  | psql:/app/migrations/init.sql:262: ERROR:  constraint "approval_otps_registration_id_pending_registrations_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:263: ERROR:  constraint "approval_otps_used_by_id_team_members_id_fk" for relation "approval_otps" already exists
+adminhub-app  | psql:/app/migrations/init.sql:264: ERROR:  constraint "managed_users_team_member_id_team_members_id_fk" for relation "managed_users" already exists
+adminhub-app  | psql:/app/migrations/init.sql:265: ERROR:  constraint "pending_registrations_department_id_departments_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:266: ERROR:  constraint "pending_registrations_reviewed_by_id_team_members_id_fk" for relation "pending_registrations" already exists
+adminhub-app  | psql:/app/migrations/init.sql:267: ERROR:  constraint "role_permissions_role_id_roles_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:268: ERROR:  constraint "role_permissions_permission_id_permissions_id_fk" for relation "role_permissions" already exists
+adminhub-app  | psql:/app/migrations/init.sql:269: ERROR:  constraint "task_assignments_task_id_tasks_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:270: ERROR:  constraint "task_assignments_team_member_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:271: ERROR:  constraint "task_assignments_assigned_by_id_team_members_id_fk" for relation "task_assignments" already exists
+adminhub-app  | psql:/app/migrations/init.sql:272: ERROR:  constraint "task_history_task_id_tasks_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:273: ERROR:  constraint "task_history_changed_by_id_team_members_id_fk" for relation "task_history" already exists
+adminhub-app  | psql:/app/migrations/init.sql:274: ERROR:  constraint "tasks_department_id_departments_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:275: ERROR:  constraint "tasks_created_by_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:276: ERROR:  constraint "tasks_assigned_to_id_team_members_id_fk" for relation "tasks" already exists
+adminhub-app  | psql:/app/migrations/init.sql:277: ERROR:  constraint "team_members_user_id_users_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:278: ERROR:  constraint "team_members_department_id_departments_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:279: ERROR:  constraint "team_members_role_id_roles_id_fk" for relation "team_members" already exists
+adminhub-app  | psql:/app/migrations/init.sql:280: ERROR:  constraint "worklogs_task_id_tasks_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:281: ERROR:  constraint "worklogs_team_member_id_team_members_id_fk" for relation "worklogs" already exists
+adminhub-app  | psql:/app/migrations/init.sql:282: ERROR:  relation "IDX_session_expire" already exists
+adminhub-app  | [db] ✓ Database schema initialized
+adminhub-app  | [db] Running database migrations...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-migration.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Migrations skipped (tables may not exist yet)
+adminhub-app  | [db] Running database seed...
+adminhub-app  | node:internal/modules/cjs/loader:1210
+adminhub-app  |   throw err;
+adminhub-app  |   ^
+adminhub-app  |
+adminhub-app  | Error: Cannot find module '/app/dist/run-seed.cjs'
+adminhub-app  |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+adminhub-app  |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+adminhub-app  |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+adminhub-app  |     at node:internal/main/run_main_module:28:49 {
+adminhub-app  |   code: 'MODULE_NOT_FOUND',
+adminhub-app  |   requireStack: []
+adminhub-app  | }
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | [db] ⚠️ Seed skipped or already applied
+adminhub-app  |
+adminhub-app  | ================================
+adminhub-app  | ✅ Initialization complete!
+adminhub-app  | ================================
+adminhub-app  |
+adminhub-app  | 2025-12-23T07:50:45: PM2 log: Launching in no daemon mode
+adminhub-app  | 2025-12-23T07:50:45: PM2 error: Script not found: /app/dist/index.js
+adminhub-app  | 2025-12-23T07:50:45: PM2 log: PM2 successfully stopped
+adminhub-app exited with code 0 (restarting)
+
+
