@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index-dev.ts",
-    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-seed.mjs",
+    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=cjs --outfile=dist/run-seed.mjs",
+    "start-prod": "NODE_ENV=production node --input-type=module dist/index.mjs",
     "start": "NODE_ENV=production node dist/index.mjs",
     "check": "tsc",
     "db:push": "drizzle-kit push",

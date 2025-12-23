@@ -7,8 +7,8 @@ import express, { type Express } from "express";
 import runApp from "./app";
 
 export async function serveStatic(app: Express, _server: Server) {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+  // Get directory path from process.cwd() since import.meta won't work in bundled CJS
+  const __dirname = path.resolve(process.cwd());
   
   const distPath = path.resolve(__dirname, "public");
   

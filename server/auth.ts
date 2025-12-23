@@ -49,11 +49,42 @@ async function loadAuthModule() {
   }
 }
 
-const auth = await loadAuthModule();
+let auth: any = null;
 
-export const setupAuth = (auth && (auth.setupAuth || auth.default?.setupAuth || auth.setupAuth)) || ((app: any) => {});
-export const isAuthenticated = (auth && (auth.isAuthenticated || auth.default?.isAuthenticated)) || ((req: any, res: any, next: any) => next());
-export const isTeamMemberAuthenticated = (auth && (auth.isTeamMemberAuthenticated || auth.default?.isTeamMemberAuthenticated || auth.isAuthenticated)) || ((req: any, res: any, next: any) => next());
-export const getSession = (auth && (auth.getSession || auth.default?.getSession)) || (() => { throw new Error('getSession not available in selected auth module'); });
+async function initAuth() {
+  if (!auth) {
+    auth = await loadAuthModule();
+  }
+  return auth;
+}
 
-export default auth;
+export const setupAuth = (app: any) => {
+  // Note: setupAuth is called after initialization, so auth will be available
+  return (auth && (auth.setupAuth || auth.default?.setupAuth || auth.setupAuth)) || (() => {});
+};
+
+export const isAuthenticated = (req: any, res: any, next: any) => {
+  if (!auth) {
+    return next();
+  }
+  const fn = auth.isAuthenticated || auth.default?.isAuthenticated;
+  return fn ? fn(req, res, next) : next();
+};
+
+export const isTeamMemberAuthenticated = (req: any, res: any, next: any) => {
+  if (!auth) {
+    return next();
+  }
+  const fn = auth.isTeamMemberAuthenticated || auth.default?.isTeamMemberAuthenticated || auth.isAuthenticated;
+  return fn ? fn(req, res, next) : next();
+};
+
+export const getSession = () => {
+  if (!auth) {
+    throw new Error('Auth not initialized');
+  }
+  return auth.getSession || auth.default?.getSession;
+};
+
+export { initAuth };
+export default { initAuth };

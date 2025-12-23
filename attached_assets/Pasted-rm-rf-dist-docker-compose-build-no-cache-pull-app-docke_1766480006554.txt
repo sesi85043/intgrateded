@@ -1,0 +1,1014 @@
+rm -rf dist/ && \
+docker compose build --no-cache --pull app && \
+docker compose up -d app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+ ✔ Container adminhub-app            Removed                                                                                           0.0s 
+ ✔ Container adminhub-postgres       Removed                                                                                           0.3s 
+ ✔ Network adminhub_adminhub-network Removed                                                                                           0.1s 
+ID                                              RECLAIMABLE     SIZE            LAST ACCESSED
+trp1ykrtplyj7spzopd5rifn5*                      true            2.314MB         57 seconds ago
+p8iqglgtkawnmujgxujrdj984*                      true    28.43MB         57 seconds ago
+icmufd9m9vnreulw1hnlh0q7c*                      true    8.192kB         57 seconds ago
+xfjbpxuk6sjp1imqvqzaaqsi9*                      true    8.192kB         57 seconds ago
+oywp3nra335mdv76wwe2ah50n                       true    46.07kB         57 seconds ago
+5b8usln8in5rieg6s9y2wd31c                       true    595.7MB         57 seconds ago
+ntq6liwc1irjf8zbgnswxnmjq                       true    20.95kB         57 seconds ago
+my5xnvttl7p112f3dxg4yotuw                       true    28.43MB         57 seconds ago
+j9lj7bq91vag2868o9x738akq                       true    17.34kB         57 seconds ago
+01622nrassy6po3sn0kg427y8                       true    13.25kB         57 seconds ago
+guww4i4y86hwtu1ozo0tbg4e4                       true    64.98kB         57 seconds ago
+20hudjklkh9fk22slard0k8gz                       true    393.6kB         57 seconds ago
+sx8wk7q4g5446dr42ts3jzcdm                       true    354.8kB         57 seconds ago
+c2rf0s5ytcf24989zhmwn5pvq                       true    3.305MB         57 seconds ago
+zd983lmynyocvmgwruchwg5rs                       true    482MB           57 seconds ago
+lptyqdvh757xydvq0u1nnurfp                       true    12.76kB         57 seconds ago
+cczf1ddq07j89x3bywltibpb7                       true    289.4kB         57 seconds ago
+btszu1o22wgj92n640mmkdwnu                       true    81.84MB         57 seconds ago
+lcog52sbppd57o7meqevscs82                       true    8.285kB         57 seconds ago
+4jhkp0prt1fx02lspctv5030x                       true    443B            57 seconds ago
+iwil1acz81q4cootmwxxlzlta                       true    1.262MB         About a minute ago
+vrqs8weckud7bd4ms6b1sgw0u                       true    42.78MB         About a minute ago
+zdz2svclhsfi1w318u0z0kf8j                       true    3.86MB          About a minute ago
+Total:  1.271GB
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 59.9s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                                             0.0s 
+ => => reading from stdin 514B                                                                                                         0.0s
+ => [internal] load build definition from Dockerfile                                                                                   0.0s
+ => => transferring dockerfile: 1.86kB                                                                                                 0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                                                                      1.5s 
+ => [internal] load .dockerignore                                                                                                      0.0s
+ => => transferring context: 150B                                                                                                      0.0s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448        0.1s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448                0.0s 
+ => [internal] load build context                                                                                                      0.4s 
+ => => transferring context: 27.11MB                                                                                                   0.3s 
+ => [builder 2/5] WORKDIR /app                                                                                                         0.1s
+ => [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                                                 7.7s 
+ => [builder 3/5] COPY . .                                                                                                             0.3s
+ => [builder 4/5] RUN npm install                                                                                                     19.4s
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                                                             0.1s
+ => [stage-1  5/14] COPY tsconfig.json ./                                                                                              0.0s
+ => [stage-1  6/14] RUN npm install --omit=dev                                                                                        15.2s 
+ => [builder 5/5] RUN npm run build                                                                                                   14.3s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                                               0.3s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                                                   0.1s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                                           0.0s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                                           0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                                                    0.0s
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh                               0.2s
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                                                     0.3s
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                                                      0.3s
+ => exporting to image                                                                                                                21.4s
+ => => exporting layers                                                                                                               13.3s
+ => => exporting manifest sha256:c4934c9bad4b1aab2410dead2c4b55ff4bd5dc3607f6662ddcaf4f117c744a5c                                      0.0s
+ => => exporting config sha256:1b2ad9c03e25d5d63c62fe3f10defe2ea7ce7e4c2fb824ee9c4befe9067fb886                                        0.0s 
+ => => exporting attestation manifest sha256:def43373b2a31136ac42517c879f18ea5b4ea60edb4c18ac3a57fbd8b41548e7                          0.0s 
+ => => exporting manifest list sha256:d97e9fd68531d1b8789a0b3b78a4b54fc3c1bb92e13b016af80a4980c95c456d                                 0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                                                                 0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                                                              8.0s
+ => resolving provenance for metadata file                                                                                             0.0s 
+[+] build 1/1
+ ✔ Image adminhub-app Built                                                                                                           60.0s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 3/3
+ ✔ Network adminhub_adminhub-network Created                                                                                           0.1s 
+ ✔ Container adminhub-postgres       Healthy                                                                                          11.7s 
+ ✔ Container adminhub-app            Created                                                                                           0.1s 
+root@vmi2905850:~/adminhub# docker compose logs -f app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+^C
+root@vmi2905850:~/adminhub# cat package.json | grep -A 5 "scripts"
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development tsx server/index-dev.ts",
+    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-seed.mjs",
+    "start": "NODE_ENV=production node dist/index.mjs",
+    "check": "tsc",
+    "db:push": "drizzle-kit push",
+root@vmi2905850:~/adminhub# cat Dockerfile
+# Build stage - using official Node image with full build tools
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy all source files
+COPY . .
+
+# Install all dependencies (including dev) - use `npm install` to avoid lockfile mismatches across npm versions
+RUN npm install
+
+# Build the application
+RUN npm run build
+
+# Runtime stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install PM2 and postgresql-client for database operations
+RUN npm install -g pm2 && \
+    apk add --no-cache postgresql-client
+
+# Copy package files for production install
+COPY package.json package-lock.json ./
+
+# Copy tsconfig so tsconfig-paths can resolve path aliases at runtime
+COPY tsconfig.json ./
+
+# Install only production dependencies
+RUN npm install --omit=dev
+
+# Copy built files from builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/migrations ./migrations
+COPY --from=builder /app/server ./server
+COPY --from=builder /app/shared ./shared
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /app/
+# FIX: Ensure file has Unix line endings and executable permission (strip CRLF introduced on Windows)
+RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
+
+# Create non-root user for security (but run as root for init)
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:5000/api/auth/user', (r) => {if (r.statusCode !== 401 && r.statusCode !== 200) throw new Error(r.statusCode)})"
+
+# Expose internal port (not accessible from outside, only via port mapping)
+EXPOSE 5000
+
+# Use entrypoint script for initialization, then start PM2
+CMD ["/app/docker-entrypoint.sh", "pm2-runtime", "start", "dist/index.js", "--name", "adminhub"]
+root@vmi2905850:~/adminhub# exit
+logout
+Connection to 158.220.107.106 closed.
+PS C:\Users\MM_SD\Downloads\intgrateded-1(1)\adminhub 1,1> git add .
+warning: in the working copy of 'Dockerfile', LF will be replaced by CRLF the next time Git touches it
+PS C:\Users\MM_SD\Downloads\intgrateded-1(1)\adminhub 1,1> git commit -m "Fix: Align Dockerfile CMD with .mjs output and remove PM2"
+[main c6cab62] Fix: Align Dockerfile CMD with .mjs output and remove PM2
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+PS C:\Users\MM_SD\Downloads\intgrateded-1(1)\adminhub 1,1> git push origin main
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 351 bytes | 31.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/sesi85043/intgrateded
+   4e713cc..c6cab62  main -> main
+PS C:\Users\MM_SD\Downloads\intgrateded-1(1)\adminhub 1,1> ssh root@158.220.107.106
+Enter passphrase for key 'C:\Users\MM_SD/.ssh/id_ed25519': 
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.8.0-88-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Dec 23 09:39:45 CET 2025
+
+  System load:           0.23
+  Usage of /:            19.1% of 192.69GB
+  Memory usage:          52%
+  Swap usage:            0%
+  Processes:             350
+  Users logged in:       1
+  IPv4 address for eth0: 158.220.107.106
+  IPv6 address for eth0: 2a02:c207:2290:5850::1
+
+  => There is 1 zombie process.
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+  _____
+ / ___/___  _  _ _____ _   ___  ___
+| |   / _ \| \| |_   _/ \ | _ )/ _ \
+| |__| (_) | .` | | |/ _ \| _ \ (_) |
+ \____\___/|_|\_| |_/_/ \_|___/\___/
+
+Welcome!
+
+This server is hosted by Contabo. If you have any questions or need help,
+please don't hesitate to contact us at support@contabo.com.
+
+Last login: Tue Dec 23 09:21:37 2025 from 41.193.198.198
+root@vmi2905850:~# cd ~/adminhub && \
+git fetch origin main && \
+git reset --hard origin/main && \
+docker compose down && \
+docker builder prune -a -f && \
+rm -rf dist/ && \
+docker compose build --no-cache app && \
+docker compose up -d app
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 331 bytes | 22.00 KiB/s, done.
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+   4e713cc..c6cab62  main       -> origin/main
+HEAD is now at c6cab62 Fix: Align Dockerfile CMD with .mjs output and remove PM2
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+ID Container adminhub-app            Removed    RECLAIMABLE     SIZE            LAST ACCESSED                                          0.0s 
+idktqlk6ejiecom62775fy2sq*              oved    true            8.192kB         4 minutes ago                                          0.3s 
+ypyof5ufk2ttaradkltdhnwi5*              oving   true    28.43MB         4 minutes ago                                                  0.2s 
+y5uqpbxiojc3jodi9xoillgg3                       true    46.06kB         4 minutes ago
+adnxl7zq0vlov8n5cznwkk8zx*                      true    8.192kB         4 minutes ago
+ssmpu5mf39585carnx9mipnb3*                      true    2.314MB         4 minutes ago
+qtbyijhzhwsqu09vcbdxnafkm                       true    595.7MB         4 minutes ago
+jv6cnf9i87imlkrprzv5ibc3i                       true    20.95kB         4 minutes ago
+qj5qpk4lc26cdlu36ra0arnvp                       true    17.34kB         4 minutes ago
+ujgrmeime95y5bg2uxcweec23                       true    28.43MB         4 minutes ago
+ujc5i8leeizxkq78x8uglqmwe                       true    13.25kB         4 minutes ago
+ondpbnsptuism1l8rws0530hz                       true    64.98kB         4 minutes ago
+qu5z51gztb0iiipwh6bk8lrrz                       true    393.6kB         4 minutes ago
+axp9q3nvbvr3txv4b5ukqqiet                       true    354.8kB         4 minutes ago
+teoj1pch8cjlsvtbrbk9qvnu2                       true    3.305MB         4 minutes ago
+yqsq9hz0ysrqpunpxsy821mwl                       true    482MB           4 minutes ago
+1ya5vm8i49s1w29b7xxls6ajb                       true    12.76kB         4 minutes ago
+tspf3ewn9e0c1cbh3fzpuef3b                       true    289.4kB         4 minutes ago
+r0mk0dotmotu6rxf3w4jeoi7y                       true    81.84MB         4 minutes ago
+pai8rko4jcvawo1x7kb03isac                       true    8.285kB         4 minutes ago
+sx34bqejhc2na9dhkipl1wlxt                       true    443B            4 minutes ago
+0j4337getokiqba1uwb2zdr1g                       true    1.262MB         5 minutes ago
+3y2g8fqz77l1ccvsyep8maxvu                       true    42.78MB         5 minutes ago
+k2ejvv75u1hv8cg1lvvrhaq6t                       true    3.86MB          5 minutes ago
+Total:  1.271GB
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 60.6s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                                             0.0s 
+ => => reading from stdin 494B                                                                                                         0.0s
+ => [internal] load build definition from Dockerfile                                                                                   0.0s
+ => => transferring dockerfile: 1.82kB                                                                                                 0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                                                                      2.2s 
+ => [internal] load .dockerignore                                                                                                      0.0s
+ => => transferring context: 150B                                                                                                      0.0s 
+ => [internal] load build context                                                                                                      0.3s 
+ => => transferring context: 27.11MB                                                                                                   0.3s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448        0.1s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448                0.0s 
+ => [builder 2/5] WORKDIR /app                                                                                                         0.1s
+ => [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                                                 7.5s 
+ => [builder 3/5] COPY . .                                                                                                             0.2s 
+ => [builder 4/5] RUN npm install                                                                                                     20.0s 
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                                                             0.2s 
+ => [stage-1  5/14] COPY tsconfig.json ./                                                                                              0.0s
+ => [stage-1  6/14] RUN npm install --omit=dev                                                                                        15.3s 
+ => [builder 5/5] RUN npm run build                                                                                                   13.7s 
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                                               0.3s 
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                                                   0.0s 
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                                           0.0s 
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                                           0.0s 
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                                                    0.0s 
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh                               0.3s 
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                                                     0.3s 
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                                                      0.2s 
+ => exporting to image                                                                                                                21.7s 
+ => => exporting layers                                                                                                               14.2s 
+ => => exporting manifest sha256:4ae88cd0d2cb44794e1001a33180b79ecf2bf76dba8ff3000b76436b6b972093                                      0.0s 
+ => => exporting config sha256:8281dccf56df680aad5233b97a5cc0d49196433762ef67fdba8104e99079d389                                        0.0s 
+ => => exporting attestation manifest sha256:a77ba789516c019acbc020d9cddec2533bb89d65d550b4872a510de653184e68                          0.0s 
+ => => exporting manifest list sha256:7abb352738a6f805344ecdcf937b2c072b6d94fa4dccf979229974559c5762a1                                 0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                                                                 0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                                                              7.4s 
+ => resolving provenance for metadata file                                                                                             0.0s 
+[+] build 1/1
+ ✔ Image adminhub-app Built                                                                                                           60.7s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 3/3
+ ✔ Network adminhub_adminhub-network Created                                                                                           0.0s 
+ ✔ Container adminhub-postgres       Healthy                                                                                          11.6s 
+ ✔ Container adminhub-app            Created                                                                                           0.1s 
+root@vmi2905850:~/adminhub# cd ~/adminhub && \
+git fetch origin main && \
+git reset --hard origin/main && \
+docker compose down && \
+docker builder prune -a -f && \
+rm -rf dist/ && \
+docker compose build --no-cache app && \
+docker compose up -d app^C
+root@vmi2905850:~/adminhub# docker compose logs -f app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  | 
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  | 
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+^C
+root@vmi2905850:~/adminhub# cd ~/adminhub
+
+# 1. Force sync the code
+git fetch origin main
+git reset --hard origin/main
+
+# 2. Build the app directly on the VPS host (bypass Docker cache)
+npm install
+npm run build
+
+# 3. Verify the build on the host is actually fixed
+# This MUST show the .catch version, not the await version
+grep "runApp" dist/index.mjs
+From https://github.com/sesi85043/intgrateded
+ * branch            main       -> FETCH_HEAD
+HEAD is now at c6cab62 Fix: Align Dockerfile CMD with .mjs output and remove PM2
+Command 'npm' not found, but can be installed with:
+apt install npm
+Command 'npm' not found, but can be installed with:
+apt install npm
+grep: dist/index.mjs: No such file or directory
+root@vmi2905850:~/adminhub# cd ~/adminhub
+
+# 1. Clean the host directory
+rm -rf dist/
+rm -rf node_modules/
+
+# 2. Nuclear Cache Clean
+docker builder prune -a -f
+
+# 3. Build with explicit cache invalidation
+docker compose build --no-cache --pull app
+
+# 4. Start
+docker compose up -d app
+ID                                              RECLAIMABLE     SIZE            LAST ACCESSED
+i7uk8oc8ofspubp4c9g4x3gib*                      true            8.192kB         3 minutes ago
+qkwgfycob5ghempxria824dar                       true    46.06kB         3 minutes ago
+y6ej6rawgkmg1ah8vteftnyfu*                      true    2.314MB         3 minutes ago
+lez365reh43pxrn09hp6r3bna*                      true    8.192kB         3 minutes ago
+t39gvwzfqks4dqurya4ai70kb*                      true    28.43MB         3 minutes ago
+joqxnm5b5ef5ul4kav6iv5xu6                       true    20.95kB         3 minutes ago
+liki988iy8zx7731k8mqz4fit                       true    595.7MB         3 minutes ago
+yobgcf1y1di9hbye0h2pxmt9v                       true    17.34kB         3 minutes ago
+zb8mkxxafynx14fqxc9jm7de9                       true    28.43MB         3 minutes ago
+9dkva70z5yxjw7bagk6k52oap                       true    13.25kB         3 minutes ago
+gpk8p2nyv8sgoqjwm6etd42ky                       true    64.98kB         3 minutes ago
+mnv96dkhktjhenkk94qcc6xms                       true    393.6kB         3 minutes ago
+jbafnkzn1c9ua09wl0u71k00d                       true    354.8kB         3 minutes ago
+w0scoe55es1x92wqb7p0c45f8                       true    3.305MB         3 minutes ago
+c43bbhz4gpvpgtiqpquwvwlyc                       true    482MB           3 minutes ago
+vqny77nbidi87d8q8nuffnoh3                       true    12.76kB         3 minutes ago
+mv1bzw24f65k6mm16bjip3cox                       true    289.4kB         3 minutes ago
+22u4sgmrv832v470p51zred4d                       true    81.84MB         3 minutes ago
+ud8xrdyvidesldl54dfz1xobr                       true    8.285kB         3 minutes ago
+chpivkz9e003g1hn4d6xp23ki                       true    443B            3 minutes ago
+5ig6zeu29xgrpfmjwc0oj2gy8                       true    1.262MB         4 minutes ago
+011njp6q1saq41uxd1do6i6uh                       true    42.78MB         4 minutes ago
+hgcu1t4d89np4rlwe2yvi0oz1                       true    3.86MB          4 minutes ago
+Total:  1.271GB
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] Building 59.3s (24/24) FINISHED
+ => [internal] load local bake definitions                                                                                             0.0s 
+ => => reading from stdin 514B                                                                                                         0.0s
+ => [internal] load build definition from Dockerfile                                                                                   0.0s
+ => => transferring dockerfile: 1.82kB                                                                                                 0.0s 
+ => [internal] load metadata for docker.io/library/node:20-alpine                                                                      2.2s 
+ => [internal] load .dockerignore                                                                                                      0.0s
+ => => transferring context: 150B                                                                                                      0.0s 
+ => [builder 1/5] FROM docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448        0.1s 
+ => => resolve docker.io/library/node:20-alpine@sha256:658d0f63e501824d6c23e06d4bb95c71e7d704537c9d9272f488ac03a370d448                0.0s
+ => [internal] load build context                                                                                                      0.4s 
+ => => transferring context: 27.11MB                                                                                                   0.4s 
+ => [builder 2/5] WORKDIR /app                                                                                                         0.1s 
+ => [stage-1  3/14] RUN npm install -g pm2 &&     apk add --no-cache postgresql-client                                                 8.2s 
+ => [builder 3/5] COPY . .                                                                                                             0.3s
+ => [builder 4/5] RUN npm install                                                                                                     20.4s
+ => [stage-1  4/14] COPY package.json package-lock.json ./                                                                             0.2s
+ => [stage-1  5/14] COPY tsconfig.json ./                                                                                              0.1s
+ => [stage-1  6/14] RUN npm install --omit=dev                                                                                        14.8s
+ => [builder 5/5] RUN npm run build                                                                                                   13.5s
+ => [stage-1  7/14] COPY --from=builder /app/dist ./dist                                                                               0.3s
+ => [stage-1  8/14] COPY --from=builder /app/migrations ./migrations                                                                   0.0s
+ => [stage-1  9/14] COPY --from=builder /app/server ./server                                                                           0.0s
+ => [stage-1 10/14] COPY --from=builder /app/shared ./shared                                                                           0.0s
+ => [stage-1 11/14] COPY docker-entrypoint.sh /app/                                                                                    0.0s
+ => [stage-1 12/14] RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh                               0.2s
+ => [stage-1 13/14] RUN addgroup -g 1001 -S nodejs                                                                                     0.3s
+ => [stage-1 14/14] RUN adduser -S nodejs -u 1001                                                                                      0.3s
+ => exporting to image                                                                                                                20.2s
+ => => exporting layers                                                                                                               12.8s
+ => => exporting manifest sha256:b1f0b1a2472ddba08ea194aa9cc83aec7b84de1eab87ae70636d5b4921dc1faa                                      0.0s
+ => => exporting config sha256:4b3726918bd2daab6970cc16e5a9e0859b73b47295819ff23c87944605cea34c                                        0.0s 
+ => => exporting attestation manifest sha256:d96ceddc241db10fbdd2cb19bcfd8e8dbdf3e3bf36f9b039f7b980dffb12bc96                          0.0s 
+ => => exporting manifest list sha256:e7df73cdb2fbf901a6aa8f0cd846f2da6f63eebdae1d2ea1dd491ea8ee23b375                                 0.0s 
+ => => naming to docker.io/library/adminhub-app:latest                                                                                 0.0s 
+ => => unpacking to docker.io/library/adminhub-app:latest                                                                              7.2s
+ => resolving provenance for metadata file                                                                                             0.0s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+root@vmi2905850:~/adminhub# ^C
+root@vmi2905850:~/adminhub# ^C Healthy                                                                                                 2.8s 
+root@vmi2905850:~/adminhub# ^C Recreated                                                                                               2.3s 
+root@vmi2905850:~/adminhub# docker run --rm adminhub-app grep "runApp" dist/index.mjs
+async function runApp(setup) {
+runApp(serveStatic).catch((err) => {
+root@vmi2905850:~/adminhub# docker compose up -d
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 1/1
+ ✔ Container adminhub-postgres Healthy                                                                                                 0.5s 
+root@vmi2905850:~/adminhub# docker compose logs -f app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+^C
+root@vmi2905850:~/adminhub# cd ~/adminhub
+
+# 1. Look at the source code on the disk (must show .catch)
+grep "runApp" server/index-prod.ts
+
+# 2. Look at the compiled bundle inside the IMAGE we just built (must show .catch)
+docker run --rm adminhub-app grep "runApp" dist/index.mjs
+
+# 3. Look at the live container's version (This is likely the one still showing await)
+docker exec adminhub-app grep "runApp" dist/index.mjs
+import runApp from "./app";
+runApp(serveStatic).catch((err) => {
+async function runApp(setup) {
+runApp(serveStatic).catch((err) => {
+Error response from daemon: Container b65892dfe8c61bfd9d2f5bfc025e47c2ec8525845df8b1e889b98232b0115818 is restarting, wait until the container is running
+root@vmi2905850:~/adminhub# root@vmi2905850:~/adminhub# cd ~/adminhub
+
+# 1. Look at the source code on the disk (must show .catch)
+grep "runApp" server/index-prod.ts
+
+# 2. Look at the compiled bundle inside the IMAGE we just built (must show .catch)
+docker run --rm adminhub-app grep "runApp" dist/index.mjs
+
+# 3. Look at the live container's version (This is likely the one still showing await)
+docker exec adminhub-app grep "runApp" dist/index.mjs
+import runApp from "./app";
+runApp(serveStatic).catch((err) => {
+async function runApp(setup) {
+runApp(serveStatic).catch((err) => {
+Error response from daemon: Container b65892dfe8c61bfd9d2f5bfc025e47c2ec8525845df8b1e889b98232b0115818 is restarting, wait until the container is running
+root@vmi2905850:~/adminhub# 
+-bash: root@vmi2905850:~/adminhub#: No such file or directory
+import runApp from "./app";
+runApp(serveStatic).catch((err) => {
+async function runApp(setup) {
+runApp(serveStatic).catch((err) => {
+Error response from daemon: Container b65892dfe8c61bfd9d2f5bfc025e47c2ec8525845df8b1e889b98232b0115818 is restarting, wait until the container is running
+Command 'import' not found, but can be installed with:
+apt install graphicsmagick-imagemagick-compat  # version 1.4+really1.3.42-1, or
+apt install imagemagick-6.q16                  # version 8:6.9.11.60+dfsg-1.6ubuntu1
+apt install imagemagick-6.q16hdri              # version 8:6.9.11.60+dfsg-1.6ubuntu1
+-bash: syntax error near unexpected token `serveStatic'
+-bash: syntax error near unexpected token `('
+-bash: syntax error near unexpected token `serveStatic'
+Error: command not found
+-bash: root@vmi2905850:~/adminhub#: No such file or directory
+root@vmi2905850:~/adminhub# cd ~/adminhub && \
+docker compose down && \
+docker compose up -d && \
+docker compose logs -f app
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] down 3/3
+ ✔ Container adminhub-app            Removed                                                                                           0.0s 
+ ✔ Container adminhub-postgres       Removed                                                                                           0.3s 
+ ✔ Network adminhub_adminhub-network Removed                                                                                           0.2s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+[+] up 3/3
+ ✔ Network adminhub_adminhub-network Created                                                                                           0.1s 
+ ✔ Container adminhub-postgres       Healthy                                                                                          10.9s 
+ ✔ Container adminhub-app            Created                                                                                           0.1s 
+WARN[0000] /root/adminhub/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  | 
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+adminhub-app  | file:///app/dist/index.mjs:2421
+adminhub-app  |     await init_app();
+adminhub-app  |     ^^^^^
+adminhub-app  |
+adminhub-app  | SyntaxError: Unexpected reserved word
+adminhub-app  |     at compileSourceTextModule (node:internal/modules/esm/utils:346:16)
+adminhub-app  |     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:146:18)
+adminhub-app  |     at #translate (node:internal/modules/esm/loader:497:12)
+adminhub-app  |     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:544:27)
+adminhub-app  |     at async ModuleJob._link (node:internal/modules/esm/module_job:148:19)
+adminhub-app  |
+adminhub-app  | Node.js v20.19.6
+adminhub-app exited with code 1 (restarting)
+^C

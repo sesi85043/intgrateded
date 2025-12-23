@@ -51,7 +51,7 @@ services:
       CORS_ORIGIN: "http://158.220.107.106:9100,https://hub.allelectronics.one"
       # Admin password used for initial provisioning or CLI-style admin creation
       ADMIN_PASSWORD: admin123
-      NODE_OPTIONS: --max-old-space-size=1024
+      NODE_OPTIONS: --max-old-space-size=1024 --input-type=module
     ports:
       # Map external port (CHANGE_ME) to internal container port 5000
       - "${EXTERNAL_PORT:-9100}:5000"
