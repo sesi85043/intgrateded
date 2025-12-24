@@ -218,7 +218,12 @@ export default function HRManagement() {
                         </Badge>
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {credential.email}
+                        <div className="flex items-center gap-2">
+                          <span>{credential.email}</span>
+                          {new Date().getTime() - new Date(credential.createdAt).getTime() < 24 * 3600 * 1000 && (
+                            <Badge variant="outline" className="ml-2">NEW</Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="text-xs">
                         {credential.quota ? (credential.quota / 1024).toFixed(1) + " GB" : "Unlimited"}

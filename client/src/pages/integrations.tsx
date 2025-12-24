@@ -804,7 +804,12 @@ function CpanelSettings() {
 
   const saveMutation = useMutation({
     mutationFn: async (data: Partial<CpanelConfig>) => {
-      return await apiRequest("/api/integrations/cpanel/config", "POST", data);
+      // Sanitize hostname on client before sending
+      const payload = { ...data } as any;
+      if (payload.hostname) {
+        payload.hostname = payload.hostname.replace(/^https?:\/\//i, '').split('/')[0].replace(/:\d+$/, '');
+      }
+      return await apiRequest("/api/integrations/cpanel/config", "POST", payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/integrations/cpanel/config"] });
@@ -844,6 +849,7 @@ function CpanelSettings() {
             defaultValue={config?.hostname || ""}
             required
           />
+          <p className="text-xs text-muted-foreground">Do not include protocol or port (e.g., use <code>cpanel.example.com</code>, not <code>https://cpanel.example.com:2083</code>).</p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="cpanel-username">cPanel Username</Label>
@@ -905,11 +911,13 @@ function CpanelSettings() {
             const form = document.querySelector('form') as HTMLFormElement;
             const formData = new FormData(form);
             setTesting(true);
-            testMutation.mutate({
-              hostname: formData.get("hostname") as string,
-              apiToken: formData.get("apiToken") as string,
-              cpanelUsername: formData.get("cpanelUsername") as string,
-            });
+              const hostnameRaw = formData.get("hostname") as string;
+              const hostnameSanitized = hostnameRaw ? hostnameRaw.replace(/^https?:\/\//i, '').split('/')[0].replace(/:\d+$/, '') : hostnameRaw;
+              testMutation.mutate({
+                hostname: hostnameSanitized,
+                apiToken: formData.get("apiToken") as string,
+                cpanelUsername: formData.get("cpanelUsername") as string,
+              });
           }}
         >
           <TestTube className="h-4 w-4 mr-2" />

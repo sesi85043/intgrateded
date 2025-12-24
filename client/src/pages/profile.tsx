@@ -33,6 +33,15 @@ export default function Profile() {
     enabled: !!teamMember,
   });
 
+  const { data: emailAccounts, isLoading: emailsLoading } = useQuery<any[]>({
+    queryKey: profile ? [`/api/integrations/cpanel/email/${profile.id}`] : ["/api/integrations/cpanel/email"],
+    queryFn: async () => {
+      if (!profile) return [];
+      return await apiRequest(`/api/integrations/cpanel/email/${profile.id}`, "GET");
+    },
+    enabled: !!profile,
+  });
+
   useEffect(() => {
     if (profile) {
       setFirstName(profile.firstName || "");
@@ -178,6 +187,22 @@ export default function Profile() {
             <div className="flex items-center gap-2 text-muted-foreground">
               <Mail className="h-4 w-4" />
               <span>{profile.email}</span>
+            </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <span>Corporate Email:</span>
+              {emailsLoading ? (
+                <Skeleton className="h-4 w-24" />
+              ) : emailAccounts && emailAccounts.length > 0 ? (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{emailAccounts[0].email}</span>
+                  {new Date().getTime() - new Date(emailAccounts[0].createdAt).getTime() < 24 * 3600 * 1000 && (
+                    <Badge variant="outline" className="ml-2">NEW</Badge>
+                  )}
+                </div>
+              ) : (
+                <span className="text-muted-foreground">No corporate email assigned</span>
+              )}
             </div>
             {profile.phone && (
               <div className="flex items-center gap-2 text-muted-foreground">

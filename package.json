@@ -8,8 +8,11 @@
     "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-seed.mjs",
     "start": "NODE_ENV=production node dist/index.mjs",
     "check": "tsc",
+    "test": "vitest",
     "db:push": "drizzle-kit push",
     "migrate": "tsx run-migration.ts",
+    "migration:preview": "tsx server/migration-preview.ts",
+    "migration:verify": "tsx server/migration-verify.ts",
     "seed": "tsx server/seed.ts"
   },
   "dependencies": {
@@ -110,7 +113,8 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.21.0",
     "typescript": "5.6.3",
-    "vite": "^5.4.20"
+    "vite": "^5.4.20",
+    "vitest": "^1.6.1"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"

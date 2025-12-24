@@ -20,6 +20,8 @@ const migrations = [
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_email" varchar`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_address" text`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "is_verified" boolean DEFAULT false NOT NULL`,
+  // Normalize any existing cPanel hostnames: strip protocol, path, and port
+  `UPDATE cpanel_config SET hostname = regexp_replace(split_part(regexp_replace(hostname, '^https?://', '', 'i'), '/', 1), ':\\d+$', '') WHERE hostname IS NOT NULL`,
 ];
 
 async function runMigrations() {

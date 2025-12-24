@@ -979,14 +979,21 @@ try {
   console.log('[storage] PostgreSQL session store initialized successfully');
 } catch (err) {
   console.error('[storage] Failed to initialize PostgreSQL session store:', err);
-  // Fallback to memory store if pool connection fails
-  import('memorystore').then((MemoryStore) => {
-    console.warn('[storage] Using fallback MemoryStore for sessions');
-    const Store = MemoryStore.default;
-    sessionStore = new Store({
-      checkPeriod: 86400000, // prune expired entries every 24h
-    });
-  });
+
+  // In production we want to fail fast so operators notice and fix the session store
+  // rather than silently falling back to an in-memory store which loses sessions.
+  if (process.env.NODE_ENV === 'production') {
+    console.error('[storage] Running in production and session store failed. Exiting process to avoid unsafe in-memory sessions.');
+    // Exit with non-zero code so the container/orchestrator can restart and alert
+    process.exit(1);
+  }
+
+  // Non-production fallback: use express-session MemoryStore synchronously so
+  // the application can still run in development or staging environments.
+  console.warn('[storage] Using fallback MemoryStore for sessions (development only)');
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  sessionStore = new session.MemoryStore();
 }
 
 export { sessionStore };

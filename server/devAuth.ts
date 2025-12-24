@@ -204,10 +204,19 @@ export async function setupAuth(app: Express) {
         console.log('[auth] Session saved successfully with ID:', req.sessionID);
         console.log('[auth] Set-Cookie header:', res.getHeader('set-cookie'));
 
-        getTeamMemberWithPermissions(member.id).then(memberWithPerms => {
+        getTeamMemberWithPermissions(member.id).then(async memberWithPerms => {
+          let hasNewCredentials = false;
+          try {
+            const { hasNewCredentialsFor } = await import('./auth-utils');
+            hasNewCredentials = memberWithPerms ? await hasNewCredentialsFor(memberWithPerms.id) : false;
+          } catch (e) {
+            console.warn('[auth] could not compute hasNewCredentials for dev login', e);
+          }
+
           res.json({ 
             user,
             teamMember: memberWithPerms,
+            hasNewCredentials,
           });
         }).catch(permErr => {
           console.error('[auth] Failed to get team member permissions:', permErr);

@@ -1152,6 +1152,14 @@ export default function registerIntegrationRoutes(app: Express) {
   app.post('/api/integrations/cpanel/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
       const { apiToken, ...otherData } = req.body;
+      // Normalize hostname if provided to prevent saving ports or protocols
+      if (otherData.hostname) {
+        let host = otherData.hostname as string;
+        host = host.replace(/^https?:\/\//i, '');
+        host = host.split('/')[0];
+        host = host.replace(/:\d+$/, '');
+        otherData.hostname = host;
+      }
       
       const [existing] = await db.select().from(cpanelConfig).limit(1);
       
@@ -1357,12 +1365,12 @@ export default function registerIntegrationRoutes(app: Express) {
         with: {
           teamMember: {
             columns: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-              departmentCode: true,
-            },
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                departmentId: true,
+              },
           },
         },
         orderBy: (ea) => [ea.createdAt],

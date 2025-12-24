@@ -4,6 +4,7 @@
  */
 
 import crypto from 'crypto';
+import { incrementCpanelFailure } from './monitoring';
 
 export interface CpanelCredentials {
   hostname: string;
@@ -25,10 +26,11 @@ export class CpanelClient {
   private cpanelUsername: string;
 
   constructor(credentials: CpanelCredentials) {
-    this.hostname = credentials.hostname;
+    this.hostname = sanitizeHostname(credentials.hostname || '');
     this.apiToken = credentials.apiToken;
     this.cpanelUsername = credentials.cpanelUsername;
   }
+  // end constructor
 
   /**
    * Create an email account in cPanel via UAPI
@@ -53,12 +55,32 @@ export class CpanelClient {
         body: params.toString(),
       });
 
-      const result = await response.json() as any;
+      // Try to parse JSON safely — cPanel can return HTML for errors
+      let result: any;
+      const contentType = response.headers.get('content-type') || '';
+
+      if (contentType.includes('application/json')) {
+        try {
+          result = await response.json();
+        } catch (err) {
+          const text = await response.text().catch(() => '<unreadable body>');
+          console.error('[cPanel] Failed to parse JSON response:', err, '\nBody:', text);
+          incrementCpanelFailure();
+          return { success: false, email: data.email, error: 'Invalid JSON response from cPanel' };
+        }
+      } else {
+        // Non-JSON response (likely an HTML error page) — capture body for debugging
+        const text = await response.text().catch(() => '<unreadable body>');
+        console.error('[cPanel] Non-JSON response from cPanel:', { status: response.status, body: text });
+        incrementCpanelFailure();
+        return { success: false, email: data.email, error: `Non-JSON response from cPanel (status ${response.status})` };
+      }
 
       // cPanel returns errors in metadata.result array
-      if (!response.ok || (result.metadata && result.metadata.result === 0)) {
-        const errorMsg = result.metadata?.reason || 'Unknown error';
+      if (!response.ok || (result?.metadata && result.metadata.result === 0)) {
+        const errorMsg = result?.metadata?.reason || 'Unknown error';
         console.error(`[cPanel] Email creation failed: ${errorMsg}`);
+        incrementCpanelFailure();
         return { success: false, email: data.email, error: errorMsg };
       }
 
@@ -66,6 +88,7 @@ export class CpanelClient {
       return { success: true, email: data.email };
     } catch (error) {
       console.error('[cPanel] Email creation error:', error);
+      incrementCpanelFailure();
       return { 
         success: false, 
         email: data.email, 
@@ -185,6 +208,16 @@ export class CpanelClient {
       };
     }
   }
+}
+
+export function sanitizeHostname(hostname: string): string {
+  let host = hostname || '';
+  host = host.replace(/^https?:\/\//i, '');
+  // remove any path or trailing slash
+  host = host.split('/')[0];
+  // remove explicit port if present
+  host = host.replace(/:\d+$/, '');
+  return host;
 }
 
 /**

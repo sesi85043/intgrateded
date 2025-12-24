@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import type { User, RoleType, PermissionType } from "@shared/schema";
 import { PERMISSION_TYPES, ROLE_TYPES } from "@shared/schema";
 
@@ -27,6 +29,7 @@ export interface AuthenticatedTeamMember {
 
 export interface AuthUser extends User {
   teamMember?: AuthenticatedTeamMember | null;
+  hasNewCredentials?: boolean;
 }
 
 export function useAuth() {
@@ -37,6 +40,18 @@ export function useAuth() {
 
   const user = data;
   const teamMember = data?.teamMember;
+  const { toast } = useToast();
+  const _notifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (data?.hasNewCredentials && !(_notifiedRef.current)) {
+      toast({
+        title: 'New Email Account',
+        description: 'A corporate email account was just created for you. Check Email Credentials in your profile.',
+      });
+      _notifiedRef.current = true;
+    }
+  }, [data?.hasNewCredentials, toast]);
 
   const hasPermission = (permission: PermissionType): boolean => {
     if (!teamMember?.permissions) return false;

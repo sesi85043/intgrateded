@@ -53,13 +53,31 @@ export async function createCpanelEmailAccount(firstName: string, lastName: stri
   }
 
   // Save to Email Credentials / emailAccounts table
-  await db.insert(emailAccounts).values({
-    teamMemberId,
-    email,
-    passwordHash: hashPassword(password),
-    provider: 'cpanel',
-    status: 'active',
-  });
+  try {
+    await db.insert(emailAccounts).values({
+      teamMemberId,
+      email,
+      passwordHash: hashPassword(password),
+      provider: 'cpanel',
+      status: 'active',
+    });
+  } catch (dbErr: any) {
+    console.error('[provisioning] Failed to persist email account to DB, attempting to delete cPanel account to avoid orphaned mailbox', dbErr);
+    // Increment the failure counter so we can alert on repeated failures
+    try {
+      const { incrementCpanelFailure } = await import('./monitoring');
+      incrementCpanelFailure();
+    } catch (mErr) {
+      console.warn('[provisioning] Failed to increment cPanel failure metric', mErr);
+    }
+    try {
+      await client.deleteEmailAccount(email);
+      console.log('[provisioning] Successfully deleted cPanel account after DB failure:', email);
+    } catch (deleteErr) {
+      console.error('[provisioning] Failed to delete cPanel account after DB failure. Manual cleanup may be required:', deleteErr);
+    }
+    throw new Error(`Failed to save email account to database: ${dbErr?.message || dbErr}`);
+  }
 
   return { email, password };
 }

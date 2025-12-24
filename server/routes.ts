@@ -138,14 +138,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Session-based auth (devAuth)
       if (req.session?.user) {
         let teamMember: AuthenticatedTeamMember | null = null;
+        let hasNewCredentials = false;
         
         if (req.session.teamMemberId) {
           teamMember = await getTeamMemberWithPermissions(req.session.teamMemberId);
+          try {
+            const { hasNewCredentialsFor } = await import('./auth-utils');
+            hasNewCredentials = teamMember ? await hasNewCredentialsFor(teamMember.id) : false;
+          } catch (err) {
+            console.warn('Unable to determine new credential status:', err);
+          }
         }
 
         return res.json({
           ...req.session.user,
           teamMember,
+          hasNewCredentials,
         });
       }
       
