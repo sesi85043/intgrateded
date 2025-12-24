@@ -1,11 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('../db', () => {
+  const mockDb = {
+    select: () => ({ from: () => ({ where: () => ({ limit: () => Promise.resolve([{ id: 'row' }]) }) }) }),
+  };
   return {
-    db: {
-      select: () => ({ from: () => ({ where: () => ({ limit: () => Promise.resolve([{ id: 'row' }]) }) }) }),
-      pool: {},
-    }
+    db: mockDb,
+    // Expose top-level `pool` as some modules import it directly
+    pool: {},
   };
 });
 

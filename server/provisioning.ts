@@ -106,7 +106,9 @@ async function createChatwootAgent(
 
     const signature = `<b>${firstName} ${lastName}</b><br><em>${departmentName}</em><br>${domain}`;
     const agent = await client.createAgent(email, `${firstName} ${lastName}`, password, signature);
-    
+
+    console.log(`[CHATWOOT] Created agent ${agent.id} for ${email}`);
+
     await db.insert(chatwootAgents).values({
       teamMemberId,
       chatwootAgentId: agent.id,
@@ -177,9 +179,11 @@ async function assignAgentToTeam(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      console.warn(`[CHATWOOT] Failed to add agent ${agentId} to team ${team.chatwootTeamId}:`, errorData);
       return { success: false, error: errorData.message || `HTTP ${response.status}` };
     }
 
+    console.log(`[CHATWOOT] Added agent ${agentId} to team ${team.chatwootTeamId}`);
     return { success: true, teamId: team.chatwootTeamId };
   } catch (error: any) {
     return { success: false, error: error.message };

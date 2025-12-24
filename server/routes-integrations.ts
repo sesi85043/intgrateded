@@ -944,13 +944,21 @@ export default function registerIntegrationRoutes(app: Express) {
         return res.status(404).json({ message: "Department not found" });
       }
 
-      // Run provisioning
-      // TODO: Re-implement using simpler approach from routes.ts
-      res.status(501).json({
-        success: false,
-        message: "Full team member provisioning not yet re-implemented. Use managed user provisioning in routes.ts instead.",
+      // Run provisioning using the shared provisioning helper
+      const { provisioning } = await import('./provisioning');
+      const result = await provisioning.provisionTeamMember(member, department, {
+        createMailbox,
+        createChatwootAgent,
+        assignToTeam,
       });
-      return;
+
+      // Log provisioning activity
+      await storage.createActivityLog(req.teamMember.id, 'provisioned_member', 'team_member', member.id, 'provision', {
+        chatwoot: result.chatwoot,
+        mailcow: result.mailcow,
+      });
+
+      res.json({ success: true, result });
     } catch (error) {
       console.error("Error provisioning team member:", error);
       res.status(500).json({ message: "Failed to provision team member" });

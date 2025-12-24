@@ -12,9 +12,11 @@ vi.mock('../db', () => {
   const mockDb = {
     select: () => ({ from: () => ({ where: () => ({ limit: () => Promise.resolve([mockConfig]) }) }) }),
     insert: () => ({ values: () => { throw new Error('DB Insert Failure'); } }),
-    pool: {},
   };
-  return { db: mockDb };
+  // Expose both the `db` named export and a top-level `pool` export so
+  // modules that import `pool` (e.g. server/storage.ts) don't error under
+  // Vitest's module mocking.
+  return { db: mockDb, pool: {} };
 });
 
 import { createCpanelEmailAccount } from '../provisioning';
