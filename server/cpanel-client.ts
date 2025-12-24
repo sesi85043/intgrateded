@@ -73,6 +73,9 @@ export class CpanelClient {
         const text = await response.text().catch(() => '<unreadable body>');
         console.error('[cPanel] Non-JSON response from cPanel:', { status: response.status, body: text });
         incrementCpanelFailure();
+        if (response.status === 401) {
+          return { success: false, email: data.email, error: 'Authentication failed: Invalid API token or username' };
+        }
         return { success: false, email: data.email, error: `Non-JSON response from cPanel (status ${response.status})` };
       }
 

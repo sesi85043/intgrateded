@@ -1216,7 +1216,7 @@ export default function registerIntegrationRoutes(app: Express) {
 
       // If it failed due to invalid domain, connection still works
       // If it failed due to auth, connection failed
-      if (result.error && result.error.includes('auth')) {
+      if (result.error && (result.error.toLowerCase().includes('auth') || result.error.toLowerCase().includes('authentication'))) {
         return res.status(400).json({ success: false, message: "Authentication failed: Invalid API token or credentials" });
       }
 
@@ -1361,30 +1361,47 @@ export default function registerIntegrationRoutes(app: Express) {
   // Get all email credentials with team member info (Management only)
   app.get('/api/hr/email-credentials', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
-      const accounts = await db.query.emailAccounts.findMany({
-        with: {
-          teamMember: {
-            columns: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                email: true,
-                departmentId: true,
-              },
-          },
-        },
-        orderBy: (ea) => [ea.createdAt],
-      });
+      // Try using Drizzle query builder first. If Drizzle fails (some runtime relation issue),
+      // fall back to a raw SQL query to ensure the route remains available.
+      let rows: any[] = [];
+      try {
+        rows = await db.select({
+          id: emailAccounts.id,
+          teamMemberId: emailAccounts.teamMemberId,
+          email: emailAccounts.email,
+          quota: emailAccounts.quota,
+          status: emailAccounts.status,
+          createdAt: emailAccounts.createdAt,
+          tmId: teamMembers.id,
+          tmFirst: teamMembers.firstName,
+          tmLast: teamMembers.lastName,
+          tmEmail: teamMembers.email,
+          tmDept: teamMembers.departmentId,
+        })
+        .from(emailAccounts)
+        .leftJoin(teamMembers, eq(teamMembers.id, emailAccounts.teamMemberId))
+        .orderBy(emailAccounts.createdAt);
+      } catch (drizzleErr) {
+        console.warn('Drizzle relational query failed for /api/hr/email-credentials, falling back to raw SQL:', drizzleErr?.message || drizzleErr);
+        const rawSql = `SELECT e.id, e.team_member_id AS "teamMemberId", e.email, e.quota, e.status, e.created_at AS "createdAt", t.id AS tm_id, t.first_name AS tm_first, t.last_name AS tm_last, t.email AS tm_email, t.department_id AS tm_dept FROM email_accounts e LEFT JOIN team_members t ON t.id = e.team_member_id ORDER BY e.created_at`;
+        const result = await (db as any).client.query(rawSql as any);
+        rows = result.rows;
+      }
 
-      // Don't expose password hashes
-      const safeAccounts = accounts.map(acc => ({
-        id: acc.id,
-        teamMemberId: acc.teamMemberId,
-        email: acc.email,
-        quota: acc.quota,
-        status: acc.status,
-        createdAt: acc.createdAt,
-        teamMember: acc.teamMember,
+      const safeAccounts = rows.map((r: any) => ({
+        id: r.id,
+        teamMemberId: r.teamMemberId || r.team_member_id,
+        email: r.email,
+        quota: r.quota,
+        status: r.status,
+        createdAt: r.createdAt || r.created_at,
+        teamMember: (r.tmId || r.tm_id) ? {
+          id: r.tmId || r.tm_id,
+          firstName: r.tmFirst || r.tm_first,
+          lastName: r.tmLast || r.tm_last,
+          email: r.tmEmail || r.tm_email,
+          departmentId: r.tmDept || r.tm_dept,
+        } : null,
       }));
 
       res.json(safeAccounts);
