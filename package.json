@@ -5,14 +5,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index-dev.ts",
-    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-seed.mjs",
+    "build": "vite build && esbuild server/index-prod.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.mjs && esbuild server/run-migration.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-migration.mjs && esbuild server/run-seed.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/run-seed.mjs && esbuild server/migration-preview.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/migration-preview.mjs && esbuild server/migration-verify.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/migration-verify.mjs",
     "start": "NODE_ENV=production node dist/index.mjs",
     "check": "tsc",
     "test": "vitest",
     "db:push": "drizzle-kit push",
-    "migrate": "tsx run-migration.ts",
-    "migration:preview": "tsx server/migration-preview.ts",
-    "migration:verify": "tsx server/migration-verify.ts",
+    "migrate": "node dist/run-migration.mjs",
+    "migration:preview": "node dist/migration-preview.mjs",
+    "migration:verify": "node dist/migration-verify.mjs",
     "seed": "tsx server/seed.ts"
   },
   "dependencies": {
