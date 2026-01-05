@@ -69,6 +69,11 @@ export default function registerIntegrationRoutes(app: Express) {
   app.post('/api/integrations/chatwoot/config', isTeamMemberAuthenticated, requireRoleOrHigher(ROLE_TYPES.MANAGEMENT), async (req: any, res) => {
     try {
       const { apiAccessToken, webhookSecret, ...otherData } = req.body;
+      // Normalize instanceUrl to avoid trailing-slash issues that can cause
+      // proxy/gateway 502 errors in upstream services.
+      if (otherData.instanceUrl && typeof otherData.instanceUrl === 'string') {
+        otherData.instanceUrl = otherData.instanceUrl.replace(/\/+$/, '');
+      }
       
       // Check if config already exists
       const [existing] = await db.select().from(chatwootConfig).limit(1);

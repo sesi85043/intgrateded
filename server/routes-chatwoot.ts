@@ -31,22 +31,42 @@ export default async function registerChatwootRoutes(app: Express) {
     isTeamMemberAuthenticated,
     async (req: any, res: Response) => {
       try {
-        const allConversations = await db.query.conversations.findMany({
-          with: {
-            contact: true,
-          },
-          orderBy: (c) => c.lastMessageAt,
-          limit: 100,
-        });
+        // Primary query using Drizzle relation helper. In some runtime
+        // environments the relation metadata can be missing (e.g. mismatched
+        // build artifacts), which throws `TypeError: Cannot read properties
+        // of undefined (reading 'referencedTable')`. To be resilient, we
+        // attempt the nicer relation-based query first and fall back to a
+        // simpler select if it fails.
+        try {
+          const allConversations = await db.query.conversations.findMany({
+            with: {
+              contact: true,
+            },
+            orderBy: (c) => c.lastMessageAt,
+            limit: 100,
+          });
 
-        res.json({
-          success: true,
-          count: allConversations.length,
-          data: allConversations,
-        });
+          return res.json({
+            success: true,
+            count: allConversations.length,
+            data: allConversations,
+          });
+        } catch (innerErr: any) {
+          // Specific known Drizzle error can be handled by falling back
+          // to a simpler query so the endpoint remains operational.
+          console.warn('[chatwoot] Relation query failed, falling back to simple select:', innerErr?.message || innerErr);
+
+          const rows = await db.select().from(conversations).orderBy(conversations.lastMessageAt).limit(100);
+
+          return res.json({
+            success: true,
+            count: rows.length,
+            data: rows,
+          });
+        }
       } catch (error) {
-        console.error("[chatwoot] Error fetching conversations:", error);
-        res.status(500).json({ message: "Failed to fetch conversations" });
+        console.error('[chatwoot] Error fetching conversations:', error);
+        res.status(500).json({ message: 'Failed to fetch conversations' });
       }
     }
   );

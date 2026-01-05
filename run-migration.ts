@@ -20,6 +20,16 @@ const migrations = [
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_phone" varchar(20)`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_email" varchar`,
   `ALTER TABLE "team_members" ADD COLUMN IF NOT EXISTS "next_of_kin_2_address" text`,
+    // Normalize Chatwoot URL columns to remove trailing slashes which can cause proxy issues.
+    // Support both `base_url` and `api_url` column names depending on older/newer schemas.
+    `DO $$ BEGIN
+       IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'service_configs' AND column_name = 'base_url') THEN
+         EXECUTE 'UPDATE service_configs SET base_url = regexp_replace(base_url, ''/+$'', '''') WHERE service_name = ''chatwoot'' AND base_url IS NOT NULL';
+       END IF;
+       IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'service_configs' AND column_name = 'api_url') THEN
+         EXECUTE 'UPDATE service_configs SET api_url = regexp_replace(api_url, ''/+$'', '''') WHERE service_name = ''chatwoot'' AND api_url IS NOT NULL';
+       END IF;
+     END $$;`,
 ];
 
 async function runMigrations() {

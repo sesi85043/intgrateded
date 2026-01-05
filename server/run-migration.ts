@@ -31,6 +31,8 @@ const migrations = [
   `ALTER TABLE IF EXISTS evolution_api_config ADD COLUMN IF NOT EXISTS last_sync_at TIMESTAMP WITH TIME ZONE`,
   `ALTER TABLE IF EXISTS typebot_config ADD COLUMN IF NOT EXISTS last_sync_at TIMESTAMP WITH TIME ZONE`,
   `ALTER TABLE IF EXISTS department_email_settings ADD COLUMN IF NOT EXISTS parent_email VARCHAR(255)`,
+  // Normalize Chatwoot base_url to remove trailing slashes which can cause proxy issues
+  `UPDATE service_configs SET base_url = regexp_replace(base_url, '/+$', '') WHERE service_name = 'chatwoot' AND base_url IS NOT NULL`,
   `ALTER TABLE IF EXISTS team_members ADD COLUMN IF NOT EXISTS chatwoot_agent_id INTEGER`,
   `ALTER TABLE IF EXISTS departments ADD COLUMN IF NOT EXISTS chatwoot_inbox_id INTEGER`,
 ];
